@@ -3,6 +3,7 @@ import { computed, onUnmounted, ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Image as ImageIcon, Loader2 } from "@lucide/vue";
+import { Slider } from "@/components/ui/slider";
 import ToolLayout from "@/components/ToolLayout.vue";
 import ToolFileInput from "@/components/ToolFileInput.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
@@ -16,7 +17,7 @@ import { useSeo } from "@/composables/useSeo";
 useSeo({
   title: "图片转换",
   description:
-    "在线图片格式转换：PNG / JPEG / WebP / AVIF / BMP 互转，浏览器原生 Canvas 处理，无需 WASM。",
+    "在线图片格式转换：PNG / JPEG / WebP / AVIF / BMP 互转，Canvas 原生 + WASM 双引擎，全平台可用。",
   path: "/tools/conversion/image",
 });
 
@@ -85,7 +86,7 @@ async function handleConvert() {
 <template>
   <ToolLayout
     title="图片转换"
-    description="PNG / JPEG / WebP / AVIF / BMP 互转，浏览器原生处理，无需 WASM 喵～"
+    description="PNG / JPEG / WebP / AVIF / BMP 互转，Canvas 原生 + WASM 双引擎，全平台可用喵～"
     back-to="/tools/conversion"
     back-label="返回转换工具"
   >
@@ -125,13 +126,12 @@ async function handleConvert() {
           </label>
           <label v-if="currentFormat.lossy" class="flex flex-1 flex-col gap-1.5">
             <span class="text-sm font-medium">质量：{{ Math.round(quality * 100) }}%</span>
-            <input
-              v-model.number="quality"
-              type="range"
-              min="0.1"
-              max="1"
-              step="0.05"
-              class="h-10 w-full"
+            <Slider
+              v-model="quality"
+              :min="0.1"
+              :max="1"
+              :step="0.05"
+              class="py-2"
             />
           </label>
         </div>
@@ -163,7 +163,7 @@ async function handleConvert() {
       <Alert>
         <ImageIcon class="size-4" />
         <AlertDescription>
-          图片转换使用浏览器内置 Canvas，无需下载 WASM 引擎，全程本地处理喵～
+          优先使用浏览器原生 Canvas 编码；遇到不支持的格式（如 AVIF）会自动改用 WASM 编码器，全程本地处理喵～
         </AlertDescription>
       </Alert>
     </div>
