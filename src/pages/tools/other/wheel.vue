@@ -443,7 +443,7 @@ function nameText(name: string): string {
         </p>
       </section>
 
-      <Alert>
+      <Alert hint-id="wheel-usage">
         <Info class="size-4" />
         <AlertDescription>
           点击「转」会随机 roll 出 720–2160 的力度（单位：度），轮盘随后顺时针旋转

@@ -170,7 +170,7 @@ async function onCiphertextLoaded(text: string) {
         />
       </label>
 
-      <Alert>
+      <Alert hint-id="symmetric-kdf">
         <CircleHelp class="size-4" />
         <AlertDescription>
           {{ currentAlgo.note }}：密码经
@@ -287,7 +287,7 @@ async function onCiphertextLoaded(text: string) {
         </div>
       </section>
 
-      <Alert>
+      <Alert hint-id="symmetric-keep">
         <KeyRound class="size-4" />
         <AlertDescription>
           请妥善保管密码：密码遗失无法找回；CBC 模式无完整性校验，密码错误时可能解密出乱码。

@@ -429,7 +429,7 @@ function sourceLabel(source: LiveCert["source"]): string {
         {{ errorMessage }}
       </p>
 
-      <Alert>
+      <Alert hint-id="cert-usage">
         <Info class="size-4" />
         <AlertDescription>
           实时证书由 SSL Labs 完成分析（首次约 30~90 秒），返回网站当前生效的证书；

@@ -121,7 +121,7 @@ function sourceLabel(source: IpLocation["source"]): string {
         </div>
       </section>
 
-      <Alert>
+      <Alert hint-id="ip-source">
         <Info class="size-4" />
         <AlertDescription>
           归属数据来自百度 opendata（国内省市 + ISP）与 ipwho.is，均为在线查询；

@@ -219,7 +219,7 @@ async function handleConvert() {
         </p>
       </section>
 
-      <Alert>
+      <Alert hint-id="document-engine">
         <FileCode class="size-4" />
         <AlertDescription>
           文档转换由 pandoc-wasm 驱动，按需从 CDN 加载，文件不上传，全程本地处理；若加载失败请检查网络后重试。

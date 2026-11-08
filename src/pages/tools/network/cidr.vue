@@ -123,7 +123,7 @@ async function handleExpand() {
         />
       </section>
 
-      <Alert>
+      <Alert hint-id="cidr-engine">
         <Info class="size-4" />
         <AlertDescription>
           展开核心由 Rust 编译为 wasm（约 19KB）在本地执行；wasm 加载失败时自动回退纯 JS。

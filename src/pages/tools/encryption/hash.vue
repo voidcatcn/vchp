@@ -266,21 +266,21 @@ watch(
       </div>
 
       <!-- 安全提示 -->
-      <Alert v-if="currentAlgo.id === 'MD5' || currentAlgo.id === 'SHA-1'">
+      <Alert hint-id="hash-weak-algo" v-if="currentAlgo.id === 'MD5' || currentAlgo.id === 'SHA-1'">
         <Fingerprint class="size-4" />
         <AlertDescription>
           MD5 与 SHA-1 已被证明可碰撞，仅用于兼容旧系统；新场景请选
           SHA-256 及以上喵～
         </AlertDescription>
       </Alert>
-      <Alert v-if="currentAlgo.needsSalt">
+      <Alert hint-id="hash-salt" v-if="currentAlgo.needsSalt">
         <CircleHelp class="size-4" />
         <AlertDescription>
           {{ currentAlgo.label }} 适合存储密码指纹：每次用随机盐派生，同一密码结果也不同；
           生产环境建议 scrypt 且 N ≥ 2¹⁵、迭代次数尽量高。
         </AlertDescription>
       </Alert>
-      <Alert v-else>
+      <Alert hint-id="hash-no-salt" v-else>
         <CircleHelp class="size-4" />
         <AlertDescription>
           哈希不可逆：文本适合校验内容，文件适合校验下载完整性；存储密码请用
