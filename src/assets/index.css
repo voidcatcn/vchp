@@ -562,3 +562,30 @@ button:not([class*="transition-"]) {
     transition: none;
   }
 }
+
+/* ===== 全局过渡修正（issue #253）=====
+   tw-animate-css 注入的无层级 *{transition} 只保留颜色类过渡，
+   并按层叠规则压过 Tailwind 的 transition-* 工具类——
+   导致 transform / translate / opacity 等动画全部失效
+   （如 shadcn Button 的 transition-all、设置页开关滑块瞬移）。
+   这里以同选择器在更靠后的位置声明更完整的过渡列表恢复它们。 */
+* {
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    fill 0.15s,
+    stroke 0.15s,
+    transform 0.15s,
+    translate 0.15s,
+    scale 0.15s,
+    rotate 0.15s,
+    opacity 0.15s,
+    box-shadow 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none;
+  }
+}
