@@ -490,7 +490,7 @@ function downloadToml() {
           </div>
         </div>
 
-        <Alert>
+        <Alert hint-id="ranking-export">
           <Info class="size-4" />
           <AlertDescription>
             把导出的 TOML 完整粘贴到仓库的

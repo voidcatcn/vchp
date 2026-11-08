@@ -211,7 +211,7 @@ function fmtBytes(bytes: number): string {
         </p>
       </section>
 
-      <Alert>
+      <Alert hint-id="speedtest-cors">
         <Info class="size-4" />
         <AlertDescription>
           下载测速需目标支持跨域（CORS）才能读取数据流；上传测速通过 no-cors 发送数据块计时。

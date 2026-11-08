@@ -221,7 +221,7 @@ async function onCiphertextLoaded(text: string) {
       </div>
 
       <!-- 密钥用途说明：加密密钥 vs GitHub 签名密钥 -->
-      <Alert>
+      <Alert hint-id="asymmetric-key-usage">
         <CircleHelp class="size-4" />
         <AlertDescription>
           密钥用途说明：这里生成的是<strong>加密密钥</strong>（公钥加密 / 私钥解密），仅在本工具内互通使用。
@@ -285,7 +285,7 @@ async function onCiphertextLoaded(text: string) {
       </div>
 
       <!-- 家族说明 -->
-      <Alert v-if="currentAlgo.family === 'rsa'">
+      <Alert hint-id="asymmetric-family-rsa" v-if="currentAlgo.family === 'rsa'">
         <CircleHelp class="size-4" />
         <AlertDescription>
           {{ currentAlgo.label }} 单次最多加密 {{ currentAlgo.maxPlaintextBytes }}
@@ -293,14 +293,14 @@ async function onCiphertextLoaded(text: string) {
           长文本 / 大文件建议先用对称加密、再加密对称密钥（混合加密）。
         </AlertDescription>
       </Alert>
-      <Alert v-else-if="currentAlgo.family === 'ecdh'">
+      <Alert hint-id="asymmetric-family-ecc" v-else-if="currentAlgo.family === 'ecdh'">
         <CircleHelp class="size-4" />
         <AlertDescription>
           ECC 混合加密：临时 ECDH 密钥协商会话密钥，经 HKDF 派生 AES-256-GCM
           密钥加密消息；会话密钥不直接传输，文件大小无限制。
         </AlertDescription>
       </Alert>
-      <Alert v-else>
+      <Alert hint-id="asymmetric-family-mlkem" v-else>
         <CircleHelp class="size-4" />
         <AlertDescription>
           {{ currentAlgo.label }}：NIST 后量子标准（FIPS 203），ML-KEM
@@ -308,7 +308,7 @@ async function onCiphertextLoaded(text: string) {
         </AlertDescription>
       </Alert>
 
-      <Alert>
+      <Alert hint-id="asymmetric-key-keep">
         <KeyRound class="size-4" />
         <AlertDescription>
           私钥等同身份凭证，请务必离线保管、不要分享；公钥可以随意分发。

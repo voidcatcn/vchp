@@ -160,7 +160,7 @@ async function handleConvert() {
         <DownloadButton :filename="resultName" :data="resultBytes" />
       </div>
 
-      <Alert>
+      <Alert hint-id="image-engine">
         <ImageIcon class="size-4" />
         <AlertDescription>
           优先使用浏览器原生 Canvas 编码；遇到不支持的格式（如 AVIF）会自动改用 WASM 编码器，全程本地处理喵～

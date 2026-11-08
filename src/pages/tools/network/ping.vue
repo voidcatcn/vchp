@@ -144,7 +144,7 @@ function fmt(ms: number, hasSamples: boolean): string {
         </div>
       </section>
 
-      <Alert>
+      <Alert hint-id="ping-usage">
         <Info class="size-4" />
         <AlertDescription>
           浏览器无法发送 ICMP，本工具以 HTTP 请求时延近似 Ping（no-cors 请求，无需目标支持跨域）；

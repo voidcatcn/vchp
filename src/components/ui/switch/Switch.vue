@@ -3,6 +3,11 @@ import type { HTMLAttributes } from "vue";
 import { SwitchRoot, SwitchThumb } from "reka-ui";
 import { cn } from "@/lib/utils";
 
+/**
+ * shadcn 风格开关。
+ * 注意：reka-ui 的 SwitchRoot 使用 modelValue（而非 radix 的 checked），
+ * 这里对外保持 checked / update:checked 语义，与设置页调用方解耦。
+ */
 const props = defineProps<{
   checked: boolean;
   disabled?: boolean;
@@ -14,7 +19,7 @@ const emit = defineEmits<{ "update:checked": [value: boolean] }>();
 
 <template>
   <SwitchRoot
-    :checked="checked"
+    :model-value="checked"
     :disabled="disabled"
     :class="
       cn(
@@ -23,7 +28,7 @@ const emit = defineEmits<{ "update:checked": [value: boolean] }>();
         props.class,
       )
     "
-    @update:checked="emit('update:checked', $event)"
+    @update:model-value="emit('update:checked', $event === true)"
   >
     <SwitchThumb
       class="pointer-events-none block size-4 rounded-full bg-background shadow-lg ring-1 ring-border transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0.5"

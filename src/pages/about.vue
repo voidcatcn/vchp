@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Component } from "vue";
-import { h, onMounted, ref } from "vue";
+import { computed, h, onMounted, ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Cookie } from "@lucide/vue";
@@ -9,6 +9,7 @@ import {
   useBannerSettings,
   BANNER_METAS,
 } from "@/composables/useBannerSettings";
+import { useHintSettings } from "@/composables/useHintSettings";
 import { useThemePreset, type ThemePreset } from "@/composables/useThemePreset";
 import { useSeo } from "@/composables/useSeo";
 
@@ -47,6 +48,10 @@ const { preset: themePreset, setPreset: setThemePreset } = useThemePreset();
 
 // 提示与横幅：全站开关 + 按横幅单独启停（issue #253）
 const { prefs: bannerPrefs, setMaster, setEnabled } = useBannerSettings();
+// 工具说明提示：全量开关 + 恢复已关闭的单条提示（issue #253）
+const { prefs: hintPrefs, setEnabled: setHintsEnabled, restoreDismissed: restoreHints } =
+  useHintSettings();
+const hasDismissedHints = computed(() => Object.keys(hintPrefs.value.dismissed).length > 0);
 
 /** 主题预设选项：名称 + 一句话描述 + 色板预览（固定色值，不随当前主题变化） */
 const themeOptions: { id: ThemePreset; name: string; desc: string; swatches: string[] }[] = [
@@ -214,6 +219,37 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
             @update:checked="setMaster"
           />
         </label>
+
+        <!-- 工具说明提示：全量开关 + 恢复已关闭的单条提示（issue #253） -->
+        <label class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-muted/60">
+          <span class="flex flex-col gap-0.5">
+            <span class="text-sm font-medium">工具说明提示</span>
+            <span class="text-xs text-muted-foreground">
+              各工具页的说明与用法提示（如密钥用途说明），也可在提示右上角单独关闭
+            </span>
+          </span>
+          <Switch
+            :checked="hintPrefs.enabled"
+            aria-label="工具说明提示"
+            @update:checked="setHintsEnabled"
+          />
+        </label>
+
+        <div
+          v-if="hasDismissedHints"
+          class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5"
+        >
+          <span class="text-xs text-muted-foreground">
+            已关闭 {{ Object.keys(hintPrefs.dismissed).length }} 条提示
+          </span>
+          <Button
+            variant="outline"
+            class="h-7 border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80"
+            @click="restoreHints"
+          >
+            恢复已关闭的提示
+          </Button>
+        </div>
 
         <div class="my-1 h-px bg-border" aria-hidden="true" />
 

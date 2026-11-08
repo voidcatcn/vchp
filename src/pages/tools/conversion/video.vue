@@ -170,7 +170,7 @@ async function handleConvert() {
         <DownloadButton :filename="resultName" :data="resultBytes" />
       </div>
 
-      <Alert>
+      <Alert hint-id="video-engine">
         <VideoIcon class="size-4" />
         <AlertDescription>
           转码引擎（ffmpeg.wasm）按需从 CDN 加载，文件不上传，全程本地处理；若加载失败请检查网络后重试。
