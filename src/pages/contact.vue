@@ -56,8 +56,8 @@ const GithubIcon: Component = {
 const publicContacts = [
   {
     label: "GitHub",
-    value: "wumingshiali",
-    href: "https://github.com/wumingshiali",
+    value: "VoidCat",
+    href: "https://github.com/voidcatcn",
     icon: GithubIcon,
   },
 ] as const;
