@@ -95,6 +95,9 @@ export default defineConfig({
     }),
     compression({
       algorithms: ["gzip", "brotliCompress"],
+      // include 补充 wasm：@jsquash 编解码器为按需加载的大体积 wasm，
+      // brotli/gzip 预压缩副本对传输体积收益显著（issue #249）
+      include: [/\.(js|mjs|css|html|svg|wasm|json|txt|xml)$/i],
       threshold: 1024,
       exclude: [/\.(br|gz|webp|woff2?)$/i],
       deleteOriginalAssets: false,
