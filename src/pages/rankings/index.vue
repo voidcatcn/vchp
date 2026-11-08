@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
-import { ArrowRight, Trophy } from "@lucide/vue";
+import { ArrowRight, Crown, Trophy } from "@lucide/vue";
 import {
   getAllRankings,
+  sortRankingItems,
   tierOf,
   type RankingCategory,
 } from "@/lib/rankings";
@@ -30,7 +31,10 @@ function summarize(category: RankingCategory) {
 
 const rankings = getAllRankings();
 const cards = computed(() =>
-  rankings.map((category) => ({ category, ...summarize(category) })),
+  rankings.map((category) => {
+    const sorted = sortRankingItems(category.items);
+    return { category, ...summarize(category), top: sorted[0] ?? null };
+  }),
 );
 </script>
 
@@ -67,6 +71,18 @@ const cards = computed(() =>
         <p v-if="card.category.description" class="text-sm leading-snug text-muted-foreground">
           {{ card.category.description }}
         </p>
+
+        <!-- 榜首预览 -->
+        <div
+          v-if="card.top"
+          class="flex items-center gap-1.5 text-xs text-muted-foreground"
+        >
+          <Crown class="size-3.5 shrink-0 text-amber-500" />
+          <span class="truncate">TOP1 · {{ card.top.name }}</span>
+          <span class="ml-auto shrink-0 font-semibold tabular-nums text-foreground">
+            {{ card.top.score }}
+          </span>
+        </div>
 
         <div class="mt-auto flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <span>{{ card.count }} 项</span>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { RouterLink, useRoute } from "vue-router";
-import { ArrowLeft, Hash, Medal } from "@lucide/vue";
+import { ArrowLeft, Award, Crown, Hash, Medal } from "@lucide/vue";
 import {
   getRankingById,
   sortRankingItems,
@@ -122,7 +122,7 @@ const sortedItems = computed(() =>
         >
           <!-- 名次 -->
           <span
-            class="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg text-sm font-semibold"
+            class="mt-0.5 flex h-7 min-w-7 shrink-0 items-center justify-center gap-0.5 rounded-lg px-1.5 text-sm font-semibold tabular-nums"
             :class="
               index === 0
                 ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
@@ -133,7 +133,10 @@ const sortedItems = computed(() =>
                     : 'bg-muted text-muted-foreground'
             "
           >
-            {{ index + 1 }}
+            <Crown v-if="index === 0" class="size-3.5" />
+              <Medal v-else-if="index === 1" class="size-3.5" />
+              <Award v-else-if="index === 2" class="size-3.5" />
+              {{ index + 1 }}
           </span>
 
           <!-- 名称 / 简洁 / 评价 -->
@@ -148,6 +151,18 @@ const sortedItems = computed(() =>
             >
               <span class="text-muted-foreground/50">评价：</span>{{ item.comment }}
             </span>
+            <!-- 分数条：按等级着色，直观展示强弱 -->
+            <div
+              class="mt-0.5 h-1 w-full overflow-hidden rounded-full bg-muted/70"
+              role="img"
+              :aria-label="`分数 ${item.score}，等级 ${tierOf(item.score).label}`"
+            >
+              <div
+                class="h-full rounded-full transition-colors"
+                :class="tierOf(item.score).barClass"
+                :style="{ width: `${item.score}%` }"
+              />
+            </div>
           </div>
 
           <!-- 分数或等级徽章 -->

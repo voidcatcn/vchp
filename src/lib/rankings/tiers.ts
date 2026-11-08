@@ -15,6 +15,8 @@ export interface TierInfo {
   label: string;
   /** 徽章完整类名（静态字符串，供 Tailwind 扫描） */
   badgeClass: string;
+  /** 分数条填充色（纯色，比徽章底色更醒目） */
+  barClass: string;
   /** 分数区间下限（含） */
   min: number;
 }
@@ -29,6 +31,7 @@ export const TIERS: readonly TierInfo[] = [
     label: "夯",
     badgeClass:
       "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    barClass: "bg-emerald-500",
     min: 90,
   },
   {
@@ -36,6 +39,7 @@ export const TIERS: readonly TierInfo[] = [
     label: "顶级",
     badgeClass:
       "border-violet-500/40 bg-violet-500/10 text-violet-600 dark:text-violet-400",
+    barClass: "bg-violet-500",
     min: 80,
   },
   {
@@ -43,6 +47,7 @@ export const TIERS: readonly TierInfo[] = [
     label: "人上人",
     badgeClass:
       "border-sky-500/40 bg-sky-500/10 text-sky-600 dark:text-sky-400",
+    barClass: "bg-sky-500",
     min: 70,
   },
   {
@@ -50,6 +55,7 @@ export const TIERS: readonly TierInfo[] = [
     label: "NPC",
     badgeClass:
       "border-slate-400/50 bg-slate-400/10 text-slate-500 dark:text-slate-400",
+    barClass: "bg-slate-400",
     min: 60,
   },
   {
@@ -57,6 +63,7 @@ export const TIERS: readonly TierInfo[] = [
     label: "拉完了",
     badgeClass:
       "border-red-500/40 bg-red-500/10 text-red-600 dark:text-red-400",
+    barClass: "bg-red-500",
     min: 0,
   },
 ];

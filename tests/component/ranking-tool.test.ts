@@ -78,7 +78,7 @@ describe("/tools/other/ranking 排名生成", () => {
   it("切换分类后编辑对应条目", async () => {
     const wrapper = await mountAt("/tools/other/ranking");
     // 点击「游戏」分类 chip
-    const gameChip = wrapper.findAll("button").find((b) => b.text().trim() === "游戏")!;
+    const gameChip = wrapper.findAll("button").find((b) => b.text().trim().startsWith("游戏"))!;
     await gameChip.trigger("click");
     await settle();
     expect(wrapper.findAll('input[aria-label="条目名称"]')).toHaveLength(2);

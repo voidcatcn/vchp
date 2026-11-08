@@ -15,6 +15,7 @@ import {
   Upload,
 } from "@lucide/vue";
 import ToolLayout from "@/components/ToolLayout.vue";
+import { tierOf } from "@/lib/rankings";
 import {
   createEmptyCategory,
   createEmptyItem,
@@ -265,7 +266,7 @@ function downloadToml() {
               "
               @click="selectCategory(index)"
             >
-              {{ category.name || `分类 ${index + 1}` }}
+              {{ category.name || `分类 ${index + 1}` }} · {{ category.items.length }}
             </button>
           </div>
           <p v-else class="text-sm text-muted-foreground">
@@ -375,6 +376,7 @@ function downloadToml() {
                 placeholder="评价"
                 aria-label="条目评价"
               />
+              <div class="flex flex-col items-stretch gap-1">
               <input
                 type="number"
                 :value="item.score"
@@ -385,6 +387,13 @@ function downloadToml() {
                 aria-label="条目分数"
                 @input="onScoreInput(item, $event)"
               />
+              <span
+                class="self-center rounded-full border px-1.5 py-0.5 text-[10px] font-medium leading-none"
+                :class="tierOf(item.score).badgeClass"
+              >
+                {{ tierOf(item.score).label }}
+              </span>
+              </div>
               <Button
                 type="button"
                 size="icon"
@@ -470,7 +479,8 @@ function downloadToml() {
           />
           <div class="flex flex-wrap gap-2">
             <Button type="button" @click="copyToml">
-              <Copy class="size-4" />
+              <Check v-if="copyState === 'copied'" class="size-4" />
+              <Copy v-else class="size-4" />
               {{ copyState === "copied" ? "已复制" : "复制" }}
             </Button>
             <Button type="button" variant="outline" @click="downloadToml">
