@@ -343,7 +343,7 @@
 
 /* 直角全覆盖：常规圆角类与胶囊全部归零（头像除外，保持圆形） */
 .theme-endfield :is(.rounded-sm, .rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl),
-.theme-endfield .rounded-full:not([data-slot="avatar"]):not([data-slot="avatar-fallback"]):not([data-slot="avatar-image"]):not(img),
+.theme-endfield .rounded-full:not([data-slot="avatar"]):not([data-slot="avatar-fallback"]):not([data-slot="avatar-image"]):not(img):not([data-keep-round]),
 .theme-endfield [data-slot="checkbox"] {
   border-radius: 0;
 }

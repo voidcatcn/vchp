@@ -351,6 +351,7 @@ function nameText(name: string): string {
 
           <!-- 旋转轮盘 -->
           <div
+            data-keep-round
             class="size-full rounded-full bg-muted shadow-lg ring-1 ring-border"
             :style="wheelStyle"
           >
