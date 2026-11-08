@@ -10,6 +10,7 @@ import LaborDayBanner from "@/components/LaborDayBanner.vue";
 import { applyMidAutumnClass, isLaborDayActive, isMidAutumnActive, isNationalDayActive } from "@/lib/festival";
 import CookieConsentDialog from "@/components/CookieConsentDialog.vue";
 import { navItems } from "@/lib/nav";
+import { useBannerSettings } from "@/composables/useBannerSettings";
 import { useThemePreset } from "@/composables/useThemePreset";
 
 // 主题：dark / light，默认跟随系统偏好，选择记忆到 localStorage
@@ -44,6 +45,7 @@ watch(theme, (val) => {
 useThemePreset();
 
 // 国庆彩蛋：日期命中国庆（10.1-10.7）或 URL 携带 ?egg=cn_birthday 时显示横幅
+const { isVisible: isBannerVisible, dismiss: dismissBanner } = useBannerSettings();
 const nationalDayActive = isNationalDayActive();
 
 // 劳动节彩蛋：日期命中（5.1-5.5）或 URL 携带 ?egg=cn_labor_day 时显示横幅
@@ -95,9 +97,18 @@ const desktopNavLinkClass = [
       <Moon v-else class="size-4" />
     </Button>
 
-    <NationalDayBanner v-if="nationalDayActive" />
-    <MidAutumnBanner v-if="midAutumnActive" />
-    <LaborDayBanner v-if="laborDayActive" />
+    <NationalDayBanner
+      v-if="nationalDayActive && isBannerVisible('national-day')"
+      @close="dismissBanner('national-day')"
+    />
+    <MidAutumnBanner
+      v-if="midAutumnActive && isBannerVisible('mid-autumn')"
+      @close="dismissBanner('mid-autumn')"
+    />
+    <LaborDayBanner
+      v-if="laborDayActive && isBannerVisible('labor-day')"
+      @close="dismissBanner('labor-day')"
+    />
 
     <RouterView v-slot="{ Component }">
       <Transition name="page" mode="out-in">

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // 国庆彩蛋横幅：仅当日期命中国庆或 ?egg=cn_birthday 时由 App.vue 渲染。
 // 红金渐变胶囊 + 旗帜图标，浅深色主题下均清晰可读。
-import { Cake } from "@lucide/vue";
+import { Cake, X } from "@lucide/vue";
+const emit = defineEmits<{ close: [] }>();
 </script>
 
 <template>
@@ -11,5 +12,14 @@ import { Cake } from "@lucide/vue";
   >
     <Cake class="size-4" aria-hidden="true" />
     <span>国庆快乐</span>
+  
+    <button
+      type="button"
+      class="-mr-1 rounded-full p-0.5 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+      aria-label="关闭横幅"
+      @click="emit('close')"
+    >
+      <X class="size-3.5" aria-hidden="true" />
+    </button>
   </div>
 </template>

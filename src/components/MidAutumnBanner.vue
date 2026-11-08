@@ -2,7 +2,8 @@
 // 中秋节彩蛋横幅：仅当日期命中农历八月十五（香港天文台 API）或 ?egg=cn_mid_autumn 时
 // 由 App.vue 渲染。金色月夜胶囊 + 月亮图标，浅深色主题下均清晰可读。
 // 农历转换数据来自香港天文台开放数据，横幅下方附带来源标注链接。
-import { MoonStar } from "@lucide/vue";
+import { MoonStar, X } from "@lucide/vue";
+const emit = defineEmits<{ close: [] }>();
 import { HKO_LUNAR_API_DOC } from "@/lib/festival";
 </script>
 
@@ -14,7 +15,16 @@ import { HKO_LUNAR_API_DOC } from "@/lib/festival";
     >
       <MoonStar class="size-4" aria-hidden="true" />
       <span>中秋快乐</span>
-    </div>
+    
+    <button
+      type="button"
+      class="-mr-1 rounded-full p-0.5 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+      aria-label="关闭横幅"
+      @click="emit('close')"
+    >
+      <X class="size-3.5" aria-hidden="true" />
+    </button>
+  </div>
     <a
       :href="HKO_LUNAR_API_DOC"
       target="_blank"

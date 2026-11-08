@@ -545,3 +545,20 @@
     linear-gradient(to bottom, oklch(0.577 0.245 27.325), oklch(0.82 0.17 85), oklch(0.577 0.245 27.325)) left / 4px 100% no-repeat,
     linear-gradient(to bottom, oklch(0.577 0.245 27.325), oklch(0.82 0.17 85), oklch(0.577 0.245 27.325)) right / 4px 100% no-repeat;
 }
+/* ===== 原生按钮过渡兜底（issue #253）=====
+   shadcn Button 组件自带 transition-all；页面里大量原生 <button>
+   （tab、chip、radio 卡片等）此前没有任何过渡，切换显得生硬。
+   这里给未显式声明 transition-* 的按钮补上统一的柔和过渡，
+   有自身过渡类名的按钮不受影响。 */
+button:not([class*="transition-"]) {
+  transition-property:
+    color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not([class*="transition-"]) {
+    transition: none;
+  }
+}
