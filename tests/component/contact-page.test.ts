@@ -96,7 +96,7 @@ describe("/contact 页面", () => {
       .findAll("a")
       .find((a) => a.text().includes("GitHub"));
     expect(githubLink).toBeTruthy();
-    expect(githubLink!.attributes("href")).toBe("https://github.com/wumingshiali");
+    expect(githubLink!.attributes("href")).toBe("https://github.com/voidcatcn");
     expect(githubLink!.attributes("target")).toBe("_blank");
     expect(githubLink!.attributes("rel")).toBe("noopener noreferrer");
   });
