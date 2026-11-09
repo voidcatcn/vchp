@@ -1,12 +1,46 @@
-# 带 hash 的静态资源永久缓存（immutable）
+# ============================================================
+# Cloudflare Pages 响应头配置
+# ============================================================
+
+# ----- 安全响应头（issue：安全审计） -----
+# CSP 说明：
+# - script-src 'unsafe-inline'：index.html 的首屏主题 / 节日内联脚本（无服务端 nonce 能力）
+# - script-src 'wasm-unsafe-eval' blob:：cidr / ffmpeg / jsquash 等 WASM 编译，
+#   ffmpeg core 经 toBlobURL + importScripts(blob:) 加载
+# - script-src umi.meali.top / clarity.ms：统计（用户同意后加载）
+# - script-src opendata.baidu.com：IP 归属查询的 JSONP
+# - img-src https:：博客与友链封面为任意外链图片（图片不可执行，放宽可维护）
+# - connect-src：天气 API / SSL Labs / crt.sh / CORS 代理 / ipwho.is /
+#   百度 opendata / Cloudflare 测速 / umami + clarity 上报
+# - frame-src giscus.app：评论系统 iframe
+# - worker-src 'self' blob:：ffmpeg worker 与 core 脚本
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://umi.meali.top https://www.clarity.ms https://opendata.baidu.com; style-src 'self' 'unsafe-inline' https://fontsapi.zeoseven.com; font-src 'self' https://fontsapi.zeoseven.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://data.weather.gov.hk https://api.ssllabs.com https://crt.sh https://api.allorigins.win https://api.codetabs.com https://ipwho.is https://opendata.baidu.com https://speed.cloudflare.com https://umi.meali.top https://www.clarity.ms https://cdn.jsdmirror.com; frame-src https://giscus.app; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# ----- 带 hash 的静态资源永久缓存（immutable） -----
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# 头像文件名固定，内容很少变化 —— 长期缓存
+# ----- 头像文件名固定，内容很少变化 —— 长期缓存 -----
 /avatar-*.webp
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML 入口不缓存，保证每次拿到最新 hash
+# ----- 根目录稳定文件：内容不变但未带 hash，7 天缓存 -----
+/cidr.wasm
+  Cache-Control: public, max-age=604800
+/reflect-metadata.js
+  Cache-Control: public, max-age=604800
+/site.webmanifest
+  Cache-Control: public, max-age=604800
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+# ----- HTML 入口不缓存，保证每次拿到最新 hash -----
 /
   Cache-Control: public, max-age=0, must-revalidate
 /index.html
