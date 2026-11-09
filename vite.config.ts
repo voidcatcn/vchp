@@ -205,6 +205,14 @@ export default defineConfig({
               return "shiki";
             }
             if (id.includes("markdown-it")) return "md";
+          // @peculiar（x509 asn1 库）只被证书工具使用：拆出懒加载 chunk，
+          // vendor 体积显著下降，仅访问证书页时才下载（issue：速度优化）
+          if (
+            id.includes("@peculiar") ||
+            id.includes("tsyringe") ||
+            id.includes("reflect-metadata")
+          )
+            return "cert-libs";
             if (id.includes("@noble/ciphers")) return "crypto";
             if (id.includes("unhead")) return "unhead";
             if (id.includes("@lucide")) return "lucide";
