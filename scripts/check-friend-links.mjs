@@ -312,7 +312,7 @@ async function main() {
     "本次新增/修改的链接全部可以正常访问：",
     ...results.map((r) => `- [${r.link.name}](${r.link.url})`),
     "",
-    "@wumingshiali 站长请进行人工审核喵～",
+    "@voidcatcn 站长请进行人工审核喵～",
     "",
     "贡献者辛苦了，请耐心等待人工审核结果喵～",
   ].join("\n");
