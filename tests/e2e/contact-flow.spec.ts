@@ -71,7 +71,7 @@ test.describe("联系页流程", () => {
   test("公开卡片（GitHub）无需验证：点击直接跳转 GitHub", async ({ page }) => {
     await page.goto("/contact");
     const githubLink = page.getByRole("link", { name: /GitHub/ });
-    await expect(githubLink).toHaveAttribute("href", "https://github.com/wumingshiali");
+    await expect(githubLink).toHaveAttribute("href", "https://github.com/voidcatcn");
     await expect(githubLink).toHaveAttribute("target", "_blank");
     await expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
   });
