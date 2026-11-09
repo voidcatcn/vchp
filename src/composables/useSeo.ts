@@ -6,7 +6,7 @@ const SITE_URL = "https://meali.top";
 /** 站点名称 */
 const SITE_NAME = "VoidCat";
 /** 默认 OG 图片（fallback: 头像） */
-const DEFAULT_OG_IMAGE = `${SITE_URL}/avatar-160.webp`;
+const DEFAULT_OG_IMAGE = `https://weavatar.com/avatar/e1cad362d957b3e7a66c699453f58d6c82ab49a4f286651aed582d45356446c5?s=160`;
 
 export interface UseSeoInput {
   /** 页面标题（自动追加 " - VoidCat" 后缀） */
