@@ -1,0 +1,24 @@
+# ============================================================
+# 第三方集成配置（统计 / 评论）
+# ------------------------------------------------------------
+# 统计脚本仅在用户同意对应 Cookie 子项后注入（见 CookieConsentDialog）
+# 评论基于 GitHub Discussions，需仓库已安装 giscus App
+# ============================================================
+
+# Umami 统计（自托管）
+[umami]
+script = "https://umi.meali.top/script.js"
+websiteId = "27cd6b5a-15b2-4d8b-9916-1de122c60cfb"
+
+# Microsoft Clarity 行为分析
+[clarity]
+script = "https://www.clarity.ms/tag/ydblo1twbo"
+
+# Giscus 评论（GitHub Discussions）
+[giscus]
+repo = "wumingshiali/giscus-for-blog"
+repoId = "R_kgDOR833VQ"
+category = "Announcements"
+categoryId = "DIC_kwDOR833Vc4C6XFc"
+mapping = "pathname"
+lang = "zh-CN"

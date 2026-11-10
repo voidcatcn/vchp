@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
+import { integrations } from "virtual:integrations";
 import { MessageSquare } from "@lucide/vue";
 import {
   Dialog,
@@ -44,17 +45,17 @@ function onDialogUpdate(v: boolean) {
       </DialogTitle>
       <div class="min-h-[480px]">
         <Giscus
-          repo="wumingshiali/giscus-for-blog"
-          repo-id="R_kgDOR833VQ"
-          category="Announcements"
-          category-id="DIC_kwDOR833Vc4C6XFc"
-          mapping="pathname"
+          :repo="integrations.giscus.repo"
+          :repo-id="integrations.giscus.repoId"
+          :category="integrations.giscus.category"
+          :category-id="integrations.giscus.categoryId"
+          :mapping="integrations.giscus.mapping"
           strict="0"
           reactions-enabled="1"
           emit-metadata="0"
           input-position="top"
           :theme="isDark ? 'dark' : 'light'"
-          lang="zh-CN"
+          :lang="integrations.giscus.lang"
           loading="lazy"
         />
       </div>

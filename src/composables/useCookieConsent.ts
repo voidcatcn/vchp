@@ -6,6 +6,7 @@
  * - 测试环境（Vitest）不弹窗、不加载统计脚本，避免干扰现有组件测试
  */
 import { computed, ref } from "vue";
+import { integrations } from "virtual:integrations";
 
 /** Cookie 同意状态 */
 export interface CookieConsent {
@@ -26,10 +27,10 @@ const STAT_SCRIPTS: Record<
   { src: string; attrs?: Record<string, string> }
 > = {
   umami: {
-    src: "https://umi.meali.top/script.js",
-    attrs: { "data-website-id": "27cd6b5a-15b2-4d8b-9916-1de122c60cfb" },
+    src: integrations.umami.script,
+    attrs: { "data-website-id": integrations.umami.websiteId },
   },
-  clarity: { src: "https://www.clarity.ms/tag/ydblo1twbo" },
+  clarity: { src: integrations.clarity.script },
 };
 
 /** 读取已保存的同意状态；无 cookie 或解析失败返回 null */
