@@ -10,6 +10,7 @@ import { resolve, join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { Plugin, ResolvedConfig } from "vite";
 import { loadRankingsData } from "./vite-plugin-rankings.ts";
+import { loadSiteConfig } from "./vite-plugin-site-config.ts";
 
 /** 站点基础 URL（生产环境） */
 const SITE_URL = "https://meali.top";

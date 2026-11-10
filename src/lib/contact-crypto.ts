@@ -5,24 +5,15 @@
  * 解密密钥由用户在 Dialog 中输入的"人机验证答案"按固定规则补齐到 16 字节得到。
  * bot 扫描源码只能拿到无法还原的密文。
  */
+import { contactData } from "virtual:contact-data";
 // 注意：子路径须带 .js 后缀（@noble/ciphers 的 exports 字段如此定义）
 // 改为动态 import：避免 noble ciphers 进入初始 vendor，仅在用户点击「解密」时按需下载。
 
-export const contactSecret = {
-  // 人机验证题目
-  question: "1 + 1 等于几？",
-  // 各联系项密文（base64），共用同一答案密钥
-  secrets: {
-    email: {
-      ciphertext: "WSIq37Co46v4eqYmkt6HALc12BDP5BBM8uJ5uGgCpWGgMu6CFAwnEyM=",
-      nonce: "Xb47nnJSBBBHPd6G",
-    },
-    wechat: {
-      ciphertext: "CStjRaTcGJBRWKkyX8oAShFXXji2XL/HSw==",
-      nonce: "ZnlhfQbY+v05IOBG",
-    },
-  },
-} as const;
+/**
+ * 联系方式密文数据（config/contact.toml 单一数据源，构建期解析）。
+ * 密文由 scripts/encrypt-contacts.mjs 生成：node scripts/encrypt-contacts.mjs <答案>
+ */
+export const contactSecret = contactData;
 
 // 支持的联系项名称
 export type ContactName = keyof typeof contactSecret.secrets;

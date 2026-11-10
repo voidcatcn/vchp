@@ -2,7 +2,7 @@
  * 友链 PR 可达性检测（配合 .github/workflows/friend-links.yml 使用）。
  *
  * 工作流由 pull_request_target 触发（标题以 [友链] 开头），本脚本：
- * 1. 读取 PR 分支上的 src/links/data.toml，全量解析并校验结构（防止 PR 破坏文件）
+ * 1. 读取 PR 分支上的 config/links.toml，全量解析并校验结构（防止 PR 破坏文件）
  * 2. 通过 GitHub API 获取该文件的 diff，只提取「新增 / 修改」的友链条目
  * 3. 仅对改动条目的 url 做可达性检测（HEAD，失败回退 GET）
  * 4. 全部通过 → 评论 @wumingshiali 并告知贡献者等待人工审核
@@ -18,7 +18,7 @@ import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 /** 友链数据文件（与 vite-plugin-links.ts 保持一致） */
-const LINKS_FILE = "src/links/data.toml";
+const LINKS_FILE = "config/links.toml";
 /** 合法优先级 */
 const PRIORITIES = new Set(["high", "default", "low"]);
 /** 浏览器风格 UA，降低被站点风控误伤的几率 */
@@ -96,7 +96,7 @@ export function validateLinks(links) {
 }
 
 /**
- * 从 data.toml 的 unified diff 中提取「新增 / 修改」的 [[links]] 条目。
+ * 从 links.toml 的 unified diff 中提取「新增 / 修改」的 [[links]] 条目。
  *
  * 规则：
  * - 块内出现 + 行（新增/修改字段）→ 视为有新增内容，需检测
@@ -153,7 +153,7 @@ export function extractChangedLinks(patch) {
   return blocks.filter((b) => b.touched && b.hasAdd).map((b) => b.fields);
 }
 
-/** 获取 data.toml 的 unified diff：GitHub API 优先，本地调试回退 git diff */
+/** 获取 links.toml 的 unified diff：GitHub API 优先，本地调试回退 git diff */
 async function getDataTomlPatch() {
   const token = process.env.GITHUB_TOKEN;
   const pr = process.env.PR_NUMBER;
@@ -255,7 +255,7 @@ async function fail(message) {
 }
 
 async function main() {
-  // 1. 全量解析 + 结构校验：防止 PR 破坏 data.toml（本地解析，不发网络请求）
+  // 1. 全量解析 + 结构校验：防止 PR 破坏 links.toml（本地解析，不发网络请求）
   let raw;
   try {
     raw = readFileSync(LINKS_FILE, "utf8");
@@ -283,7 +283,7 @@ async function main() {
   }
   const changed = extractChangedLinks(patch);
   if (changed.length === 0) {
-    await fail("❌ 未检测到 src/links/data.toml 中新增或修改的友链，请修改该文件后重新推送喵～");
+    await fail("❌ 未检测到 config/links.toml 中新增或修改的友链，请修改该文件后重新推送喵～");
   }
 
   // 3. 校验改动条目的字段

@@ -13,13 +13,14 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Plugin, ResolvedConfig } from "vite";
+import { loadSiteConfig } from "./vite-plugin-site-config.ts";
 
 /** 站点基础 URL（生产环境） */
-const SITE_URL = "https://meali.top";
+const SITE_URL = loadSiteConfig().url;
 /** 站点名称 */
-const SITE_NAME = "VoidCat";
+const SITE_NAME = loadSiteConfig().name;
 /** 站点描述 */
-const SITE_DESC = "开源即自由，自由即万物。个人博客，记录技术与思考。";
+const SITE_DESC = loadSiteConfig().description;
 
 interface FeedPost {
   id: string;

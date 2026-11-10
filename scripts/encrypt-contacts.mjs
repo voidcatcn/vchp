@@ -2,7 +2,7 @@
  * 联系方式密文生成脚本（离线一次性工具）
  *
  * 用途：用"人机验证答案"作为 AES 密钥，加密多个联系方式（邮箱、微信等），
- *       生成可硬编码进前端的密文配置。
+ *       生成 config/contact.toml（前端构建期解析）。
  * 用法：node scripts/encrypt-contacts.mjs [答案]
  *   例：node scripts/encrypt-contacts.mjs 2
  *
@@ -49,7 +49,26 @@ const output = {
   _answer: answer,
 };
 
-const json = JSON.stringify(output, null, 2);
-writeFileSync("scripts/contacts-secret.generated.json", json, "utf-8");
-console.log("✓ 已生成 scripts/contacts-secret.generated.json");
-console.log(json);
+// 生成 config/contact.toml（TOML 字符串转义：双引号与反斜杠）
+const tomlStr = (v) => '"' + String(v).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+const toml =
+  "# ============================================================\n" +
+  "# 联系方式配置（密文由 scripts/encrypt-contacts.mjs 生成）\n" +
+  "# ------------------------------------------------------------\n" +
+  "# 用法：node scripts/encrypt-contacts.mjs <人机验证答案>\n" +
+  "# 修改 question 或重新生成密文后重新构建即可生效。\n" +
+  "# ============================================================\n\n" +
+  "# 人机验证题目（展示给访客）\n" +
+  "question = " + tomlStr(output.question) + "\n\n" +
+  Object.entries(secrets)
+    .map(
+      ([name, secret]) =>
+        "[[secrets]]\n" +
+        'name = "' + name + '"\n' +
+        "ciphertext = " + tomlStr(secret.ciphertext) + "\n" +
+        "nonce = " + tomlStr(secret.nonce) + "\n"
+    )
+    .join("\n");
+
+writeFileSync("config/contact.toml", toml, "utf-8");
+console.log("✓ 已生成 config/contact.toml");

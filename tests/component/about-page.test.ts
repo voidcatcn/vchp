@@ -164,7 +164,7 @@ describe("/about 页面：构建 git 提交 ID", () => {
     const commitId = link.text().trim();
     expect(commitId).toMatch(/^[0-9a-f]{7,}$/);
     expect(link.attributes("href")).toBe(
-      `https://github.com/wumingshiali/wumingshiali.github.io/commit/${commitId}`,
+      `https://github.com/voidcatcn/vchp/commit/${commitId}`,
     );
   });
 });

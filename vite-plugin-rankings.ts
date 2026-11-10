@@ -1,7 +1,7 @@
 /**
  * Vite 插件：以虚拟模块暴露排名数据。
  *
- * 单一数据源 src/rankings/data.toml（分类 + 条目 + 分数）由构建期解析为
+ * 单一数据源 config/rankings.toml（分类 + 条目 + 分数）由构建期解析为
  * `virtual:rankings-data` 虚拟模块，客户端只消费解析结果，不引入 TOML 解析器。
  *
  * 与友链（vite-plugin-links）同构：贡献者/站长只需修改 TOML 提交，无需本地构建。
@@ -13,7 +13,7 @@ import { parseRankingsToml } from "./src/lib/rankings/toml.ts";
 import type { RankingCategory } from "./src/lib/rankings/types.ts";
 
 /** 排名数据文件（单一数据源） */
-const RANKINGS_FILE = resolve("src/rankings/data.toml");
+const RANKINGS_FILE = resolve("config/rankings.toml");
 /** 客户端消费的虚拟模块 id */
 export const RANKINGS_VIRTUAL_ID = "virtual:rankings-data";
 

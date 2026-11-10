@@ -1,7 +1,7 @@
 /**
  * 排名页面组件测试（数据驱动）。
  *
- * 断言基于 src/rankings/data.toml 的实际内容推导，
+ * 断言基于 config/rankings.toml 的实际内容推导，
  * 站长更新排名数据时无需同步修改测试。
  *
  * 关注：
@@ -18,7 +18,7 @@ import RankingsIndexPage from "@/pages/rankings/index.vue";
 import RankingDetailPage from "@/pages/rankings/[id].vue";
 import { getAllRankings, sortRankingItems, tierOf } from "@/lib/rankings";
 
-/** 以 data.toml 的第一个分类作为断言样本 */
+/** 以 rankings.toml 的第一个分类作为断言样本 */
 const rankings = getAllRankings();
 const first = rankings[0];
 

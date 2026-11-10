@@ -10,6 +10,8 @@ import { generateSitemap } from "./vite-plugin-sitemap.ts";
 import { prerenderPosts } from "./vite-plugin-prerender-posts.ts";
 import { linksData } from "./vite-plugin-links.ts";
 import { rankingsData } from "./vite-plugin-rankings.ts";
+import { siteConfig } from "./vite-plugin-site-config.ts";
+import { contactData } from "./vite-plugin-contact-data.ts";
 import { generateRssFeed } from "./vite-plugin-rss.ts";
 import { defineConfig, type Plugin } from "vitest/config";
 
@@ -69,6 +71,8 @@ export default defineConfig({
   plugins: [
     linksData(),
     rankingsData(),
+    siteConfig(),
+    contactData(),
     VueRouter({
       routesFolder: "src/pages",
       dts: "src/route-map.d.ts",

@@ -1,0 +1,19 @@
+# ============================================================
+# 联系方式配置（密文由 scripts/encrypt-contacts.mjs 生成）
+# ------------------------------------------------------------
+# 用法：node scripts/encrypt-contacts.mjs <人机验证答案>
+# 修改 question 或重新生成密文后重新构建即可生效。
+# ============================================================
+
+# 人机验证题目（展示给访客）
+question = "1 + 1 等于几？"
+
+[[secrets]]
+name = "email"
+ciphertext = "B2io2rQtCchL1hmPdHT5+iyP04vq8RmWdKUWck2GmUNqQvF4Ft830LY="
+nonce = "MGF8ffaiHCLCAVGD"
+
+[[secrets]]
+name = "wechat"
+ciphertext = "FRsAXoCWFniW36lrlfg35LCUX/pnHayx3w=="
+nonce = "eur4plh2HYFYZ/Ra"

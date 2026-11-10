@@ -1,7 +1,7 @@
 /**
  * /rankings 排名页 E2E 测试（数据驱动）。
  *
- * 断言基于 src/rankings/data.toml 的实际内容推导，
+ * 断言基于 config/rankings.toml 的实际内容推导，
  * 站长更新排名数据时无需同步修改测试。
  *
  * 覆盖：目录页分类卡片、详情页行列表 + 分数/等级切换、排名生成工具导入导出。
@@ -26,7 +26,7 @@ interface TomlCategory {
   items: TomlItem[];
 }
 const doc = parseToml(
-  readFileSync(join(process.cwd(), "src/rankings/data.toml"), "utf-8"),
+  readFileSync(join(process.cwd(), "config/rankings.toml"), "utf-8"),
 ) as { categories: TomlCategory[] };
 const first = doc.categories[0];
 const sorted = [...first.items].sort((a, b) => b.score - a.score);

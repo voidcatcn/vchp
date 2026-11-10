@@ -39,10 +39,10 @@ test("友链页：渲染卡片并弹出添加说明", async ({ page }) => {
   await expect(page.getByText("等待审核")).toBeVisible();
 
   // 直接编辑 data.toml 的入口
-  const editLink = page.getByRole("link", { name: /直接编辑 data\.toml/ });
+  const editLink = page.getByRole("link", { name: /直接编辑 links.toml/ });
   await expect(editLink).toBeVisible();
   await expect(editLink).toHaveAttribute(
     "href",
-    "https://github.com/wumingshiali/wumingshiali.github.io/edit/main/src/links/data.toml",
+    "https://github.com/voidcatcn/vchp/edit/main/config/links.toml",
   );
 });

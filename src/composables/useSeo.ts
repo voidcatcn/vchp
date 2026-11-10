@@ -1,12 +1,13 @@
 import { useHead, useSeoMeta } from "@unhead/vue";
 import { computed, toValue, type MaybeRefOrGetter } from "vue";
+import { siteConfig } from "virtual:site-config";
 
-/** 站点基础 URL（生产环境） */
-const SITE_URL = "https://meali.top";
-/** 站点名称 */
-const SITE_NAME = "VoidCat";
+/** 站点基础 URL（config/site.toml 单一数据源） */
+const SITE_URL = siteConfig.url;
+/** 站点名称（config/site.toml 单一数据源） */
+const SITE_NAME = siteConfig.name;
 /** 默认 OG 图片（fallback: 头像） */
-const DEFAULT_OG_IMAGE = `https://weavatar.com/avatar/e1cad362d957b3e7a66c699453f58d6c82ab49a4f286651aed582d45356446c5?s=160`;
+const DEFAULT_OG_IMAGE = siteConfig.ogImage;
 
 export interface UseSeoInput {
   /** 页面标题（自动追加 " - VoidCat" 后缀） */

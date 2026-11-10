@@ -1,7 +1,7 @@
 /**
  * Vite 插件：以虚拟模块暴露友链数据。
  *
- * 单一数据源 src/links/data.toml（name/url/priority/cover）由构建期解析为 `virtual:links-data` 虚拟模块，
+ * 单一数据源 config/links.toml（name/url/priority/cover）由构建期解析为 `virtual:links-data` 虚拟模块，
  * 客户端只消费解析结果，不引入 TOML 解析器，也不在运行时解析。
  *
  * 与博客（vite-plugin-prerender-posts 提交生成文件）不同：友链面向外部贡献者，
@@ -14,7 +14,7 @@ import { parse as parseToml } from "smol-toml";
 import type { Plugin } from "vite";
 
 /** 友链数据文件（单一数据源） */
-const LINKS_FILE = resolve("src/links/data.toml");
+const LINKS_FILE = resolve("config/links.toml");
 /** 客户端消费的虚拟模块 id */
 export const LINKS_VIRTUAL_ID = "virtual:links-data";
 

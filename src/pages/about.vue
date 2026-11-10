@@ -11,6 +11,7 @@ import {
 } from "@/composables/useBannerSettings";
 import { useHintSettings } from "@/composables/useHintSettings";
 import { useThemePreset, type ThemePreset } from "@/composables/useThemePreset";
+import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 
 useSeo({
@@ -120,7 +121,7 @@ onMounted(() => {
 });
 
 // 本项目 GitHub 仓库地址
-const repoUrl = "https://github.com/wumingshiali/wumingshiali.github.io";
+const repoUrl = siteConfig.repoUrl;
 
 // 构建时由 vite.config.ts 注入的 git 提交 ID（短哈希）；git 不可用时为 "unknown"
 const buildCommitId = __GIT_COMMIT_ID__;

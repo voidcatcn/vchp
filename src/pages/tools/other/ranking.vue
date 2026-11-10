@@ -494,7 +494,7 @@ function downloadToml() {
           <Info class="size-4" />
           <AlertDescription>
             把导出的 TOML 完整粘贴到仓库的
-            <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">src/rankings/data.toml</code>
+            <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">config/rankings.toml</code>
             并提交，排名页（/rankings）就会自动更新喵～
           </AlertDescription>
         </Alert>

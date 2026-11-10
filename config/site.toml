@@ -1,0 +1,25 @@
+# ============================================================
+# 站点基础配置（单一数据源）
+# ------------------------------------------------------------
+# 消费方：SEO 元信息 / sitemap / RSS / 预渲染 / 首页静态标签 /
+#         设置页与友链页的仓库链接
+# 修改后重新构建即可全站生效
+# ============================================================
+
+# 站点名称：标题后缀、og:site_name、author、RSS 频道名
+name = "VoidCat"
+
+# 首屏静态标题（JS 加载前与 og/twitter:title）
+title = "VoidCat - 个人主页"
+
+# 站点描述（og/twitter:description；head meta 会自动加 "名称 - " 前缀）
+description = "开源即自由，自由即万物。个人博客，记录技术与思考。"
+
+# 站点根地址：canonical / og:url / sitemap / RSS
+url = "https://meali.top"
+
+# OG 兜底图：社交分享卡片（weavatar 实时头像）
+ogImage = "https://weavatar.com/avatar/e1cad362d957b3e7a66c699453f58d6c82ab49a4f286651aed582d45356446c5?s=160"
+
+# 仓库地址：设置页与友链页的 GitHub 链接
+repoUrl = "https://github.com/voidcatcn/vchp"

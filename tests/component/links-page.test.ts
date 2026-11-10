@@ -64,6 +64,6 @@ describe("/links 页面", () => {
     expect(body).toContain("提交 PR");
     expect(body).toContain("等待审核");
     // 提供直接编辑 data.toml 的入口
-    expect(body).toContain("直接编辑 data.toml");
+    expect(body).toContain("直接编辑 links.toml");
   });
 });

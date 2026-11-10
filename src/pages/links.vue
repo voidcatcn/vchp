@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Link2, Plus, ExternalLink, ArrowRight } from "@lucide/vue";
 import { getAllLinks } from "@/lib/links";
+import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 
 useSeo({
@@ -19,9 +20,9 @@ useSeo({
 });
 
 // 本项目 GitHub 仓库地址（与 about.vue 保持一致）
-const REPO_URL = "https://github.com/wumingshiali/wumingshiali.github.io";
+const REPO_URL = siteConfig.repoUrl;
 // 友链数据文件路径：贡献者修改的就是这个文件
-const LINKS_TOML = "src/links/data.toml";
+const LINKS_TOML = "config/links.toml";
 
 // lucide 已移除品牌图标，GitHub 用内联 SVG 保留品牌识别度（与 contact.vue 一致）
 const GithubIcon: Component = {
@@ -159,7 +160,7 @@ const addSteps = [
             class="w-full border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80"
           >
             <GithubIcon />
-            直接编辑 data.toml
+            直接编辑 links.toml
           </Button>
           <Button
             as="a"
