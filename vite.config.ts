@@ -12,6 +12,8 @@ import { linksData } from "./vite-plugin-links.ts";
 import { rankingsData } from "./vite-plugin-rankings.ts";
 import { siteConfig } from "./vite-plugin-site-config.ts";
 import { contactData } from "./vite-plugin-contact-data.ts";
+import { banners } from "./vite-plugin-banners.ts";
+import { integrations } from "./vite-plugin-integrations.ts";
 import { generateRssFeed } from "./vite-plugin-rss.ts";
 import { defineConfig, type Plugin } from "vitest/config";
 
@@ -73,6 +75,8 @@ export default defineConfig({
     rankingsData(),
     siteConfig(),
     contactData(),
+    banners(),
+    integrations(),
     VueRouter({
       routesFolder: "src/pages",
       dts: "src/route-map.d.ts",
