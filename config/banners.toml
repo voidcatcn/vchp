@@ -1,0 +1,31 @@
+# ============================================================
+# 节日彩蛋横幅配置
+# ------------------------------------------------------------
+# - date 格式 MM-DD（每年重复）；lunar 表示农历（由天文台 API 动态判断）
+# - 显示开关在设置页可调（显示全站提示 / 单横幅），单横幅关闭记忆按年过期
+# - egg 为 URL 参数（任意日期可手动触发：?egg=<egg>）
+# ============================================================
+
+[[banners]]
+id = "labor-day"
+egg = "cn_labor_day"
+cssClass = "egg-labor-day"
+name = "劳动人民万岁"
+start = "05-01"
+end = "05-05"
+
+[[banners]]
+id = "mid-autumn"
+egg = "cn_mid_autumn"
+cssClass = "egg-mid-autumn"
+name = "中秋快乐"
+lunar = "八月十五"
+api = "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php"
+
+[[banners]]
+id = "national-day"
+egg = "cn_birthday"
+cssClass = "egg-cn-birthday"
+name = "国庆快乐"
+start = "10-01"
+end = "10-07"
