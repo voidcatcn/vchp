@@ -5,7 +5,7 @@
  * 1. 读取 PR 分支上的 config/links.toml，全量解析并校验结构（防止 PR 破坏文件）
  * 2. 通过 GitHub API 获取该文件的 diff，只提取「新增 / 修改」的友链条目
  * 3. 仅对改动条目的 url 做可达性检测（HEAD，失败回退 GET）
- * 4. 全部通过 → 评论 @wumingshiali 并告知贡献者等待人工审核
+ * 4. 全部通过 → 评论 @voidcatcn 并告知贡献者等待人工审核
  *    任一项失败 → 评论失败详情并退出非 0，让 PR 检查变红
  *
  * 关键设计：只检测 diff 中新增/修改的友链，不检测存量链接——避免历史链接
@@ -23,7 +23,7 @@ const LINKS_FILE = "config/links.toml";
 const PRIORITIES = new Set(["high", "default", "low"]);
 /** 浏览器风格 UA，降低被站点风控误伤的几率 */
 const UA =
-  "Mozilla/5.0 (compatible; FriendLinksBot/1.0; +https://github.com/wumingshiali/wumingshiali.github.io)";
+  "Mozilla/5.0 (compatible; FriendLinksBot/1.0; +https://github.com/voidcatcn/vchp)";
 
 /**
  * 解析本仓库友链 TOML 的受约束子集：

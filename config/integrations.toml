@@ -16,7 +16,7 @@ script = "https://www.clarity.ms/tag/ydblo1twbo"
 
 # Giscus 评论（GitHub Discussions）
 [giscus]
-repo = "wumingshiali/giscus-for-blog"
+repo = "voidcatcn/giscus-for-blog"
 repoId = "R_kgDOR833VQ"
 category = "Announcements"
 categoryId = "DIC_kwDOR833Vc4C6XFc"

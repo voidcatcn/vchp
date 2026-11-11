@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted, watch, defineAsyncComponent } fr
 import { useRoute, RouterLink } from "vue-router";
 import { ArrowLeft } from "@lucide/vue";
 import { getPost, type Post } from "@/lib/posts";
+import { integrations } from "virtual:integrations";
 import { useSeo } from "@/composables/useSeo";
 import TableOfContentsList from "@/components/TableOfContentsList.vue";
 import MobileTocButton from "@/components/MobileTocButton.vue";
@@ -121,17 +122,17 @@ watch(
 
           <!-- 文章底部 Giscus评论区（保留供直接访问/无 JS 用户） -->
           <Giscus
-            repo="wumingshiali/giscus-for-blog"
-            repo-id="R_kgDOR833VQ"
-            category="Announcements"
-            category-id="DIC_kwDOR833Vc4C6XFc"
-            mapping="pathname"
+            :repo="integrations.giscus.repo"
+            :repo-id="integrations.giscus.repoId"
+            :category="integrations.giscus.category"
+            :category-id="integrations.giscus.categoryId"
+            :mapping="integrations.giscus.mapping"
             strict="0"
             reactions-enabled="1"
             emit-metadata="0"
             input-position="top"
             :theme="isDark ? 'dark' : 'light'"
-            lang="zh-CN"
+            :lang="integrations.giscus.lang"
             loading="lazy"
           />
         </template>
