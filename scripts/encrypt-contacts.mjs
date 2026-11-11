@@ -17,24 +17,46 @@ import { writeFileSync } from "node:fs";
 
 const answer = process.argv[2] ?? "2";
 
-// 待加密的联系方式明文（生成后删除此处的明文）
-const SECRETS = {
-  email: "ZWj1154142014@hotmail.com",
-  wechat: "AliZhouSZ",
-};
+// 联系项清单：
+// - secret 为明文 → 加密写入 [[secrets]]（label/icon/name 一并写入）
+// - value/url 为明文 → 直接写入 [[public]]（无需加密，公开联系）
+// 脚本里的明文仅用于生成密文，TOML 中不含 secret 项的明文。
+const ITEMS = [
+  {
+    name: "email",
+    label: "Email",
+    icon: "mail",
+    secret: "ZWj1154142014@hotmail.com",
+  },
+  {
+    name: "wechat",
+    label: "微信",
+    icon: "message-circle",
+    secret: "AliZhouSZ",
+  },
+  {
+    label: "GitHub",
+    icon: "github",
+    value: "VoidCat",
+    url: "https://github.com/voidcatcn",
+  },
+];
 
 // 答案字符串 → 16 字节 AES-128 密钥（右侧补 0）
 const answerBytes = Buffer.from(answer, "utf8");
 const key = new Uint8Array(16);
 key.set(answerBytes.subarray(0, 16));
 
-// 每个联系项独立 nonce 加密
-const secrets = {};
-for (const [name, plaintext] of Object.entries(SECRETS)) {
+// 加密联系项：独立 nonce 加密（label/icon 随后一并写入 TOML）
+const encrypted = {};
+for (const item of ITEMS) {
+  if (!item.secret) continue;
   const nonce = randomBytes(12);
   const cipher = gcm(key, nonce);
-  const ciphertext = await cipher.encrypt(Buffer.from(plaintext, "utf8"));
-  secrets[name] = {
+  const ciphertext = await cipher.encrypt(Buffer.from(item.secret, "utf8"));
+  encrypted[item.name] = {
+    label: item.label,
+    icon: item.icon,
     ciphertext: Buffer.from(ciphertext).toString("base64"),
     nonce: Buffer.from(nonce).toString("base64"),
   };
@@ -43,8 +65,8 @@ for (const [name, plaintext] of Object.entries(SECRETS)) {
 const output = {
   // 人机验证题目
   question: "1 + 1 等于几？",
-  // 各联系项密文（base64）
-  secrets,
+  // 加密联系项（base64 密文 + label/icon）
+  secrets: encrypted,
   // 期望答案（仅供此处记录，前端不应包含明文答案）
   _answer: answer,
 };
@@ -56,18 +78,39 @@ const toml =
   "# 联系方式配置（密文由 scripts/encrypt-contacts.mjs 生成）\n" +
   "# ------------------------------------------------------------\n" +
   "# 用法：node scripts/encrypt-contacts.mjs <人机验证答案>\n" +
-  "# 修改 question 或重新生成密文后重新构建即可生效。\n" +
+  "#\n" +
+  "# [[public]]  非加密联系：label + icon + value（复制）/ url（跳转）\n" +
+  "# [[secrets]] 加密联系：name + label + icon + ciphertext + nonce\n" +
+  "# icon 可选值（lucide）：mail / message-circle / message-square /\n" +
+  "#             phone / at-sign / send / link / globe / qr-code / github\n" +
   "# ============================================================\n\n" +
-  "# 人机验证题目（展示给访客）\n" +
+  "# 人机验证题目（展示给访客，用于解密加密联系）\n" +
   "question = " + tomlStr(output.question) + "\n\n" +
-  Object.entries(secrets)
-    .map(
-      ([name, secret]) =>
-        "[[secrets]]\n" +
-        'name = "' + name + '"\n' +
-        "ciphertext = " + tomlStr(secret.ciphertext) + "\n" +
-        "nonce = " + tomlStr(secret.nonce) + "\n"
-    )
+  ITEMS.filter((item) => item.value || item.url)
+    .map((item) => {
+      const lines = [
+        "[[public]]",
+        'label = ' + tomlStr(item.label),
+        'icon = ' + tomlStr(item.icon),
+      ];
+      if (item.value) lines.push("value = " + tomlStr(item.value));
+      if (item.url) lines.push("url = " + tomlStr(item.url));
+      return lines.join("\n") + "\n";
+    })
+    .join("\n") +
+  "\n" +
+  ITEMS.filter((item) => item.secret)
+    .map((item) => {
+      const e = encrypted[item.name];
+      return [
+        "[[secrets]]",
+        'name = ' + tomlStr(item.name),
+        'label = ' + tomlStr(e.label),
+        'icon = ' + tomlStr(e.icon),
+        "ciphertext = " + tomlStr(e.ciphertext),
+        "nonce = " + tomlStr(e.nonce),
+      ].join("\n") + "\n";
+    })
     .join("\n");
 
 writeFileSync("config/contact.toml", toml, "utf-8");

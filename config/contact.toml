@@ -2,18 +2,32 @@
 # 联系方式配置（密文由 scripts/encrypt-contacts.mjs 生成）
 # ------------------------------------------------------------
 # 用法：node scripts/encrypt-contacts.mjs <人机验证答案>
-# 修改 question 或重新生成密文后重新构建即可生效。
+#
+# [[public]]  非加密联系：label + icon + value（复制）/ url（跳转）
+# [[secrets]] 加密联系：name + label + icon + ciphertext + nonce
+# icon 可选值（lucide）：mail / message-circle / message-square /
+#             phone / at-sign / send / link / globe / qr-code / github
 # ============================================================
 
-# 人机验证题目（展示给访客）
+# 人机验证题目（展示给访客，用于解密加密联系）
 question = "1 + 1 等于几？"
+
+[[public]]
+label = "GitHub"
+icon = "github"
+value = "VoidCat"
+url = "https://github.com/voidcatcn"
 
 [[secrets]]
 name = "email"
-ciphertext = "B2io2rQtCchL1hmPdHT5+iyP04vq8RmWdKUWck2GmUNqQvF4Ft830LY="
-nonce = "MGF8ffaiHCLCAVGD"
+label = "Email"
+icon = "mail"
+ciphertext = "IZaYsyn/8kR6hh8TCGOYgyeuo7DfHowMFEim+q/yqb99daNGXQi9TuY="
+nonce = "WEDwEzOh2+neLWjA"
 
 [[secrets]]
 name = "wechat"
-ciphertext = "FRsAXoCWFniW36lrlfg35LCUX/pnHayx3w=="
-nonce = "eur4plh2HYFYZ/Ra"
+label = "微信"
+icon = "message-circle"
+ciphertext = "Ehnxrsdf2dnWbAGk3knPv0WbubY9lz7HbQ=="
+nonce = "gNuvQ7tSwRJREHW0"

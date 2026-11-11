@@ -15,8 +15,8 @@ import { contactData } from "virtual:contact-data";
  */
 export const contactSecret = contactData;
 
-// 支持的联系项名称
-export type ContactName = keyof typeof contactSecret.secrets;
+// 加密联系项的解密键（TOML 配置的 name，动态）
+export type ContactName = string;
 
 // AES-128 密钥固定长度
 const KEY_LENGTH = 16;
@@ -48,7 +48,8 @@ export async function decryptContact(
   name: ContactName,
   answer: string,
 ): Promise<string> {
-  const secret = contactSecret.secrets[name];
+  const secret = contactSecret.secrets.find((s) => s.name === name);
+  if (!secret) throw new Error(`未知联系项: ${name}`);
   const key = deriveKeyFromAnswer(answer);
   const nonce = base64ToBytes(secret.nonce);
   const ciphertext = base64ToBytes(secret.ciphertext);
@@ -62,9 +63,11 @@ export async function decryptContact(
 export async function decryptAllContacts(
   answer: string,
 ): Promise<Record<ContactName, string>> {
-  const names = Object.keys(contactSecret.secrets) as ContactName[];
   const entries = await Promise.all(
-    names.map(async (name) => [name, await decryptContact(name, answer)] as const),
+    contactSecret.secrets.map(
+      async (secret) =>
+        [secret.name, await decryptContact(secret.name, answer)] as const,
+    ),
   );
   return Object.fromEntries(entries) as Record<ContactName, string>;
 }

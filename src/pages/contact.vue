@@ -14,14 +14,19 @@ import {
   Send,
   Loader2,
   MessageCircle,
+  MessageSquare,
   Check,
   UnlockKeyhole,
   Info,
+  Phone,
+  AtSign,
+  Link,
+  Globe,
+  QrCode,
 } from "@lucide/vue";
 import {
   contactSecret,
   decryptAllContacts,
-  type ContactName,
 } from "@/lib/contact-crypto";
 import { useSeo } from "@/composables/useSeo";
 
@@ -52,21 +57,47 @@ const GithubIcon: Component = {
   },
 };
 
-// 非加密联系方式，集中管理便于维护
-const publicContacts = [
-  {
-    label: "GitHub",
-    value: "VoidCat",
-    href: "https://github.com/voidcatcn",
-    icon: GithubIcon,
-  },
-] as const;
+/**
+ * 图标注册表：contact.toml 的 icon 字段（lucide 图标名）→ 组件。
+ * github 为内联品牌 SVG；未知名称回退 link。
+ */
+const ICON_MAP: Record<string, Component> = {
+  mail: Mail,
+  "message-circle": MessageCircle,
+  "message-square": MessageSquare,
+  phone: Phone,
+  "at-sign": AtSign,
+  send: Send,
+  link: Link,
+  globe: Globe,
+  "qr-code": QrCode,
+  github: GithubIcon,
+};
 
-// 加密联系方式：验证通过后一次性解密显示
-const secretContacts = [
-  { label: "Email", name: "email" as ContactName, icon: Mail },
-  { label: "微信", name: "wechat" as ContactName, icon: MessageCircle },
-] as const;
+// 非加密联系（config/contact.toml）：url=跳转卡片 / value=复制卡片
+const publicContacts = contactSecret.public.map((item) => ({
+  label: item.label,
+  value: item.value,
+  url: item.url,
+  icon: ICON_MAP[item.icon] ?? Link,
+}));
+
+/** 跳转型公开联系（点击导航） */
+const linkContacts = publicContacts.filter(
+  (item): item is (typeof item) & { url: string } => item.url !== undefined,
+);
+
+/** 复制型公开联系（点击复制明文） */
+const copyContacts = publicContacts.filter(
+  (item): item is (typeof item) & { value: string } => item.value !== undefined,
+);
+
+// 加密联系（config/contact.toml）：验证答案后展示/复制
+const secretContacts = contactSecret.secrets.map((item) => ({
+  name: item.name,
+  label: item.label,
+  icon: ICON_MAP[item.icon] ?? Link,
+}));
 
 // 解密状态：locked 未验证 / revealed 已解密显示
 type RevealState = "locked" | "revealed";
@@ -129,17 +160,17 @@ function resetDialog() {
       <p class="text-muted-foreground">想和 VoidCat 说点什么？选个方式吧喵～</p>
     </div>
 
-    <!-- 操作提示：GitHub 直接跳转，加密卡片验证后复制 -->
+    <!-- 操作提示：明文联系点击直接复制/跳转，加密联系验证后复制 -->
     <Alert class="w-full max-w-md">
       <Info class="size-4" />
       <AlertDescription>
-        GitHub 点击直接跳转；邮箱和微信需要先通过验证，再点击复制喵～
+        明文联系点击直接复制或跳转；加密联系需要先通过验证，再点击复制喵～
       </AlertDescription>
     </Alert>
 
-    <!-- 解密所有按钮：一次性验证解锁邮箱+微信 -->
+    <!-- 解密所有按钮：一次性验证解锁全部加密联系 -->
     <Button
-      v-if="revealState === 'locked'"
+      v-if="revealState === 'locked' && secretContacts.length > 0"
       size="lg"
       class="w-full max-w-md border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80"
       @click="openDialog('全部')"
@@ -148,7 +179,7 @@ function resetDialog() {
       解密所有
     </Button>
 
-    <!-- 加密联系方式卡片 -->
+    <!-- 加密联系方式卡片：验证后展示/复制 -->
     <div class="grid w-full max-w-md gap-3 sm:grid-cols-2">
       <Button
         v-for="item in secretContacts"
@@ -182,13 +213,13 @@ function resetDialog() {
       </Button>
     </div>
 
-    <!-- 公开联系方式卡片：GitHub 点击直接跳转外链 -->
+    <!-- 公开联系方式卡片：url=点击跳转外链 / value=点击复制明文 -->
     <div class="grid w-full max-w-md gap-3 sm:grid-cols-2">
       <Button
-        v-for="item in publicContacts"
+        v-for="item in linkContacts"
         :key="item.label"
         as="a"
-        :href="item.href"
+        :href="item.url"
         target="_blank"
         rel="noopener noreferrer"
         variant="outline"
@@ -196,16 +227,41 @@ function resetDialog() {
         class="h-auto flex-col items-start gap-1 py-4 bg-card hover:bg-card/80 dark:bg-input/30 dark:hover:bg-input/50"
       >
         <div class="flex w-full items-center justify-between">
-          <component :is="item.icon" />
+          <component :is="item.icon" class="size-5" />
         </div>
         <span class="text-xs text-muted-foreground">{{ item.label }}</span>
         <span class="text-sm font-medium">{{ item.value }}</span>
       </Button>
+
+      <Button
+        v-for="item in copyContacts"
+        :key="item.label"
+        type="button"
+        variant="outline"
+        size="lg"
+        class="h-auto flex-col items-start gap-1 py-4 bg-card hover:bg-card/80 dark:bg-input/30 dark:hover:bg-input/50"
+        @click="copyText(item.label, item.value)"
+      >
+        <div class="flex w-full items-center justify-between">
+          <component :is="item.icon" class="size-5" />
+          <Check
+            v-if="copiedKey === item.label"
+            class="size-4 text-emerald-500"
+          />
+        </div>
+        <span class="text-xs text-muted-foreground">{{ item.label }}</span>
+        <span v-if="copiedKey === item.label" class="text-sm font-medium text-emerald-500">
+          已复制
+        </span>
+        <span v-else class="text-sm font-medium break-all">
+          {{ item.value }}
+        </span>
+      </Button>
     </div>
 
-    <!-- 解密成功后的快捷操作 -->
+    <!-- 解密成功后的快捷操作：存在 email 项时提供 mailto 入口 -->
     <Button
-      v-if="revealState === 'revealed'"
+      v-if="revealState === 'revealed' && revealed.email"
       as="a"
       :href="`mailto:${revealed.email}`"
       size="lg"
@@ -215,7 +271,7 @@ function resetDialog() {
       发封邮件
     </Button>
 
-    <!-- 人机验证对话框（邮箱/微信共用） -->
+    <!-- 人机验证对话框（加密联系共用） -->
     <Dialog v-model:open="dialogOpen" @update:open="(o) => !o && resetDialog()">
       <DialogContent>
         <div class="flex flex-col gap-1.5 text-center">
@@ -244,8 +300,7 @@ function resetDialog() {
           </div>
           <Button type="submit" :disabled="decrypting" class="w-full border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80">
             <Loader2 v-if="decrypting" class="size-4 animate-spin" />
-            <Send v-else class="size-4" />
-            {{ decrypting ? "解密中…" : "提交" }}
+            {{ decrypting ? "解密中…" : "验证" }}
           </Button>
         </form>
       </DialogContent>

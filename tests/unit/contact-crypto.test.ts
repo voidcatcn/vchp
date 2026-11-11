@@ -43,7 +43,7 @@ describe("contactSecret", () => {
   });
 
   it("包含 email 与 wechat 两项密文", () => {
-    const names = Object.keys(contactSecret.secrets).sort();
+    const names = contactSecret.secrets.map((s) => s.name).sort();
     expect(names).toEqual(["email", "wechat"]);
   });
 });
