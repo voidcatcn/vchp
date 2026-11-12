@@ -23,7 +23,7 @@ overrides:
   postcss-selector-parser@<7.1.6: 7.2.0
   '@modelcontextprotocol/sdk@>=1.12.0 <1.32.0': 1.32.2
   body-parser@>=2.0.0 <2.4.0: 2.4.0
-  glob@>=9.0.0 <=14.0.1: 14.0.2
+  glob@>=9.0.0 <=14.0.1: 14.0.5
   minimatch@>=7.0.0 <11.0.1: 11.0.1
 
 importers:
@@ -2224,8 +2224,8 @@ packages:
     resolution: {integrity: sha512-XxwI8EOhVQgWp6iDL+3b0r86f4d6AX6zSU55HfB4ydCEuXLXc5FcYeOu+nnGftS4TEju/11rt4KJPTMgbfmv4A==}
     engines: {node: '>=10.13.0'}
 
-  glob@14.0.2:
-    resolution: {integrity: sha512-vfMgTR2djMHPUchsJMLpZlYQvtjVL+mHpEr5wPpoCbQs2vr/FBNK+3Gnl9Ara1DSs4Aeg4eG9HiADb5/rkY/ZA==}
+  glob@14.0.5:
+    resolution: {integrity: sha512-nbKW5Sl53DEM5PkmZ5Jwfeyss1ohuqcgOBjOarSjz1fp8W4ss4EOOvKADQRbApD6JmVBX+HkpZYfBez4wXbeQQ==}
     engines: {node: 18 || 20 || >=22}
 
   glob@7.2.3:
@@ -2623,6 +2623,10 @@ packages:
   minimatch@11.0.1:
     resolution: {integrity: sha512-t+Vn6DX4wPCxS23y03C0uhF7S1jpi1GfqPrnlEipCJaA2ykiNbMkVlDutZtmvLfRcUN6R8AYVlzTsQrT4RZoLQ==}
     engines: {node: 18 || 20 || >=22}
+
+  minimatch@11.0.8:
+    resolution: {integrity: sha512-nFQuYSTVrGvysVBps5Ih+0BdnYFN/Cj3C816r6+p7yK+FHrVLGE4O4N9AFwykrlNlvM2HYt+Rad1Uiro6h88Ig==}
+    engines: {node: 20 || >=22}
 
   minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
@@ -5471,9 +5475,9 @@ snapshots:
     dependencies:
       is-glob: 4.0.3
 
-  glob@14.0.2:
+  glob@14.0.5:
     dependencies:
-      minimatch: 11.0.1
+      minimatch: 11.0.8
       minipass: 7.1.3
       path-scurry: 3.0.0
 
@@ -5631,7 +5635,7 @@ snapshots:
     dependencies:
       config-chain: 1.1.13
       editorconfig: 3.0.2
-      glob: 14.0.2
+      glob: 14.0.5
       js-cookie: 3.0.8
       nopt: 10.0.1
 
@@ -5856,6 +5860,11 @@ snapshots:
     dependencies:
       '@isaacs/nonrecursive-glob-match': 1.1.0
       brace-expansion: 5.0.12
+
+  minimatch@11.0.8:
+    dependencies:
+      '@isaacs/nonrecursive-glob-match': 1.1.0
+      brace-expansion: 5.0.13
 
   minimatch@3.1.5:
     dependencies:
@@ -6801,7 +6810,7 @@ snapshots:
       commander: 14.0.3
       deep-diff: 1.0.2
       fs-extra: 11.4.1
-      glob: 14.0.2
+      glob: 14.0.5
       lodash-es: 4.18.1
       magic-string: 0.30.21
       micromatch: 4.0.8
