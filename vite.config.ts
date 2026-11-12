@@ -147,53 +147,14 @@ export default defineConfig({
 
   build: {
     target: "esnext",
-    minify: "terser",
+    minify: "esbuild",
     cssCodeSplit: true,
+    // 压缩阶段丢弃 console/debugger（与原 terser drop_console 等价）
+    esbuild: {
+      drop: ["console", "debugger"],
+    },
     reportCompressedSize: false,
     chunkSizeWarningLimit: 1000,
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        passes: 3,
-        unsafe: true,
-        unsafe_arrows: true,
-        unsafe_comps: true,
-        unsafe_Function: true,
-        unsafe_math: false, // noble 库的 BigInt 代码会被 unsafe_math 压缩破坏（Cannot convert a BigInt value to a number）
-        unsafe_symbols: true,
-        unsafe_methods: true,
-        unsafe_proto: true,
-        unsafe_regexp: true,
-        unsafe_undefined: true,
-        booleans: true,
-        collapse_vars: true,
-        comparisons: true,
-        evaluate: true,
-        inline: true,
-        loops: true,
-        negate_iife: true,
-        properties: true,
-        reduce_funcs: true,
-        reduce_vars: true,
-        sequences: true,
-        side_effects: true,
-        switches: true,
-        typeofs: true,
-      },
-      format: {
-        comments: false,
-        beautify: false,
-      },
-      mangle: {
-        toplevel: true,
-        // 禁用 properties.regex 混淆：reka-ui/Vue 内部使用下划线开头的属性，
-        // 混淆后会破坏 provide/inject，导致 Dialog 等组件在生产环境静默失效。
-        // properties: {
-        //   regex: /^_/,
-        // },
-      },
-    },
     cssMinify: true,
     sourcemap: false,
     rollupOptions: {
