@@ -3,31 +3,27 @@
 # ------------------------------------------------------------
 # 用法：node scripts/encrypt-contacts.mjs <人机验证答案>
 #
-# [[public]]  非加密联系：label + icon + value（复制）/ url（跳转）
-# [[secrets]] 加密联系：name + label + icon + ciphertext + nonce
-# icon 可选值（lucide）：mail / message-circle / message-square /
-#             phone / at-sign / send / link / globe / qr-code / github
+# [[public]]  非加密联系：type（预设）+ value（复制）/ url（跳转）
+# [[secrets]] 加密联系：name + type（预设）+ ciphertext + nonce
+# label/icon 预设解析见 vite-plugin-contact-data（contact-presets）
 # ============================================================
 
 # 人机验证题目（展示给访客，用于解密加密联系）
 question = "1 + 1 等于几？"
 
 [[public]]
-label = "GitHub"
-icon = "github"
+type = "github"
 value = "VoidCat"
 url = "https://github.com/voidcatcn"
 
 [[secrets]]
+type = "email"
 name = "email"
-label = "Email"
-icon = "mail"
-ciphertext = "IZaYsyn/8kR6hh8TCGOYgyeuo7DfHowMFEim+q/yqb99daNGXQi9TuY="
-nonce = "WEDwEzOh2+neLWjA"
+ciphertext = "djfDy1QZmP0aSdkZ/xEF4V/lf79H2J7D50XkxPwmHVnGP9WpzMh5pd0="
+nonce = "4tL2AgDokgU2RCaD"
 
 [[secrets]]
+type = "wechat"
 name = "wechat"
-label = "微信"
-icon = "message-circle"
-ciphertext = "Ehnxrsdf2dnWbAGk3knPv0WbubY9lz7HbQ=="
-nonce = "gNuvQ7tSwRJREHW0"
+ciphertext = "FubTfdjjLna+aI9H9feCllne3ZFnYpby+Q=="
+nonce = "KOr8PYrGrQjuhphO"

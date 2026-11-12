@@ -16,6 +16,14 @@ import {
   MessageCircle,
   MessageSquare,
   Check,
+
+  Play,
+
+  Camera,
+
+  Rss,
+
+  Tv,
   UnlockKeyhole,
   Info,
   Phone,
@@ -72,6 +80,10 @@ const ICON_MAP: Record<string, Component> = {
   globe: Globe,
   "qr-code": QrCode,
   github: GithubIcon,
+  tv: Tv,
+  camera: Camera,
+  rss: Rss,
+  play: Play,
 };
 
 // 非加密联系（config/contact.toml）：url=跳转卡片 / value=复制卡片

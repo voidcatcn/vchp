@@ -18,28 +18,14 @@ import { writeFileSync } from "node:fs";
 const answer = process.argv[2] ?? "2";
 
 // 联系项清单：
-// - secret 为明文 → 加密写入 [[secrets]]（label/icon/name 一并写入）
-// - value/url 为明文 → 直接写入 [[public]]（无需加密，公开联系）
+// - type 为预设（默认 label/icon 由 contact.vue 的 ICON_MAP 提供）
+// - secret 为明文 → 加密写入 [[secrets]]（构建期解析）
+// - value/url 为明文 → 直接写入 [[public]]（公开联系）
 // 脚本里的明文仅用于生成密文，TOML 中不含 secret 项的明文。
 const ITEMS = [
-  {
-    name: "email",
-    label: "Email",
-    icon: "mail",
-    secret: "ZWj1154142014@hotmail.com",
-  },
-  {
-    name: "wechat",
-    label: "微信",
-    icon: "message-circle",
-    secret: "AliZhouSZ",
-  },
-  {
-    label: "GitHub",
-    icon: "github",
-    value: "VoidCat",
-    url: "https://github.com/voidcatcn",
-  },
+  { type: "email", name: "email", secret: "ZWj1154142014@hotmail.com" },
+  { type: "wechat", name: "wechat", secret: "AliZhouSZ" },
+  { type: "github", value: "VoidCat", url: "https://github.com/voidcatcn" },
 ];
 
 // 答案字符串 → 16 字节 AES-128 密钥（右侧补 0）
@@ -55,8 +41,8 @@ for (const item of ITEMS) {
   const cipher = gcm(key, nonce);
   const ciphertext = await cipher.encrypt(Buffer.from(item.secret, "utf8"));
   encrypted[item.name] = {
-    label: item.label,
-    icon: item.icon,
+    type: item.type,
+    name: item.name,
     ciphertext: Buffer.from(ciphertext).toString("base64"),
     nonce: Buffer.from(nonce).toString("base64"),
   };
@@ -79,10 +65,9 @@ const toml =
   "# ------------------------------------------------------------\n" +
   "# 用法：node scripts/encrypt-contacts.mjs <人机验证答案>\n" +
   "#\n" +
-  "# [[public]]  非加密联系：label + icon + value（复制）/ url（跳转）\n" +
-  "# [[secrets]] 加密联系：name + label + icon + ciphertext + nonce\n" +
-  "# icon 可选值（lucide）：mail / message-circle / message-square /\n" +
-  "#             phone / at-sign / send / link / globe / qr-code / github\n" +
+  "# [[public]]  非加密联系：type（预设）+ value（复制）/ url（跳转）\n" +
+  "# [[secrets]] 加密联系：name + type（预设）+ ciphertext + nonce\n" +
+  "# label/icon 预设解析见 vite-plugin-contact-data（contact-presets）\n" +
   "# ============================================================\n\n" +
   "# 人机验证题目（展示给访客，用于解密加密联系）\n" +
   "question = " + tomlStr(output.question) + "\n\n" +
@@ -90,8 +75,7 @@ const toml =
     .map((item) => {
       const lines = [
         "[[public]]",
-        'label = ' + tomlStr(item.label),
-        'icon = ' + tomlStr(item.icon),
+        "type = " + tomlStr(item.type),
       ];
       if (item.value) lines.push("value = " + tomlStr(item.value));
       if (item.url) lines.push("url = " + tomlStr(item.url));
@@ -104,9 +88,8 @@ const toml =
       const e = encrypted[item.name];
       return [
         "[[secrets]]",
-        'name = ' + tomlStr(item.name),
-        'label = ' + tomlStr(e.label),
-        'icon = ' + tomlStr(e.icon),
+        "type = " + tomlStr(item.type),
+        "name = " + tomlStr(item.name),
         "ciphertext = " + tomlStr(e.ciphertext),
         "nonce = " + tomlStr(e.nonce),
       ].join("\n") + "\n";
