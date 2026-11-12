@@ -1,0 +1,4 @@
+# route-map 由 vue-router 生成（LF），pinpoint eol 避免 autocrlf 幻影 M
+src/route-map.d.ts text eol=lf
+# 统一配置 TOML 统一 LF（脚本与插件反复读写）
+config/*.toml text eol=lf
