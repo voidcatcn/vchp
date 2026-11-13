@@ -20,7 +20,7 @@ overrides:
   ip-address@<=10.7.3: 10.7.6
   source-map-js@>=1.0.0 <1.2.2: 1.2.2
   proxy-addr@>=1.1.0 <2.0.8: 2.0.8
-  postcss-selector-parser@<7.1.6: 7.2.0
+  postcss-selector-parser@<7.1.6: 7.2.1
   '@modelcontextprotocol/sdk@>=1.12.0 <1.32.0': 1.32.2
   body-parser@>=2.0.0 <2.4.0: 2.4.0
   glob@>=9.0.0 <=14.0.1: 14.0.5
@@ -2857,8 +2857,8 @@ packages:
     resolution: {integrity: sha512-wWBro/7hJ40ye6TPiXkUQoXKCw23xSsjriUvqd7Uls9Sso3oLiON1flc18cCdnjgCRXw4fBVqUJJeOdDTh3P3g==}
     engines: {node: '>=4'}
 
-  postcss-selector-parser@7.2.0:
-    resolution: {integrity: sha512-Khh/tERVBn0I1499dvBSHY0pWJloMJWUxDsOBM0CCDPAcVZ10Jl2L1qy1f19uEX22spa8Mv7DCdEQJc0cGwBhQ==}
+  postcss-selector-parser@7.2.1:
+    resolution: {integrity: sha512-GwxlMgTTXwIom+ebC7an3k6RaJDwklRQQnfiXsLPGicu8FYV/k/+1/9YY2OU2+r938H2t4X0TDxoif+HP2rjzQ==}
     engines: {node: '>=4'}
     deprecated: Double-escapes CSS Modules class names (#362). Use 7.2.1.
 
@@ -4568,7 +4568,7 @@ snapshots:
 
   '@tailwindcss/typography@0.5.20(tailwindcss@4.3.5)':
     dependencies:
-      postcss-selector-parser: 7.2.0
+      postcss-selector-parser: 7.2.1
       tailwindcss: 4.3.5
 
   '@tailwindcss/vite@4.3.5(vite@8.3.8(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(stylus@0.57.0)(terser@5.51.2)(yaml@2.9.1))':
@@ -6086,7 +6086,7 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-selector-parser@7.2.0:
+  postcss-selector-parser@7.2.1:
     dependencies:
       util-deprecate: 1.0.2
 
