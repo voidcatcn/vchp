@@ -4,6 +4,7 @@ import { useRoute, RouterLink } from "vue-router";
 import { ArrowLeft } from "@lucide/vue";
 import { getPost, type Post } from "@/lib/posts";
 import { integrations } from "virtual:integrations";
+import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 import TableOfContentsList from "@/components/TableOfContentsList.vue";
 import MobileTocButton from "@/components/MobileTocButton.vue";
@@ -22,7 +23,7 @@ const commentOpen = ref(false);
 
 // 动态 SEO 元数据：post 在 setup 阶段即就绪，title/meta/JSON-LD 同步注入
 const seoTitle = computed(() => post.value?.name ?? "博客文章");
-const seoDescription = computed(() => post.value?.desc ?? "阅读 VoidCat 的博客文章");
+const seoDescription = computed(() => post.value?.desc ?? `阅读 ${siteConfig.name} 的博客文章`);
 const seoImage = computed(() => post.value?.cover ?? undefined);
 const seoPath = computed(() => `/posts/${route.params.id}`);
 const seoPublishedTime = computed(() => post.value?.createTime ?? undefined);

@@ -10,7 +10,7 @@ const SITE_NAME = siteConfig.name;
 const DEFAULT_OG_IMAGE = siteConfig.ogImage;
 
 export interface UseSeoInput {
-  /** 页面标题（自动追加 " - VoidCat" 后缀） */
+  /** 页面标题（自动追加 " - 站点名" 后缀（config/site.toml 的 name）） */
   title: MaybeRefOrGetter<string>;
   /** Meta 描述 */
   description: MaybeRefOrGetter<string>;
@@ -33,7 +33,7 @@ export interface UseSeoInput {
 /**
  * 统一注入页面级 SEO 元数据。
  *
- * - 标题自动追加 " - VoidCat" 后缀
+ * - 标题自动追加 " - 站点名" 后缀（config/site.toml 的 name）
  * - 自动设置 OG / Twitter Card / canonical URL / OG 图片 alt
  * - type: "article" 时自动注入 OG article 标签与 JSON-LD Article 结构化数据
  */

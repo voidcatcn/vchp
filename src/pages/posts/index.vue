@@ -5,11 +5,12 @@ import { RouterLink } from "vue-router";
 import { FileText, Search } from "@lucide/vue";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "博客",
-  description: "VoidCat 的博客文章列表。记录技术、工具与思考。",
+  description: `${siteConfig.name} 的博客文章列表。记录技术、工具与思考。`,
   path: "/posts",
 });
 
@@ -47,7 +48,7 @@ const filteredPosts = computed<PostMeta[]>(() => {
 
 <template>
   <section class="flex w-full flex-col gap-6">
-    <h1 class="text-2xl font-bold tracking-tight text-center">VoidCat的博客</h1>
+    <h1 class="text-2xl font-bold tracking-tight text-center">{{ siteConfig.name }}的博客</h1>
 
     <!-- 搜索区 -->
     <div class="flex w-full max-w-5xl mx-auto flex-col gap-2">

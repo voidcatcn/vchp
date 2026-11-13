@@ -16,7 +16,7 @@ import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "设置",
-  description: "VoidCat 的站点设置：主题外观、提示横幅与 Cookie 偏好，全部本地保存。",
+  description: `${siteConfig.name} 的站点设置：主题外观、提示横幅与 Cookie 偏好，全部本地保存。`,
   path: "/about",
 });
 

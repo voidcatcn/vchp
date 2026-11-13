@@ -15,7 +15,7 @@ import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "友链",
-  description: "VoidCat 的友链墙。想交换友链？fork 仓库修改 TOML 并提交 PR 即可。",
+  description: `${siteConfig.name} 的友链墙。想交换友链？fork 仓库修改 TOML 并提交 PR 即可。`,
   path: "/links",
 });
 

@@ -36,11 +36,12 @@ import {
   contactSecret,
   decryptAllContacts,
 } from "@/lib/contact-crypto";
+import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "联系",
-  description: "想和 VoidCat 说点什么？通过 GitHub 或解密后的邮箱/微信联系。",
+  description: `想和 ${siteConfig.name} 说点什么？通过 GitHub 或解密后的邮箱/微信联系。`,
   path: "/contact",
 });
 
@@ -169,7 +170,7 @@ function resetDialog() {
   <main class="mt-6 flex w-full flex-col items-center gap-6">
     <div class="flex flex-col items-center gap-2 text-center">
       <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">联系</h1>
-      <p class="text-muted-foreground">想和 VoidCat 说点什么？选个方式吧喵～</p>
+      <p class="text-muted-foreground">想和 {{ siteConfig.name }} 说点什么？选个方式吧喵～</p>
     </div>
 
     <!-- 操作提示：明文联系点击直接复制/跳转，加密联系验证后复制 -->
