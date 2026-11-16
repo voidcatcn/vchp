@@ -1,0 +1,42 @@
+name: 🧭 最佳实践 / Best Practice
+description: 建议更符合业界最佳实践的实现 / Suggest a more idiomatic implementation
+title: "[BP] "
+labels: ["best-practice"]
+body:
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置确认 / Prerequisites
+      options:
+        - label: 我已搜索过现有 Issue，确认没有重复 / I have searched existing issues and found no duplicates
+          required: true
+  - type: textarea
+    id: location
+    attributes:
+      label: 相关代码位置 / Related Code
+      description: 文件路径或代码永久链接 / File path or permalink
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 现状与问题 / Current Implementation & Problem
+      description: 当前写法有什么隐患（性能、安全、可维护性…）/ What's risky about it (performance, security, maintainability...)
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议的最佳实践 / Proposed Best Practice
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考资料 / References
+      description: 官方文档、规范、成熟实现 / Official docs, specs, established implementations
+  - type: textarea
+    id: impact
+    attributes:
+      label: 影响范围 / Impact & Compatibility
+      description: 是否有破坏性变更 / Any breaking changes?
