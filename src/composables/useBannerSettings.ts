@@ -56,6 +56,14 @@ function load(): BannerPrefs {
 /** 单例响应式状态：App.vue 与设置页共享同一份 */
 const prefs = ref<BannerPrefs>(load());
 
+/** 全站开关同步到 <html> class：关闭时 CSS 层隐藏全部装饰性伪元素（终末地横条 / 节日边框） */
+function applyMasterClass(): void {
+  document.documentElement.classList.toggle("hide-site-prompts", !prefs.value.master);
+}
+
+// 模块加载时同步一次（与主题预设 / 节日 class 同一时机）
+applyMasterClass();
+
 function save(): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs.value));
@@ -89,9 +97,10 @@ export function useBannerSettings() {
 
   /** 全站提示开关 */
   function setMaster(value: boolean): void {
-    prefs.value.master = value;
-    save();
-  }
+  prefs.value.master = value;
+  save();
+  applyMasterClass();
+}
 
   /** 设置页按横幅启停 */
   function setEnabled(id: BannerId, value: boolean): void {

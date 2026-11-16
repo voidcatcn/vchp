@@ -589,3 +589,10 @@ button:not([class*="transition-"]) {
     transition: none;
   }
 }
+
+/* ===== 全站提示关闭：隐藏装饰性伪元素（issue #294）===== */
+/* 「显示全站提示」开关关闭时，终末地主题顶部横条与节日边框一并隐藏 */
+.hide-site-prompts body::before,
+.hide-site-prompts body::after {
+  display: none;
+}

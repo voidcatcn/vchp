@@ -208,7 +208,17 @@ export function buildSlices(
       name: it.name,
     });
   }
-  return slices;
+      // 圆环首尾相邻：最后一个扇区避免与第一个同色（issue #292）
+    if (slices.length > 2) {
+      const firstColor = slices[0].color;
+      const prevColor = slices[slices.length - 1].color;
+      if (prevColor === firstColor) {
+        const used = new Set([firstColor, prevColor]);
+        const alt = WHEEL_COLORS.find((c) => !used.has(c));
+        if (alt) slices[slices.length - 1].color = alt;
+      }
+    }
+    return slices;
 }
 
 
