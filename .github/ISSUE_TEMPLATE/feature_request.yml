@@ -1,0 +1,41 @@
+name: 🚀 功能请求 / Feature Request
+description: 想要新功能或增强 / Suggest a new feature or enhancement
+title: "[FUTURE] "
+labels: ["enhancement"]
+body:
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置确认 / Prerequisites
+      options:
+        - label: 我已搜索过现有 Issue，确认没有重复 / I have searched existing issues and found no duplicates
+          required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 需求背景 / Motivation
+      description: 想解决什么问题？/ What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望方案 / Proposed Solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 替代方案 / Alternatives Considered
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: 愿意参与实现吗 / Willing to help implement?
+      options:
+        - 愿意，可提 PR / Yes, I can open a PR
+        - 可以协助测试 / I can help test
+        - 仅提建议 / Just suggesting
+  - type: textarea
+    id: context
+    attributes:
+      label: 补充信息 / Additional Context
