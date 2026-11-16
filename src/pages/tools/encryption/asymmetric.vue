@@ -10,6 +10,15 @@ import {
   RefreshCw,
   UnlockKeyhole,
 } from "@lucide/vue";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ToolLayout from "@/components/ToolLayout.vue";
 import CopyButton from "@/components/CopyButton.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
@@ -185,26 +194,31 @@ async function onCiphertextLoaded(text: string) {
       <div class="flex flex-col gap-3 sm:flex-row">
         <label class="flex flex-1 flex-col gap-1.5">
           <span class="text-sm font-medium">加密算法</span>
-          <select
-            v-model="algorithm"
-            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-          >
-            <optgroup label="RSA（经典）">
-              <option v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'rsa')" :key="algo.id" :value="algo.id">
+          <Select v-model="algorithm">
+            <SelectTrigger aria-label="加密算法">
+              <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+            <SelectGroup>
+              <SelectLabel>RSA（经典）</SelectLabel>
+              <SelectItem v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'rsa')" :key="algo.id" :value="algo.id">
                 {{ algo.label }}
-              </option>
-            </optgroup>
-            <optgroup label="ECC（椭圆曲线）">
-              <option v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'ecdh')" :key="algo.id" :value="algo.id">
+              </SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>ECC（椭圆曲线）</SelectLabel>
+              <SelectItem v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'ecdh')" :key="algo.id" :value="algo.id">
                 {{ algo.label }}
-              </option>
-            </optgroup>
-            <optgroup label="后量子（抗量子攻击）">
-              <option v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'mlkem')" :key="algo.id" :value="algo.id">
+              </SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>后量子（抗量子攻击）</SelectLabel>
+              <SelectItem v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'mlkem')" :key="algo.id" :value="algo.id">
                 {{ algo.label }}
-              </option>
-            </optgroup>
-          </select>
+              </SelectItem>
+            </SelectGroup>
+              </SelectContent>
+          </Select>
         </label>
         <div class="flex items-end">
           <Button

@@ -4,6 +4,7 @@ import { routes } from "vue-router/auto-routes";
 import { createHead } from "@unhead/vue/client";
 import App from "./App.vue";
 import { applyLaborDayClass, applyMidAutumnClass, applyNationalDayClass, isMidAutumnParamActive } from "@/lib/festival";
+import { warmAllRouteChunks } from "@/composables/useRoutePrefetch";
 
 import "./assets/index.css";
 
@@ -24,3 +25,6 @@ if (isMidAutumnParamActive()) applyMidAutumnClass(true);
 
 // 纯客户端渲染（SPA）：静态 HTML 为空壳，无需 SSR/hydrate。
 createApp(App).use(router).use(head).mount("#app");
+
+// 空闲时预热全部路由 chunk：后续页面切换零加载等待（首屏不受影响）
+warmAllRouteChunks();

@@ -100,9 +100,10 @@ const linkContacts = publicContacts.filter(
   (item): item is (typeof item) & { url: string } => item.url !== undefined,
 );
 
-/** 复制型公开联系（点击复制明文） */
+/** 复制型公开联系（点击复制明文；带 url 的项由跳转卡渲染，不重复） */
 const copyContacts = publicContacts.filter(
-  (item): item is (typeof item) & { value: string } => item.value !== undefined,
+  (item): item is (typeof item) & { value: string } =>
+    item.value !== undefined && item.url === undefined,
 );
 
 // 加密联系（config/contact.toml）：验证答案后展示/复制
@@ -313,7 +314,8 @@ function resetDialog() {
           </div>
           <Button type="submit" :disabled="decrypting" class="w-full border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80">
             <Loader2 v-if="decrypting" class="size-4 animate-spin" />
-            {{ decrypting ? "解密中…" : "验证" }}
+            <Send v-else class="size-4" />
+            {{ decrypting ? "解密中…" : "提交" }}
           </Button>
         </form>
       </DialogContent>

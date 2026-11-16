@@ -18,6 +18,7 @@ import AsymmetricPage from "@/pages/tools/encryption/asymmetric.vue";
 import ImagePage from "@/pages/tools/conversion/image.vue";
 import VideoPage from "@/pages/tools/conversion/video.vue";
 import DocumentPage from "@/pages/tools/conversion/document.vue";
+import { Select } from "@/components/ui/select";
 import { symmetricEncrypt } from "@/lib/crypto/symmetric";
 import {
   encryptWithPublicKey,
@@ -41,6 +42,17 @@ async function settle() {
     await nextTick();
     await flushPromises();
   }
+}
+
+// 设置 shadcn Select 的选中值（组件级 v-model 触发，绕过 DOM 交互；
+// 真实 UI 交互由 E2E 覆盖）
+function setSelectValue(
+  wrapper: ReturnType<typeof mount>,
+  value: string,
+) {
+  const selectComponent = wrapper.findComponent(Select);
+  if (!selectComponent.exists()) throw new Error("找不到 Select 组件");
+  selectComponent.vm.$emit("update:modelValue", value);
 }
 
 // 轮询等待目标文本出现（Argon2 / ML-KEM 等重运算耗时随机器负载波动，
@@ -193,7 +205,7 @@ describe("/tools/encryption/asymmetric 非对称加密页", () => {
 describe("/tools/encryption/hash 带盐与密钥算法", () => {
   it("HMAC-SHA256：输入密钥与消息后输出标准结果", async () => {
     const wrapper = await mountAt(HashPage, "/tools/encryption/hash");
-    await wrapper.find("select").setValue("HMAC-SHA256");
+    setSelectValue(wrapper, "HMAC-SHA256");
     await settle();
     await wrapper.find('input[placeholder*="共享密钥"]').setValue("key");
     await wrapper.find("textarea").setValue("The quick brown fox jumps over the lazy dog");
@@ -207,7 +219,7 @@ describe("/tools/encryption/hash 带盐与密钥算法", () => {
 
   it("PBKDF2-SHA256：密码 + 盐 + 迭代次数派生密钥", async () => {
     const wrapper = await mountAt(HashPage, "/tools/encryption/hash");
-    await wrapper.find("select").setValue("PBKDF2-SHA256");
+    setSelectValue(wrapper, "PBKDF2-SHA256");
     await settle();
     await wrapper.find('input[placeholder*="要派生的密码"]').setValue("password");
     await wrapper.find('input[placeholder*="随机盐"]').setValue("salt");
@@ -226,7 +238,7 @@ describe("/tools/encryption/asymmetric ECC 与后量子", () => {
 
   it("ECDH-P-256：生成密钥 → 加密 → 解密 往返", async () => {
     const wrapper = await mountAt(AsymmetricPage, "/tools/encryption/asymmetric");
-    await wrapper.find("select").setValue("ECDH-P-256");
+    setSelectValue(wrapper, "ECDH-P-256");
     await settle();
 
     await findButton(wrapper, "生成密钥对").trigger("click");
@@ -249,7 +261,7 @@ describe("/tools/encryption/asymmetric ECC 与后量子", () => {
 
   it("ML-KEM-768（后量子）：生成密钥 → 加密 → 解密 往返", async () => {
     const wrapper = await mountAt(AsymmetricPage, "/tools/encryption/asymmetric");
-    await wrapper.find("select").setValue("ML-KEM-768");
+    setSelectValue(wrapper, "ML-KEM-768");
     await settle();
 
     await findButton(wrapper, "生成密钥对").trigger("click");
@@ -344,7 +356,7 @@ describe("/tools/encryption/asymmetric 文件模式", () => {
     const wrapper = await mountAt(AsymmetricPage, "/tools/encryption/asymmetric");
     const plaintext = "非对称文件加密喵～";
 
-    await wrapper.find("select").setValue("ML-KEM-768");
+    setSelectValue(wrapper, "ML-KEM-768");
     await settle();
     await findButton(wrapper, "生成密钥对").trigger("click");
     await settle();
@@ -413,7 +425,7 @@ describe("上传解密文件与密钥", () => {
     const payload = await encryptWithPublicKey("ML-KEM-768", pair.publicKey, plaintext);
 
     // 切到 ML-KEM-768（密钥文本为 base64）
-    await wrapper.find("select").setValue("ML-KEM-768");
+    setSelectValue(wrapper, "ML-KEM-768");
     await settle();
 
     // 上传公钥文件

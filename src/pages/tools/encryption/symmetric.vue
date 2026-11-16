@@ -3,6 +3,13 @@ import { computed, ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CircleHelp, KeyRound, Loader2, Lock, UnlockKeyhole } from "@lucide/vue";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ToolLayout from "@/components/ToolLayout.vue";
 import CopyButton from "@/components/CopyButton.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
@@ -129,33 +136,37 @@ async function onCiphertextLoaded(text: string) {
       <div class="flex flex-col gap-3 sm:flex-row">
         <label class="flex flex-1 flex-col gap-1.5">
           <span class="text-sm font-medium">密钥派生（KDF）</span>
-          <select
-            v-model="kdf"
-            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-          >
-            <option
+          <Select v-model="kdf">
+            <SelectTrigger aria-label="密钥派生（KDF）">
+              <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+            <SelectItem
               v-for="item in kdfAlgorithms"
               :key="item.id"
               :value="item.id"
             >
               {{ item.label }}（{{ item.note }}）
-            </option>
-          </select>
+            </SelectItem>
+              </SelectContent>
+          </Select>
         </label>
         <label class="flex flex-1 flex-col gap-1.5">
           <span class="text-sm font-medium">加密算法</span>
-          <select
-            v-model="algorithm"
-            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-          >
-            <option
+          <Select v-model="algorithm">
+            <SelectTrigger aria-label="加密算法">
+              <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+            <SelectItem
               v-for="algo in symmetricAlgorithms"
               :key="algo.id"
               :value="algo.id"
             >
               {{ algo.label }}
-            </option>
-          </select>
+            </SelectItem>
+              </SelectContent>
+          </Select>
         </label>
       </div>
       <!-- 密码 -->

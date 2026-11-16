@@ -3,6 +3,13 @@ import { computed, ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, RefreshCw, Video as VideoIcon, WifiOff } from "@lucide/vue";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ToolLayout from "@/components/ToolLayout.vue";
 import ToolFileInput from "@/components/ToolFileInput.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
@@ -105,14 +112,16 @@ async function handleConvert() {
       <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
         <label class="flex flex-col gap-1.5">
           <span class="text-sm font-medium">输出格式</span>
-          <select
-            v-model="presetId"
-            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-          >
-            <option v-for="p in videoPresets" :key="p.id" :value="p.id">
+          <Select v-model="presetId">
+            <SelectTrigger aria-label="输出格式">
+              <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+            <SelectItem v-for="p in videoPresets" :key="p.id" :value="p.id">
               {{ p.label }}{{ p.note ? `（${p.note}）` : "" }}
-            </option>
-          </select>
+            </SelectItem>
+              </SelectContent>
+          </Select>
         </label>
         <Button
           type="button"

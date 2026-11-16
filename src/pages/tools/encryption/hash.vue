@@ -3,6 +3,15 @@ import { computed, ref, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CircleHelp, Dices, Fingerprint } from "@lucide/vue";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ToolLayout from "@/components/ToolLayout.vue";
 import CopyButton from "@/components/CopyButton.vue";
 import ModeToggle from "@/components/ModeToggle.vue";
@@ -113,26 +122,31 @@ watch(
       <!-- 算法选择 -->
       <label class="flex flex-col gap-1.5">
         <span class="text-sm font-medium">加密算法</span>
-        <select
-          v-model="algorithm"
-          class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-        >
-          <optgroup label="散列摘要">
-            <option v-for="algo in hashAlgorithms.filter((a) => !a.needsKey && !a.needsPassword)" :key="algo.id" :value="algo.id">
+        <Select v-model="algorithm">
+          <SelectTrigger aria-label="加密算法">
+            <SelectValue placeholder="请选择" />
+            </SelectTrigger>
+            <SelectContent>
+          <SelectGroup>
+            <SelectLabel>散列摘要</SelectLabel>
+            <SelectItem v-for="algo in hashAlgorithms.filter((a) => !a.needsKey && !a.needsPassword)" :key="algo.id" :value="algo.id">
               {{ algo.label }}
-            </option>
-          </optgroup>
-          <optgroup label="密钥散列（HMAC）">
-            <option v-for="algo in hashAlgorithms.filter((a) => a.needsKey)" :key="algo.id" :value="algo.id">
+            </SelectItem>
+          </SelectGroup>
+          <SelectGroup>
+            <SelectLabel>密钥散列（HMAC）</SelectLabel>
+            <SelectItem v-for="algo in hashAlgorithms.filter((a) => a.needsKey)" :key="algo.id" :value="algo.id">
               {{ algo.label }}
-            </option>
-          </optgroup>
-          <optgroup label="加盐密码派生">
-            <option v-for="algo in hashAlgorithms.filter((a) => a.needsPassword)" :key="algo.id" :value="algo.id">
+            </SelectItem>
+          </SelectGroup>
+          <SelectGroup>
+            <SelectLabel>加盐密码派生</SelectLabel>
+            <SelectItem v-for="algo in hashAlgorithms.filter((a) => a.needsPassword)" :key="algo.id" :value="algo.id">
               {{ algo.label }}
-            </option>
-          </optgroup>
-        </select>
+            </SelectItem>
+          </SelectGroup>
+            </SelectContent>
+        </Select>
       </label>
 
       <!-- 输入方式切换（密码派生算法仅文本）+ 模式动画 -->
@@ -215,15 +229,17 @@ watch(
       <div v-if="currentAlgo.needsScryptParams" class="grid gap-3 sm:grid-cols-3">
         <label class="flex flex-col gap-1.5">
           <span class="text-sm font-medium">内存成本 N</span>
-          <select
-            v-model.number="scryptN"
-            class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-          >
-            <option :value="16384">2¹⁴ (16K)</option>
-            <option :value="32768">2¹⁵ (32K)</option>
-            <option :value="65536">2¹⁶ (64K)</option>
-            <option :value="131072">2¹⁷ (128K)</option>
-          </select>
+          <Select v-model="scryptN">
+            <SelectTrigger aria-label="内存成本 N">
+              <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+            <SelectItem :value="16384">2¹⁴ (16K)</SelectItem>
+            <SelectItem :value="32768">2¹⁵ (32K)</SelectItem>
+            <SelectItem :value="65536">2¹⁶ (64K)</SelectItem>
+            <SelectItem :value="131072">2¹⁷ (128K)</SelectItem>
+              </SelectContent>
+          </Select>
         </label>
         <label class="flex flex-col gap-1.5">
           <span class="text-sm font-medium">块大小 r</span>

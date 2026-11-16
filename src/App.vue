@@ -10,6 +10,7 @@ import LaborDayBanner from "@/components/LaborDayBanner.vue";
 import { applyMidAutumnClass, isLaborDayActive, isMidAutumnActive, isNationalDayActive } from "@/lib/festival";
 import CookieConsentDialog from "@/components/CookieConsentDialog.vue";
 import { navItems } from "@/lib/nav";
+import { useRoutePrefetch } from "@/composables/useRoutePrefetch";
 import { useBannerSettings } from "@/composables/useBannerSettings";
 import { useThemePreset } from "@/composables/useThemePreset";
 
@@ -60,6 +61,9 @@ onMounted(async () => {
 });
 
 // 桌面导航链接共用样式（普通项与「工具」入口一致，保证视觉统一）
+// 导航悬停 / 聚焦时预取目标路由 chunk（issue：页面切换再提速一档）
+const { prefetchRoute } = useRoutePrefetch();
+
 const desktopNavLinkClass = [
   "group",
   "flex",
@@ -127,6 +131,8 @@ const desktopNavLinkClass = [
             :to="item.to"
             :class="desktopNavLinkClass"
             aria-haspopup="menu"
+            @pointerenter="prefetchRoute(item.to)"
+            @focusin="prefetchRoute(item.to)"
           >
             <component :is="item.icon" class="nav-icon size-4" />
             {{ item.label }}

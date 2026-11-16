@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Image as ImageIcon, Loader2 } from "@lucide/vue";
 import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ToolLayout from "@/components/ToolLayout.vue";
 import ToolFileInput from "@/components/ToolFileInput.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
@@ -115,14 +122,16 @@ async function handleConvert() {
         <div class="flex flex-col gap-3 sm:flex-row">
           <label class="flex flex-1 flex-col gap-1.5">
             <span class="text-sm font-medium">输出格式</span>
-            <select
-              v-model="formatId"
-              class="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-            >
-              <option v-for="f in imageFormats" :key="f.id" :value="f.id">
+            <Select v-model="formatId">
+              <SelectTrigger aria-label="输出格式">
+                <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+              <SelectItem v-for="f in imageFormats" :key="f.id" :value="f.id">
                 {{ f.label }}{{ f.note ? `（${f.note}）` : "" }}
-              </option>
-            </select>
+              </SelectItem>
+                </SelectContent>
+            </Select>
           </label>
           <label v-if="currentFormat.lossy" class="flex flex-1 flex-col gap-1.5">
             <span class="text-sm font-medium">质量：{{ Math.round(quality * 100) }}%</span>

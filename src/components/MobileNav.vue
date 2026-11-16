@@ -9,8 +9,11 @@ import {
 } from "@/components/ui/popover";
 import { Menu, X } from "@lucide/vue";
 import { navItems } from "@/lib/nav";
+import { useRoutePrefetch } from "@/composables/useRoutePrefetch";
 
 const open = ref(false);
+// 导航悬停 / 触碰时预取目标路由 chunk（issue：页面切换再提速一档）
+const { prefetchRoute } = useRoutePrefetch();
 </script>
 
 <template>
@@ -42,7 +45,8 @@ const open = ref(false);
     >
       <div class="flex flex-col gap-0.5">
         <RouterLink
-          v-for="item in navItems"
+          @pointerenter="prefetchRoute(item.to)"
+        v-for="item in navItems"
           :key="item.to"
           :to="item.to"
           class="group flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.router-link-active]:bg-muted [&.router-link-active]:text-foreground"

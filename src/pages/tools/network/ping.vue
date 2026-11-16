@@ -3,6 +3,13 @@ import { computed, ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Activity, Info, Loader2 } from "@lucide/vue";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ToolLayout from "@/components/ToolLayout.vue";
 import { pingHosts, type PingStats } from "@/lib/network/ping";
 import { useSeo } from "@/composables/useSeo";
@@ -92,14 +99,16 @@ function fmt(ms: number, hasSamples: boolean): string {
         />
         <label class="flex items-center gap-2 text-sm">
           <span class="text-muted-foreground">每目标样本数</span>
-          <select
-            v-model.number="sampleCount"
-            class="h-9 rounded-lg border border-input bg-background px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-          >
-            <option :value="1">1</option>
-            <option :value="4">4</option>
-            <option :value="8">8</option>
-          </select>
+          <Select v-model="sampleCount">
+            <SelectTrigger aria-label="每目标样本数">
+              <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+            <SelectItem :value="1">1</SelectItem>
+            <SelectItem :value="4">4</SelectItem>
+            <SelectItem :value="8">8</SelectItem>
+              </SelectContent>
+          </Select>
         </label>
         <Button
           type="button"
