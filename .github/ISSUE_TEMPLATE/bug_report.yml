@@ -1,0 +1,64 @@
+name: 🐛 Bug 报告 / Bug Report
+description: 报告程序错误 / Report something that isn't working
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置确认 / Prerequisites
+      options:
+        - label: 我已搜索过现有 Issue，确认没有重复 / I have searched existing issues and found no duplicates
+          required: true
+        - label: 我使用的是最新版本 / I am using the latest version
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug 描述 / Bug Description
+      description: 清晰简洁地描述问题 / A clear and concise description of the bug
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤 / Steps to Reproduce
+      placeholder: |
+        1. 打开 / Go to '...'
+        2. 点击 / Click on '...'
+        3. 出现错误 / See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为 / Expected Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为 / Actual Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境 / Environment
+      placeholder: |
+        - 版本 / Version: v1.2.3
+        - 系统 / OS: Windows 11
+        - 浏览器 / Browser: Firefox
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志 / Logs
+      description: 粘贴报错日志，自动渲染为代码块 / Paste error logs (auto-formatted as code)
+      render: shell
+  - type: textarea
+    id: context
+    attributes:
+      label: 补充信息 / Additional Context
+      description: 截图、录屏等，可直接拖拽上传 / Screenshots, recordings, drag & drop supported
