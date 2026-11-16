@@ -118,7 +118,7 @@ export function parseRankingsToml(raw: string): RankingCategory[] {
   const rawCategories = doc.categories;
   if (rawCategories === undefined) return [];
   if (!Array.isArray(rawCategories)) {
-    throw new Error("data.toml 需要 [[categories]] 数组表结构");
+    throw new Error("rankings.toml 需要 [[categories]] 数组表结构");
   }
   return rawCategories.map((category, index) => {
     if (typeof category !== "object" || category === null) {
@@ -156,7 +156,7 @@ function serializeItem(item: RankingItem): string {
   return lines.join("\n");
 }
 
-/** 文件头注释（与 src/rankings/data.toml 一致，导出即开箱可用） */
+/** 文件头注释（与 config/rankings.toml 一致，导出即开箱可用） */
 const TOML_HEADER = `# ============================================================
 # 排名数据（单一数据源）
 # ------------------------------------------------------------

@@ -43,7 +43,7 @@ const cards = computed(() =>
     <div class="flex flex-col items-center gap-2 text-center">
       <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">排名</h1>
       <p class="text-muted-foreground">
-        各种东西的排名榜，点进去看详细排行喵～（数据在 src/rankings/data.toml）
+        各种东西的排名榜，点进去看详细排行喵～（数据在 config/rankings.toml）
       </p>
     </div>
 

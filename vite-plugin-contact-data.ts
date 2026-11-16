@@ -111,7 +111,13 @@ export function parseContactToml(raw: string): ContactData {
       // value 与 url 可同时存在：卡片点击跳转并展示明文
       const item: ContactPublicItem = { label, icon };
       if (hasValue) item.value = (raw.value as string).trim();
-      if (hasUrl) item.url = (raw.url as string).trim();
+      if (hasUrl) {
+        const url = (raw.url as string).trim();
+        if (!/^https?:\/\//.test(url)) {
+          throw new Error(`contact.toml public[${index}]（${label}）的 url 必须是 http(s) 地址`);
+        }
+        item.url = url;
+      }
       publicItems.push(item);
     }
   }

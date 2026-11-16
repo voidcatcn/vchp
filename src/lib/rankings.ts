@@ -1,7 +1,7 @@
 /**
  * 排名数据访问（客户端）。
  *
- * 单一 TOML（src/rankings/data.toml）在构建期由 vite-plugin-rankings 解析成
+ * 单一 TOML（config/rankings.toml）在构建期由 vite-plugin-rankings 解析成
  * `virtual:rankings-data` 虚拟模块，客户端只同步读取，不在运行时引入 TOML 解析器。
  */
 import { rankingsData } from "virtual:rankings-data";

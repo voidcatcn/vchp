@@ -31,7 +31,7 @@ import { useSeo } from "@/composables/useSeo";
 useSeo({
   title: "排名生成",
   description:
-    "可视化编辑排名数据（分类 + 条目 + 分数），支持 TOML 导入导出，生成后粘贴回仓库的 data.toml 即可发布。",
+    "可视化编辑排名数据（分类 + 条目 + 分数），支持 TOML 导入导出，生成后粘贴回仓库的 rankings.toml 即可发布。",
   path: "/tools/other/ranking",
 });
 
