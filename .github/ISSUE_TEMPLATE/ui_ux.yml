@@ -1,0 +1,57 @@
+name: 🎨 UI/UX 改进 / UI/UX Improvement
+description: 视觉、交互或可用性问题 / Visual, interaction or usability issues
+title: "[UI/UX] "
+labels: ["UI/UX"]
+body:
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: 前置确认 / Prerequisites
+      options:
+        - label: 我已搜索过现有 Issue，确认没有重复 / I have searched existing issues and found no duplicates
+          required: true
+  - type: input
+    id: location
+    attributes:
+      label: 问题位置 / Location
+      description: 页面、组件或路由 / Page, component or route
+      placeholder: 例 / e.g. 设置页 → 主题切换 / Settings → Theme switcher
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 问题类别 / Category
+      multiple: true
+      options:
+        - 视觉 / Visual
+        - 交互 / Interaction
+        - 可访问性 / Accessibility
+        - 响应式布局 / Responsive layout
+        - 文案 / Copywriting
+        - 其他 / Other
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: 当前体验 / Current Experience
+      description: 现在是什么样，哪里不舒服 / What it looks or feels like now, and what's wrong
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 改进建议 / Suggested Improvement
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图或设计稿 / Screenshots or Mockups
+      description: 可直接拖拽图片上传 / Drag & drop images here
+  - type: input
+    id: environment
+    attributes:
+      label: 设备环境 / Device & Viewport
+      placeholder: 例 / e.g. iPad · Safari · 1180×820
