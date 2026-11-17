@@ -3,7 +3,7 @@
  *
  * 覆盖：页面可访问、友链卡片渲染、添加友链操作说明弹窗。
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 // 预置 cookie 同意状态（统计开启）：避免 Cookie 选择弹窗遮挡交互
 test.beforeEach(async ({ context }) => {
   await context.addCookies([

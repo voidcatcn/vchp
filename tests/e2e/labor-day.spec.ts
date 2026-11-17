@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { mockDate } from "./helpers";
 
 // 与 playwright.config.ts 的 baseURL 保持一致

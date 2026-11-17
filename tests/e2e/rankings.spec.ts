@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseToml } from "smol-toml";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import { tierOf } from "../../src/lib/rankings/tiers";
 
 // ---- 从 data.toml 推导断言样本（与页面同源） ----

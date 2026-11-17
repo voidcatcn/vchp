@@ -6,7 +6,7 @@
  * 注意：本 describe 依赖 navigator.clipboard.readText，webkit (mobile-iphone-se)
  * 不支持该 API；用 describe.skip 限制只跑 desktop project。
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 // 预置 cookie 同意状态（统计开启）：避免 Cookie 选择弹窗遮挡交互
 // （弹窗自身流程由 tests/e2e/cookie-consent.spec.ts 覆盖）

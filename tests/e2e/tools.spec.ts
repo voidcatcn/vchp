@@ -6,7 +6,7 @@
  * - 移动端：悬浮菜单包含「工具」入口
  * - 各工具页：哈希计算、对称/非对称真实加解密往返、随机转盘等
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 // 预置 cookie 同意状态（统计开启）：避免 Cookie 选择弹窗遮挡交互
 test.beforeEach(async ({ context }) => {
   await context.addCookies([

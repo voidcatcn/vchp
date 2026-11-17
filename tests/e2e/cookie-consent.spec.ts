@@ -8,7 +8,7 @@
  * - 接受所有 / 接受必要 / 确认 三个按钮的行为与 cookie 写入
  * - 已保存选择后再次访问不再弹窗，并按选择加载对应统计脚本
  */
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 const BASE = "http://127.0.0.1:4173";
 const consentValue = (statistics: { umami: boolean; clarity: boolean }) =>
