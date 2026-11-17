@@ -224,7 +224,9 @@ test.describe("转换工具页", () => {
         "base64",
       ),
     });
-    await page.locator("select").selectOption("jpeg");
+    // shadcn Select：点击触发器打开下拉 → 点击 JPEG 选项
+    await page.locator('[aria-label="输出格式"]').click();
+    await page.locator('[role="option"]', { hasText: "JPEG" }).first().click();
     await page.getByRole("button", { name: "转换", exact: true }).click();
 
     await expect(page.getByText(/转换成功/)).toBeVisible();
