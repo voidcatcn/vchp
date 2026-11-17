@@ -165,6 +165,10 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes("node_modules")) {
             // 顺序敏感：从最具体到最通用，避免子串误匹配
+            // @jsquash 编解码器按需懒加载：强制归并会让加载器进入 vendor，
+            // 全站首屏都下载且 wasm 资产重复两份
+            if (id.includes("@jsquash") || id.includes("wasm-feature-detect"))
+              return undefined;
             if (id.includes("reka-ui")) return "reka";
             if (id.includes("@vueuse/core")) return "vueuse";
             if (id.includes("shiki") || id.includes("@shikijs")) {
