@@ -94,7 +94,9 @@ async function waitForValue(
 }
 
 function findButton(wrapper: ReturnType<typeof mount>, label: string) {
-  return wrapper.findAll("button").find((b) => b.text().includes(label))!;
+  // 精确匹配：SelectItem 也渲染成 button 且文本可能包含目标词（如 ECDH 选项），
+  // includes 会误点下拉选项导致点击无效
+  return wrapper.findAll("button").find((b) => b.text().trim() === label)!;
 }
 
 describe("/tools 工具总览页", () => {
