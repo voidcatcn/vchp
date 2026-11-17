@@ -568,8 +568,9 @@ button:not([class*="transition-"]) {
    并按层叠规则压过 Tailwind 的 transition-* 工具类——
    导致 transform / translate / opacity 等动画全部失效
    （如 shadcn Button 的 transition-all、设置页开关滑块瞬移）。
-   这里以同选择器在更靠后的位置声明更完整的过渡列表恢复它们。 */
-* {
+   浮层内容（select/popover/dialog 等）由 reka-ui popper 以 transform 定位，
+   位置跳变被过渡平滑化会表现为「飞入」，故排除浮层内容元素。 */
+*:not([data-slot$="-content"]):not([data-reka-popper-content-wrapper]) {
   transition:
     background-color 0.15s,
     border-color 0.15s,
