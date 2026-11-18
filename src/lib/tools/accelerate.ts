@@ -22,14 +22,14 @@ function stripPrefix(input: string): string {
   return input.trim().replace(/^https?:\/\//i, "");
 }
 
-/** 在剥离协议后的字符串里定位 github 域起点，未找到返回 -1 */
-function githubHostIndex(s: string): number {
-  let index = -1;
+/** 在剥离协议后的字符串里定位最早的 github 域，返回起点与命中域 */
+function findGithubHost(s: string): { at: number; host: string } | null {
+  let best: { at: number; host: string } | null = null;
   for (const host of GITHUB_HOSTS) {
     const at = s.indexOf(host);
-    if (at !== -1 && (index === -1 || at < index)) index = at;
+    if (at !== -1 && (best === null || at < best.at)) best = { at, host };
   }
-  return index;
+  return best;
 }
 
 /**
@@ -39,10 +39,10 @@ function githubHostIndex(s: string): number {
 export function buildGithubUrl(input: string, channelBase: string): string | null {
   const bare = stripPrefix(input);
   if (!bare) return null;
-  const at = githubHostIndex(bare);
+  const hit = findGithubHost(bare);
   const target =
-    at !== -1
-      ? `https://${bare.slice(at)}`
+    hit
+      ? `https://${bare.slice(hit.at)}`
       : /^[\w-]+\/[\w.-]+/.test(bare)
         ? `https://github.com/${bare}`
         : null;
@@ -58,8 +58,170 @@ export function buildSourceforgeUrl(input: string, base: string): string | null 
   if (!s) return null;
   s = s.replace(/^https?:\/\//i, "");
   const at = s.indexOf(SOURCEFORGE_HOST);
-  const path =
-    at !== -1 ? s.slice(at + SOURCEFORGE_HOST.length) : s.startsWith("/") ? s : `/${s}`;
+  const path = at !== -1 ? s.slice(at + SOURCEFORGE_HOST.length) : s.startsWith("/") ? s : `/${s}`;
   if (!/^\/projects\/[\w.-]+/.test(path)) return null;
   return `${base}${path.replace(/^\/+/, "")}`;
+}
+
+// ============================================================
+// 平台检测与 Release 资产匹配（浏览器端无后端）
+// ============================================================
+
+export interface PlatformInfo {
+  os: "windows" | "macos" | "linux";
+  arch: "x64" | "arm64";
+}
+
+/** 由 UA 检测当前平台（检测失败回退 windows/x64） */
+export function detectPlatform(ua: string = navigator.userAgent): PlatformInfo {
+  const os = /windows|win32/i.test(ua)
+    ? "windows"
+    : /mac os|darwin|macintosh/i.test(ua)
+      ? "macos"
+      : "linux";
+  const arch = /arm|aarch/i.test(ua) ? "arm64" : "x64";
+  return { os, arch };
+}
+
+/** Release 资产（GitHub API 精简字段） */
+export interface ReleaseAsset {
+  name: string;
+  size: number;
+  browser_download_url: string;
+}
+
+export interface PlatformMatch {
+  asset: ReleaseAsset;
+  /** 适合当前平台：OS 与架构都命中 */
+  recommended: boolean;
+  /** OS 命中但架构不确定（通用安装包） */
+  plausible: boolean;
+}
+
+const OS_KEYWORDS: Record<PlatformInfo["os"], RegExp> = {
+  windows: /win|\.exe$|\.msi$/i,
+  macos: /mac|darwin|osx|\.dmg$|\.pkg$/i,
+  linux: /linux|\.appimage$|\.tar\.(gz|xz|bz2)$/i,
+};
+
+const ARCH_KEYWORDS: Record<PlatformInfo["arch"], RegExp> = {
+  x64: /x64|x86_64|amd64|(?<!a)64bit/i,
+  arm64: /arm64|aarch64/i,
+};
+
+/**
+ * 给 Release 资产标记平台适配度：
+ * recommended（OS+架构命中）> plausible（OS 命中或通用包）> 其他。
+ */
+export function matchReleaseAssets(
+  assets: ReleaseAsset[],
+  platform: PlatformInfo,
+): PlatformMatch[] {
+  const osRe = OS_KEYWORDS[platform.os];
+  const archRe = ARCH_KEYWORDS[platform.arch];
+  const otherOs = Object.entries(OS_KEYWORDS)
+    .filter(([os]) => os !== platform.os)
+    .map(([, re]) => re);
+
+  return assets
+    .map((asset) => {
+      const isOtherOs = otherOs.some((re) => re.test(asset.name));
+      const osHit = osRe.test(asset.name);
+      const archHit = archRe.test(asset.name);
+      const noArch = !/x64|x86_64|amd64|arm64|aarch64|32\b/i.test(asset.name);
+      const recommended = osHit && (archHit || noArch);
+      const plausible = osHit || (!isOtherOs && noArch && !/\.(sha256|sig|txt|json)$/i.test(asset.name));
+      return { asset, recommended, plausible: plausible && !recommended };
+    })
+    .sort((a, b) => {
+      const rank = (m: PlatformMatch) => (m.recommended ? 0 : m.plausible ? 1 : 2);
+      return rank(a) - rank(b);
+    });
+}
+
+/** 从输入中提取 owner/repo（剥离 URL / releases 尾巴） */
+export function extractOwnerRepo(input: string): string | null {
+  let s = input.trim();
+  if (!s) return null;
+  const hit = findGithubHost(stripPrefix(s));
+  if (hit) {
+    s = stripPrefix(s)
+      .slice(hit.at + hit.host.length)
+      .replace(/^\/+/, "")
+      .replace(/^api\//, "repos/")
+      .replace(/^repos\//, "");
+  }
+  const m = s.match(/^([\w.-]+)\/([\w.-]+)/);
+  return m ? `${m[1]}/${m[2]}` : null;
+}
+
+// ============================================================
+// Node.js 版本助手（nodejs.org index.json + 镜像路径）
+// ============================================================
+
+export interface NodeDist {
+  version: string;
+  lts: false | string;
+  date: string;
+  files: string[];
+}
+
+/**
+ * 从 dist/index.json 选取最新 LTS 行。
+ * index.json 按时间倒序，首个 lts 非空即为最新 LTS。
+ */
+export function pickLatestLts(dists: NodeDist[]): NodeDist | null {
+  return dists.find((d) => d.lts) ?? null;
+}
+
+/** 平台 → dist 文件名关键词（nodejs.org files 命名） */
+const NODE_FILES: Record<PlatformInfo["os"], Record<PlatformInfo["arch"], RegExp>> = {
+  windows: { x64: /win-x64-zip$/, arm64: /win-arm64-zip$/ },
+  macos: { x64: /osx-x64-pkg$/, arm64: /osx-arm64-pkg$/ },
+  linux: { x64: /linux-x64-tarxz$/, arm64: /linux-arm64-tarxz$/ },
+};
+
+/**
+ * 为 LTS 行选择当前平台的安装包文件名。
+ * files 元素形如 win-x64-zip / osx-arm64-pkg / linux-x64-tarxz，无匹配返回 null。
+ */
+export function pickNodeFile(dist: NodeDist, platform: PlatformInfo): string | null {
+  const re = NODE_FILES[platform.os][platform.arch];
+  const hit = dist.files.find((f) => re.test(f));
+  const m = hit?.match(/^(.+)-(zip|pkg|tarxz)$/);
+  if (!m) return null;
+  const ext = m[2] === "tarxz" ? "tar.xz" : m[2];
+  return `node-${dist.version}-${m[1]}.${ext}`;
+}
+
+/**
+ * 生成 Node.js 镜像下载链接（cernet nodejs-release 路径）。
+ * distUrl 传入官方或镜像的 dist 前缀。
+ */
+export function buildNodeDownloadUrl(
+  distUrl: string,
+  dist: NodeDist,
+  file: string,
+): string {
+  return `${distUrl}v${dist.version.replace(/^v/, "")}/${file}`;
+}
+
+// ============================================================
+// MirrorZ 同步状态解析
+// ============================================================
+
+export type MirrorSyncStatus = "ok" | "syncing" | "error" | "unknown";
+
+/**
+ * 解析 MirrorZ status 字段：S<更新时间戳>X<错误时间戳>。
+ * 有错误且错误晚于更新 → error；仅更新 → ok；缺失 → unknown。
+ */
+export function parseMirrorStatus(status: string | undefined): MirrorSyncStatus {
+  if (!status) return "unknown";
+  const m = status.match(/^S(\d+)(?:X(\d+))?/);
+  if (!m) return "unknown";
+  const updated = Number(m[1]);
+  const errored = m[2] ? Number(m[2]) : 0;
+  if (errored > updated) return "error";
+  return "ok";
 }

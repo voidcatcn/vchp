@@ -15,6 +15,8 @@ declare module "virtual:accelerate-data" {
     github: GithubChannel[];
     sourceforge: { base: string };
     mirrors: { app: string; shortcut: MirrorShortcut[] };
+    nodejs: { indexJson: string; mirrorDist: string };
+    mirrorList: { url: string };
   }
   export const accelerateData: AccelerateData;
 }

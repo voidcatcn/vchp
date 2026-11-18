@@ -70,3 +70,12 @@ path = "/qt"
 [[mirrors.shortcut]]
 name = "Blender"
 path = "/blender"
+
+# Node.js 版本助手：官方版本数据（含 CORS 头，浏览器可直连）与镜像 dist 前缀
+[nodejs]
+indexJson = "https://nodejs.org/dist/index.json"
+mirrorDist = "https://mirrors.cernet.edu.cn/nodejs-release/dist/"
+
+# 实时镜像列表数据源（MirrorZ 协议，需允许 CORS）
+[mirrorList]
+url = "https://mirror.lzu.edu.cn/.mirrorz.json"

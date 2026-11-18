@@ -25,6 +25,8 @@ export interface AccelerateData {
   github: GithubChannel[];
   sourceforge: { base: string };
   mirrors: { app: string; shortcut: MirrorShortcut[] };
+  nodejs: { indexJson: string; mirrorDist: string };
+  mirrorList: { url: string };
 }
 
 /** 解析并校验 accelerate.toml（构建期快速失败） */
@@ -63,7 +65,24 @@ export function parseAccelerateToml(raw: string): AccelerateData {
     }
     return { name, path };
   });
-  return { github, sourceforge: { base: sourceforgeBase }, mirrors: { app, shortcut } };
+  const nodejsRaw = (doc.nodejs ?? {}) as Record<string, unknown>;
+  const nodeIndex = String(nodejsRaw.indexJson ?? "");
+  const nodeMirrorDist = String(nodejsRaw.mirrorDist ?? "");
+  if (!/^https?:\/\//.test(nodeIndex) || !/^https?:\/\/.+\/$/.test(nodeMirrorDist)) {
+    throw new Error("accelerate.toml 的 [nodejs] 需要 indexJson 与以 / 结尾的 mirrorDist");
+  }
+  const mirrorListRaw = (doc.mirrorList ?? {}) as Record<string, unknown>;
+  const mirrorListUrl = String(mirrorListRaw.url ?? "");
+  if (!/^https?:\/\//.test(mirrorListUrl)) {
+    throw new Error("accelerate.toml 的 [mirrorList] url 必须是 http(s) 地址");
+  }
+  return {
+    github,
+    sourceforge: { base: sourceforgeBase },
+    mirrors: { app, shortcut },
+    nodejs: { indexJson: nodeIndex, mirrorDist: nodeMirrorDist },
+    mirrorList: { url: mirrorListUrl },
+  };
 }
 
 export function loadAccelerateData(): AccelerateData {
