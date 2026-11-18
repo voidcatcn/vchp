@@ -352,8 +352,7 @@ describe("/tools/encryption/symmetric 文件模式", () => {
     await findButton(wrapper, "加密").trigger("click");
     await settle();
 
-    const ciphertext = wrapper.find('textarea[aria-label="加密结果"]');
-    const payload = (ciphertext.element as HTMLTextAreaElement).value;
+    const payload = await waitForValue(wrapper, 'textarea[aria-label="加密结果"]');
     expect(payload.startsWith("v2:argon2id:AES-256-GCM:")).toBe(true);
 
     // 解密：粘贴密文，还原明文（文件模式也提供 UTF-8 预览）
