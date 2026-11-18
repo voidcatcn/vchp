@@ -11,6 +11,7 @@ import { prerenderPosts } from "./vite-plugin-prerender-posts.ts";
 import { linksData } from "./vite-plugin-links.ts";
 import { rankingsData } from "./vite-plugin-rankings.ts";
 import { siteConfig } from "./vite-plugin-site-config.ts";
+import { accelerateData } from "./vite-plugin-accelerate.ts";
 import { contactData } from "./vite-plugin-contact-data.ts";
 import { banners } from "./vite-plugin-banners.ts";
 import { integrations } from "./vite-plugin-integrations.ts";
@@ -69,6 +70,7 @@ export default defineConfig({
     linksData(),
     rankingsData(),
     siteConfig(),
+    accelerateData(),
     contactData(),
     banners(),
     integrations(),

@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Sparkles,
   Video,
+  Zap,
 } from "@lucide/vue";
 
 /**
@@ -138,6 +139,26 @@ const otherTools: ToolInfo[] = [
   },
 ];
 
+const accelerateTools: ToolInfo[] = [
+  {
+    to: "/tools/accelerate/github",
+    label: "GitHub 加速",
+    description: "Release / Raw / Gist 链接一键换加速渠道，多渠道可切换",
+    icon: Gauge,
+  },
+  {
+    to: "/tools/accelerate/sourceforge",
+    label: "SourceForge 加速",
+    description: "SourceForge 项目文件下载链接换加速前缀",
+    icon: FileBadge,
+  },
+  {
+    to: "/tools/accelerate/mirrors",
+    label: "开源镜像",
+    description: "教育网联合镜像站目录与常用镜像快捷入口",
+    icon: Globe,
+  },
+];
 export const toolGroups: ToolGroup[] = [
   {
     to: "/tools/encryption",
@@ -166,6 +187,13 @@ export const toolGroups: ToolGroup[] = [
     description: "随机转盘等趣味小工具，列表与占比完全自定义",
     icon: Sparkles,
     items: otherTools,
+  },
+  {
+    to: "/tools/accelerate",
+    label: "加速",
+    description: "GitHub / SourceForge 下载加速与开源镜像导航",
+    icon: Zap,
+    items: accelerateTools,
   },
 ];
 

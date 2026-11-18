@@ -1,0 +1,72 @@
+# ============================================================
+# 加速工具配置（单一数据源）
+# ------------------------------------------------------------
+# 消费方：工具页「加速」类别（GitHub / SourceForge / 开源镜像）
+# 修改后重新构建即可生效
+# ============================================================
+
+# GitHub 加速渠道：拼前缀代理（gh-proxy 系，支持完整 URL 拼接）
+[[github]]
+label = "默认（meali）"
+base = "https://gh.meali.top/"
+
+[[github]]
+label = "备选（gh-proxy）"
+base = "https://v4.gh-proxy.org/"
+
+# SourceForge 加速：拼接 sourceforge 路径
+[sourceforge]
+base = "https://v4.gh-proxy.org/sourceforge/"
+
+# 开源镜像目录（教育网联合镜像站）
+[mirrors]
+app = "https://mirrors.cernet.edu.cn/app"
+
+# 常见镜像快捷入口（跳转 https://mirrors.cernet.edu.cn{path}）
+[[mirrors.shortcut]]
+name = "Node.js"
+path = "/nodejs-release"
+
+[[mirrors.shortcut]]
+name = "PyPI"
+path = "/pypi"
+
+[[mirrors.shortcut]]
+name = "npm"
+path = "/npm"
+
+[[mirrors.shortcut]]
+name = "Anaconda"
+path = "/anaconda"
+
+[[mirrors.shortcut]]
+name = "Homebrew"
+path = "/homebrew-bottles"
+
+[[mirrors.shortcut]]
+name = "Docker"
+path = "/docker"
+
+[[mirrors.shortcut]]
+name = "Gradle"
+path = "/gradle"
+
+[[mirrors.shortcut]]
+name = "Maven"
+path = "/maven"
+
+[[mirrors.shortcut]]
+name = "CMake"
+path = "/cmake"
+
+[[mirrors.shortcut]]
+name = "LLVM"
+path = "/llvm"
+
+[[mirrors.shortcut]]
+name = "Qt"
+path = "/qt"
+
+[[mirrors.shortcut]]
+name = "Blender"
+path = "/blender"

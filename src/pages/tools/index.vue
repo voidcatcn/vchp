@@ -6,7 +6,7 @@ import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "工具",
-  description: "浏览器本地运行的工具集：加密、转换、网络与趣味小工具，全程本地计算。",
+  description: "浏览器本地运行的工具集：加密、转换、网络、加速与趣味小工具，全程本地计算。",
   path: "/tools",
 });
 </script>
@@ -18,7 +18,7 @@ useSeo({
       <p class="text-muted-foreground">全部在浏览器本地运行，数据不会上传喵～</p>
     </div>
 
-    <!-- 工具分组卡片：加密 / 转换 / 网络 / 其他四个「文件夹」 -->
+    <!-- 工具分组卡片：加密 / 转换 / 网络 / 其他 / 加速五个「文件夹」 -->
     <div class="grid w-full max-w-2xl gap-3 sm:grid-cols-2">
       <RouterLink
         v-for="group in toolGroups"
