@@ -95,9 +95,7 @@ export function useSeo(input: UseSeoInput) {
             description: toValue(description),
             image: toValue(image),
             datePublished: publishedTime.value,
-            ...(modifiedTime.value
-              ? { dateModified: modifiedTime.value }
-              : {}),
+            ...(modifiedTime.value ? { dateModified: modifiedTime.value } : {}),
             ...(wordCount.value ? { wordCount: wordCount.value } : {}),
             author: {
               "@type": "Person",

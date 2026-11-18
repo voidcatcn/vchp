@@ -63,7 +63,9 @@ function sourceLabel(source: IpLocation["source"]): string {
     back-label="返回网络工具"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <MapPin class="size-4" />
@@ -101,7 +103,10 @@ function sourceLabel(source: IpLocation["source"]): string {
         {{ errorMessage }}
       </p>
 
-      <section v-if="results.length" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="results.length"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <span class="text-sm font-medium">查询结果（{{ results.length }} 条）</span>
         <div class="flex flex-col gap-1.5">
           <div
@@ -111,7 +116,9 @@ function sourceLabel(source: IpLocation["source"]): string {
           >
             <span class="shrink-0 font-mono text-sm">{{ item.ip }}</span>
             <span class="min-w-0 flex-1 truncate text-right text-sm">
-              <span v-if="item.location" class="text-foreground">{{ item.location }}</span>
+              <span v-if="item.location" class="text-foreground">{{
+                item.location
+              }}</span>
               <span v-else class="text-destructive">{{ item.error ?? "查询失败" }}</span>
             </span>
             <span class="w-16 shrink-0 text-right text-xs text-muted-foreground">

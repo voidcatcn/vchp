@@ -5,10 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Cookie } from "@lucide/vue";
 import { useCookieConsent } from "@/composables/useCookieConsent";
-import {
-  useBannerSettings,
-  BANNER_METAS,
-} from "@/composables/useBannerSettings";
+import { useBannerSettings, BANNER_METAS } from "@/composables/useBannerSettings";
 import { useHintSettings } from "@/composables/useHintSettings";
 import { useThemePreset, type ThemePreset } from "@/composables/useThemePreset";
 import { siteConfig } from "virtual:site-config";
@@ -50,12 +47,22 @@ const { preset: themePreset, setPreset: setThemePreset } = useThemePreset();
 // 提示与横幅：全站开关 + 按横幅单独启停（issue #253）
 const { prefs: bannerPrefs, setMaster, setEnabled } = useBannerSettings();
 // 工具说明提示：全量开关 + 恢复已关闭的单条提示（issue #253）
-const { prefs: hintPrefs, setEnabled: setHintsEnabled, restoreDismissed: restoreHints } =
-  useHintSettings();
-const hasDismissedHints = computed(() => Object.keys(hintPrefs.value.dismissed).length > 0);
+const {
+  prefs: hintPrefs,
+  setEnabled: setHintsEnabled,
+  restoreDismissed: restoreHints,
+} = useHintSettings();
+const hasDismissedHints = computed(
+  () => Object.keys(hintPrefs.value.dismissed).length > 0,
+);
 
 /** 主题预设选项：名称 + 一句话描述 + 色板预览（固定色值，不随当前主题变化） */
-const themeOptions: { id: ThemePreset; name: string; desc: string; swatches: string[] }[] = [
+const themeOptions: {
+  id: ThemePreset;
+  name: string;
+  desc: string;
+  swatches: string[];
+}[] = [
   {
     id: "rice",
     name: "Rice",
@@ -95,12 +102,17 @@ function formatProtocol(raw: string): string {
 
 onMounted(() => {
   // 老浏览器兜底：performance.getEntriesByType 可能不存在
-  if (typeof performance === "undefined" || typeof performance.getEntriesByType !== "function") {
+  if (
+    typeof performance === "undefined" ||
+    typeof performance.getEntriesByType !== "function"
+  ) {
     return;
   }
 
   // 入口文档的 navigation 条目 = 当前页主文档的协商结果，语义最准
-  const navEntries = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
+  const navEntries = performance.getEntriesByType(
+    "navigation",
+  ) as PerformanceNavigationTiming[];
   const nav = navEntries[0];
   if (nav) {
     // loadEventEnd 为 0 表示页面还在加载中，此时不展示用时；
@@ -166,7 +178,10 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
             @click="setThemePreset(opt.id)"
           >
             <!-- 主题色板预览：固定色值，不受当前主题影响 -->
-            <span class="flex h-2.5 w-full overflow-hidden rounded-sm border border-border/60" aria-hidden="true">
+            <span
+              class="flex h-2.5 w-full overflow-hidden rounded-sm border border-border/60"
+              aria-hidden="true"
+            >
               <span
                 v-for="(c, i) in opt.swatches"
                 :key="i"
@@ -184,7 +199,11 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
             </span>
             <span
               class="text-xs"
-              :class="themePreset === opt.id ? 'text-primary-foreground/80' : 'text-muted-foreground'"
+              :class="
+                themePreset === opt.id
+                  ? 'text-primary-foreground/80'
+                  : 'text-muted-foreground'
+              "
             >
               {{ opt.desc }}
             </span>
@@ -204,7 +223,9 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
       <div
         class="flex flex-col gap-1 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
       >
-        <label class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-muted/60">
+        <label
+          class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-muted/60"
+        >
           <span class="flex flex-col gap-0.5">
             <span class="flex items-center gap-1.5 text-sm font-medium">
               <Bell class="size-4" aria-hidden="true" />
@@ -222,7 +243,9 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
         </label>
 
         <!-- 工具说明提示：全量开关 + 恢复已关闭的单条提示（issue #253） -->
-        <label class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-muted/60">
+        <label
+          class="flex items-center justify-between gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-muted/60"
+        >
           <span class="flex flex-col gap-0.5">
             <span class="text-sm font-medium">工具说明提示</span>
             <span class="text-xs text-muted-foreground">
@@ -355,7 +378,9 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
             <span> · </span>
             <span>延迟 {{ ttfb !== null ? `${ttfb} ms` : "无法获取" }}</span>
             <span> · </span>
-            <span>加载 {{ loadDuration !== null ? `${loadDuration} ms` : "无法获取" }}</span>
+            <span
+              >加载 {{ loadDuration !== null ? `${loadDuration} ms` : "无法获取" }}</span
+            >
           </template>
           <span v-else>传输信息无法获取</span>
         </p>

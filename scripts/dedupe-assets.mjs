@@ -63,7 +63,9 @@ for (const [, list] of groups) {
 }
 
 if (removed > 0) {
-  console.log(`[dedupe-assets] 移除 ${removed} 个重复资产，节省 ${(savedBytes / 1024 / 1024).toFixed(1)} MB`);
+  console.log(
+    `[dedupe-assets] 移除 ${removed} 个重复资产，节省 ${(savedBytes / 1024 / 1024).toFixed(1)} MB`,
+  );
 } else {
   console.log("[dedupe-assets] 无重复资产");
 }

@@ -108,7 +108,10 @@ name = "A"
 });
 
 describe("sortLinks（优先级 + 首字母）", () => {
-  const link = (name: string, priority: FriendLink["priority"] = "default"): FriendLink => ({
+  const link = (
+    name: string,
+    priority: FriendLink["priority"] = "default",
+  ): FriendLink => ({
     name,
     url: `https://${name}.example`,
     priority,

@@ -12,7 +12,7 @@ const emit = defineEmits<{ close: [] }>();
   >
     <Cake class="size-4" aria-hidden="true" />
     <span>国庆快乐</span>
-  
+
     <button
       type="button"
       class="-mr-1 rounded-full p-0.5 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"

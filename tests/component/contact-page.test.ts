@@ -92,9 +92,7 @@ describe("/contact 页面", () => {
 
   it("公开卡片（GitHub）无需验证：点击直接跳转 GitHub 外链", async () => {
     const wrapper = await mountAt("/contact");
-    const githubLink = wrapper
-      .findAll("a")
-      .find((a) => a.text().includes("GitHub"));
+    const githubLink = wrapper.findAll("a").find((a) => a.text().includes("GitHub"));
     expect(githubLink).toBeTruthy();
     expect(githubLink!.attributes("href")).toBe("https://github.com/voidcatcn");
     expect(githubLink!.attributes("target")).toBe("_blank");

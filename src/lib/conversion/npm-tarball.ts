@@ -93,9 +93,7 @@ export async function fetchFileFromTarball(
   }
   if (!response.ok) throw new WasmUnavailableError();
   if (!response.body || typeof DecompressionStream === "undefined") {
-    throw new WasmUnavailableError(
-      "WASM 转换引擎不可用：当前浏览器不支持流式解压",
-    );
+    throw new WasmUnavailableError("WASM 转换引擎不可用：当前浏览器不支持流式解压");
   }
   let tarBytes: Uint8Array;
   try {
@@ -106,9 +104,7 @@ export async function fetchFileFromTarball(
   }
   const file = extractTarFile(tarBytes, filePath);
   if (!file) {
-    throw new WasmUnavailableError(
-      "WASM 转换引擎不可用：下载的包中未找到引擎文件",
-    );
+    throw new WasmUnavailableError("WASM 转换引擎不可用：下载的包中未找到引擎文件");
   }
   return file;
 }

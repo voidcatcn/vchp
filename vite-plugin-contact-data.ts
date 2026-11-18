@@ -77,9 +77,7 @@ function resolveLabelIcon(
       ? record.icon.trim()
       : preset?.icon;
   if (!label || !icon) {
-    throw new Error(
-      `contact.toml ${index} 需要 type（预设）或 label + icon（自定义）`,
-    );
+    throw new Error(`contact.toml ${index} 需要 type（预设）或 label + icon（自定义）`);
   }
   return { label, icon };
 }
@@ -114,7 +112,9 @@ export function parseContactToml(raw: string): ContactData {
       if (hasUrl) {
         const url = (raw.url as string).trim();
         if (!/^https?:\/\//.test(url)) {
-          throw new Error(`contact.toml public[${index}]（${label}）的 url 必须是 http(s) 地址`);
+          throw new Error(
+            `contact.toml public[${index}]（${label}）的 url 必须是 http(s) 地址`,
+          );
         }
         item.url = url;
       }

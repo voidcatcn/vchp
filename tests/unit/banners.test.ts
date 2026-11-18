@@ -38,7 +38,9 @@ lunar = "八月十五"
 api = "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php"
 `);
     expect(banners[0].lunar).toBe("八月十五");
-    expect(banners[0].api).toBe("https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php");
+    expect(banners[0].api).toBe(
+      "https://data.weather.gov.hk/weatherAPI/opendata/lunardate.php",
+    );
   });
 
   it("无日期范围且非农历时抛错", () => {

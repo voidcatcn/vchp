@@ -43,12 +43,15 @@ onMounted(() => {
         <!-- 必要 Cookies：父级始终勾选不可取消，子项同步开启 -->
         <div class="rounded-lg border border-border bg-card p-3">
           <div class="flex items-start gap-3">
-            <Checkbox :model-value="true" disabled aria-label="必要 Cookies" class="mt-0.5" />
+            <Checkbox
+              :model-value="true"
+              disabled
+              aria-label="必要 Cookies"
+              class="mt-0.5"
+            />
             <div class="flex flex-col gap-0.5">
               <span class="text-sm font-medium">必要 Cookies</span>
-              <span class="text-xs text-muted-foreground">
-                维持网站运行的 Cookies
-              </span>
+              <span class="text-xs text-muted-foreground"> 维持网站运行的 Cookies </span>
             </div>
           </div>
           <div class="mt-2 flex flex-col gap-2 pl-7">
@@ -70,9 +73,7 @@ onMounted(() => {
             />
             <div class="flex flex-col gap-0.5">
               <span class="text-sm font-medium">统计 Cookies</span>
-              <span class="text-xs text-muted-foreground">
-                优化用户体验的 Cookies
-              </span>
+              <span class="text-xs text-muted-foreground"> 优化用户体验的 Cookies </span>
             </div>
           </div>
           <div class="mt-2 flex flex-col gap-2 pl-7">
@@ -89,15 +90,11 @@ onMounted(() => {
       </div>
 
       <div class="flex flex-col gap-2">
-        <Button class="w-full" @click="acceptAll">
-          接受所有 Cookies
-        </Button>
+        <Button class="w-full" @click="acceptAll"> 接受所有 Cookies </Button>
         <Button variant="secondary" class="w-full" @click="acceptNecessary">
           接受必要 Cookies
         </Button>
-        <Button variant="outline" class="w-full" @click="confirm">
-          确认
-        </Button>
+        <Button variant="outline" class="w-full" @click="confirm"> 确认 </Button>
       </div>
     </DialogContent>
   </Dialog>

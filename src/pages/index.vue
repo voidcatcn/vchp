@@ -3,11 +3,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 
-const avatarSrc = "https://weavatar.com/avatar/e1cad362d957b3e7a66c699453f58d6c82ab49a4f286651aed582d45356446c5?s=192";
+const avatarSrc =
+  "https://weavatar.com/avatar/e1cad362d957b3e7a66c699453f58d6c82ab49a4f286651aed582d45356446c5?s=192";
 
 useSeo({
   title: "个人主页",
-  description: "开源即自由，自由即万物。Open source is freedom. Freedom builds the world.",
+  description:
+    "开源即自由，自由即万物。Open source is freedom. Freedom builds the world.",
   path: "/",
 });
 </script>
@@ -31,7 +33,9 @@ useSeo({
       </Avatar>
     </div>
     <div id="name" class="flex flex-col items-center gap-2">
-      <h1 class="text-5xl font-medium tracking-tight sm:text-6xl">{{ siteConfig.name }}</h1>
+      <h1 class="text-5xl font-medium tracking-tight sm:text-6xl">
+        {{ siteConfig.name }}
+      </h1>
       <div class="flex flex-col items-center gap-1 text-center">
         <p class="text-lg font-medium text-muted-foreground sm:text-xl">
           开源即自由，自由即万物

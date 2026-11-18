@@ -3,7 +3,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "vue-router/auto-routes";
 import { createHead } from "@unhead/vue/client";
 import App from "./App.vue";
-import { applyLaborDayClass, applyMidAutumnClass, applyNationalDayClass, isMidAutumnParamActive } from "@/lib/festival";
+import {
+  applyLaborDayClass,
+  applyMidAutumnClass,
+  applyNationalDayClass,
+  isMidAutumnParamActive,
+} from "@/lib/festival";
 import { warmAllRouteChunks } from "@/composables/useRoutePrefetch";
 
 import "./assets/index.css";

@@ -6,8 +6,10 @@
  * - happy-dom 20.x 在未传 --localstorage-file 时不挂载 localStorage，
  *   App.vue 在 setup 阶段就调用 localStorage.getItem；显式注入最小实现。
  */
-// @peculiar/x509 依赖 tsyringe，需要 reflect-metadata polyfill；内联到 src 避免生产构建 tree-shake（组件测试不走 main.ts，须在此引入）
-import "@/lib/network/reflect-metadata";
+// @peculiar/x509 依赖 tsyringe，需要 reflect-metadata polyfill；内联到 src 避免生产构建 tree-shake（组件测试不走 main.ts，须在此引入）
+
+import "@/lib/network/reflect-metadata";
+
 import { vi } from "vitest";
 
 // @unhead/vue 在 happy-dom 中不需要真实 DOM 操作，mock 即可
@@ -38,7 +40,10 @@ if (typeof window !== "undefined" && !window.matchMedia) {
   });
 }
 
-if (typeof globalThis !== "undefined" && !(globalThis as { ResizeObserver?: unknown }).ResizeObserver) {
+if (
+  typeof globalThis !== "undefined" &&
+  !(globalThis as { ResizeObserver?: unknown }).ResizeObserver
+) {
   (globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = class {
     observe(): void {}
     unobserve(): void {}
@@ -48,16 +53,22 @@ if (typeof globalThis !== "undefined" && !(globalThis as { ResizeObserver?: unkn
 
 // happy-dom 不提供 IntersectionObserver；useScrollSpy 在组件 onMounted 立即注册，
 // 提供 noop polyfill 避免测试环境抛 "IntersectionObserver is not defined"。
-if (typeof globalThis !== "undefined" && !(globalThis as { IntersectionObserver?: unknown }).IntersectionObserver) {
-  (globalThis as unknown as { IntersectionObserver: unknown }).IntersectionObserver = class {
-    observe(): void {}
-    unobserve(): void {}
-    disconnect(): void {}
-    takeRecords(): IntersectionObserverEntry[] { return []; }
-    root = null;
-    rootMargin = "";
-    thresholds = [];
-  };
+if (
+  typeof globalThis !== "undefined" &&
+  !(globalThis as { IntersectionObserver?: unknown }).IntersectionObserver
+) {
+  (globalThis as unknown as { IntersectionObserver: unknown }).IntersectionObserver =
+    class {
+      observe(): void {}
+      unobserve(): void {}
+      disconnect(): void {}
+      takeRecords(): IntersectionObserverEntry[] {
+        return [];
+      }
+      root = null;
+      rootMargin = "";
+      thresholds = [];
+    };
 }
 
 // happy-dom 20.x 默认挂载的 localStorage 是个空对象 {}，缺 getItem 等方法；
@@ -97,7 +108,6 @@ if (typeof window !== "undefined") {
     value: localStoragePolyfill,
   });
 }
-
 
 // 组件测试不发起真实网络请求（如香港天文台农历 API），统一 stub 为失败。
 // festival.ts 的 fetchLunarDate 会捕获异常静默降级；需要验证请求行为的用例应注入 mock fetcher。

@@ -48,7 +48,9 @@ const filteredPosts = computed<PostMeta[]>(() => {
 
 <template>
   <section class="flex w-full flex-col gap-6">
-    <h1 class="text-2xl font-bold tracking-tight text-center">{{ siteConfig.name }}的博客</h1>
+    <h1 class="text-2xl font-bold tracking-tight text-center">
+      {{ siteConfig.name }}的博客
+    </h1>
 
     <!-- 搜索区 -->
     <div class="flex w-full max-w-5xl mx-auto flex-col gap-2">
@@ -56,11 +58,7 @@ const filteredPosts = computed<PostMeta[]>(() => {
         <Search
           class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
         />
-        <Input
-          v-model="searchQuery"
-          placeholder="搜索博客标题或简介..."
-          class="pl-9"
-        />
+        <Input v-model="searchQuery" placeholder="搜索博客标题或简介..." class="pl-9" />
       </div>
       <label class="flex items-center gap-2 text-sm text-muted-foreground">
         <Checkbox v-model="deepSearch" />
@@ -82,9 +80,7 @@ const filteredPosts = computed<PostMeta[]>(() => {
         class="group flex flex-row overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/50"
       >
         <!-- 封面缩略图：固定尺寸，不随卡片宽度变高 -->
-        <div
-          class="relative w-28 h-36 shrink-0 overflow-hidden bg-muted sm:w-36 sm:h-40"
-        >
+        <div class="relative w-28 h-36 shrink-0 overflow-hidden bg-muted sm:w-36 sm:h-40">
           <img
             v-if="post.cover"
             :src="post.cover"
@@ -106,10 +102,7 @@ const filteredPosts = computed<PostMeta[]>(() => {
           >
             {{ post.name }}
           </h2>
-          <p
-            v-if="post.desc"
-            class="text-sm text-muted-foreground line-clamp-2"
-          >
+          <p v-if="post.desc" class="text-sm text-muted-foreground line-clamp-2">
             {{ post.desc }}
           </p>
           <div class="flex flex-wrap items-center gap-1.5">
@@ -121,9 +114,7 @@ const filteredPosts = computed<PostMeta[]>(() => {
               {{ t }}
             </span>
           </div>
-          <div
-            class="mt-auto flex items-center gap-1.5 text-xs text-muted-foreground"
-          >
+          <div class="mt-auto flex items-center gap-1.5 text-xs text-muted-foreground">
             <time :datetime="post.createTime">{{ post.createTime }}</time>
             <span aria-hidden="true">·</span>
             <span>{{ post.wordCount }} 字</span>

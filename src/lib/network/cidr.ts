@@ -112,7 +112,10 @@ export async function loadCidrWasm(): Promise<CidrWasm | null> {
 }
 
 /** 用 wasm 展开；失败（wasm 不可用 / 超限）返回 null */
-async function expandWithWasm(entries: CidrEntry[], inputText: string): Promise<string | null> {
+async function expandWithWasm(
+  entries: CidrEntry[],
+  inputText: string,
+): Promise<string | null> {
   const wasm = await loadCidrWasm();
   if (!wasm) return null;
   try {
@@ -152,7 +155,9 @@ function expandWithJs(entries: CidrEntry[]): string {
   for (const e of entries) {
     for (let i = 0; i < e.count; i++) {
       const ip = (e.start + i) >>> 0;
-      parts.push(`${(ip >>> 24) & 0xff}.${(ip >>> 16) & 0xff}.${(ip >>> 8) & 0xff}.${ip & 0xff}`);
+      parts.push(
+        `${(ip >>> 24) & 0xff}.${(ip >>> 16) & 0xff}.${(ip >>> 8) & 0xff}.${ip & 0xff}`,
+      );
     }
   }
   return parts.join("\n");
@@ -180,7 +185,13 @@ export async function expandCidrs(input: string): Promise<ExpandResult> {
   }
   const wasmText = await expandWithWasm(entries, input);
   if (wasmText !== null) {
-    return { text: wasmText, count: total, lineCount: entries.length, engine: "wasm", errors };
+    return {
+      text: wasmText,
+      count: total,
+      lineCount: entries.length,
+      engine: "wasm",
+      errors,
+    };
   }
   return {
     text: expandWithJs(entries),

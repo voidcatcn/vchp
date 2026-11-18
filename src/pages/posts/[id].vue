@@ -14,7 +14,7 @@ import CommentButton from "@/components/CommentButton.vue";
 // 异步加载评论区：@giscus/vue 独立成 chunk，由 onMounted 中预拉 import 触发
 const Giscus = defineAsyncComponent(() => import("@giscus/vue"));
 
-const route = useRoute<'/posts/[id]'>();
+const route = useRoute<"/posts/[id]">();
 // 数据来自构建期预渲染（posts-data.ts），同步即可拿到，无需 loading/error 状态
 const post = ref<Post | null>(getPost(route.params.id as string));
 
@@ -23,7 +23,9 @@ const commentOpen = ref(false);
 
 // 动态 SEO 元数据：post 在 setup 阶段即就绪，title/meta/JSON-LD 同步注入
 const seoTitle = computed(() => post.value?.name ?? "博客文章");
-const seoDescription = computed(() => post.value?.desc ?? `阅读 ${siteConfig.name} 的博客文章`);
+const seoDescription = computed(
+  () => post.value?.desc ?? `阅读 ${siteConfig.name} 的博客文章`,
+);
 const seoImage = computed(() => post.value?.cover ?? undefined);
 const seoPath = computed(() => `/posts/${route.params.id}`);
 const seoPublishedTime = computed(() => post.value?.createTime ?? undefined);
@@ -87,9 +89,7 @@ watch(
       class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 lg:grid-cols-[minmax(0,1fr)_14rem]"
     >
       <!-- 左列：原 section 内容 -->
-      <section
-        class="mx-auto flex w-full max-w-3xl flex-col gap-4 lg:mx-0"
-      >
+      <section class="mx-auto flex w-full max-w-3xl flex-col gap-4 lg:mx-0">
         <RouterLink
           to="/posts"
           class="inline-flex items-center gap-1.5 self-start text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -157,13 +157,10 @@ watch(
         - lg 以下隐藏，移动端走 MobileTocButton
         - z-30：评论区 Dialog z-50 弹出时盖在上方
       -->
-      <aside
-        v-if="post && post.headings.length > 0"
-        class="hidden self-stretch lg:block"
-      >
+      <aside v-if="post && post.headings.length > 0" class="hidden self-stretch lg:block">
         <div
           class="sticky z-30 flex w-56 max-h-[calc(100vh-2rem)] flex-col items-stretch gap-3 overflow-y-auto"
-          style="top: calc(50vh - 9rem);"
+          style="top: calc(50vh - 9rem)"
         >
           <CommentButton v-model:open="commentOpen" />
           <div

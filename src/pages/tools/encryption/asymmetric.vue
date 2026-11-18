@@ -127,10 +127,7 @@ async function handleEncrypt() {
     decryptedBytes.value = null;
     decryptedText.value = "";
   } catch (err) {
-    errorMessage.value = friendlyError(
-      err,
-      "加密失败：请检查公钥是否正确、内容是否过大",
-    );
+    errorMessage.value = friendlyError(err, "加密失败：请检查公钥是否正确、内容是否过大");
   } finally {
     busy.value = false;
   }
@@ -186,7 +183,8 @@ async function onCiphertextLoaded(text: string) {
 <template>
   <ToolLayout
     title="非对称加密"
-    back-to="/tools/encryption" back-label="返回加密工具"
+    back-to="/tools/encryption"
+    back-label="返回加密工具"
     description="公钥加密、私钥解密：RSA / ECC / 后量子 ML-KEM，文本与文件都可以喵～"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
@@ -197,27 +195,39 @@ async function onCiphertextLoaded(text: string) {
           <Select v-model="algorithm">
             <SelectTrigger aria-label="加密算法">
               <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-            <SelectGroup>
-              <SelectLabel>RSA（经典）</SelectLabel>
-              <SelectItem v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'rsa')" :key="algo.id" :value="algo.id">
-                {{ algo.label }}
-              </SelectItem>
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>ECC（椭圆曲线）</SelectLabel>
-              <SelectItem v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'ecdh')" :key="algo.id" :value="algo.id">
-                {{ algo.label }}
-              </SelectItem>
-            </SelectGroup>
-            <SelectGroup>
-              <SelectLabel>后量子（抗量子攻击）</SelectLabel>
-              <SelectItem v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'mlkem')" :key="algo.id" :value="algo.id">
-                {{ algo.label }}
-              </SelectItem>
-            </SelectGroup>
-              </SelectContent>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>RSA（经典）</SelectLabel>
+                <SelectItem
+                  v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'rsa')"
+                  :key="algo.id"
+                  :value="algo.id"
+                >
+                  {{ algo.label }}
+                </SelectItem>
+              </SelectGroup>
+              <SelectGroup>
+                <SelectLabel>ECC（椭圆曲线）</SelectLabel>
+                <SelectItem
+                  v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'ecdh')"
+                  :key="algo.id"
+                  :value="algo.id"
+                >
+                  {{ algo.label }}
+                </SelectItem>
+              </SelectGroup>
+              <SelectGroup>
+                <SelectLabel>后量子（抗量子攻击）</SelectLabel>
+                <SelectItem
+                  v-for="algo in asymmetricAlgorithms.filter((a) => a.family === 'mlkem')"
+                  :key="algo.id"
+                  :value="algo.id"
+                >
+                  {{ algo.label }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
           </Select>
         </label>
         <div class="flex items-end">
@@ -238,9 +248,11 @@ async function onCiphertextLoaded(text: string) {
       <Alert hint-id="asymmetric-key-usage">
         <CircleHelp class="size-4" />
         <AlertDescription>
-          密钥用途说明：这里生成的是<strong>加密密钥</strong>（公钥加密 / 私钥解密），仅在本工具内互通使用。
-          GitHub 登录与提交用的 SSH / GPG 是<strong>签名密钥</strong>，格式与用途不同，不能直接混用。
-          RSA 与 ECC 广泛兼容；后量子 ML-KEM（Kyber，FIPS 203）是新一代标准，GitHub / SSH / TLS 目前尚未支持，仅作实验用途。
+          密钥用途说明：这里生成的是<strong>加密密钥</strong>（公钥加密 /
+          私钥解密），仅在本工具内互通使用。 GitHub 登录与提交用的 SSH / GPG
+          是<strong>签名密钥</strong>，格式与用途不同，不能直接混用。 RSA 与 ECC
+          广泛兼容；后量子 ML-KEM（Kyber，FIPS 203）是新一代标准，GitHub / SSH / TLS
+          目前尚未支持，仅作实验用途。
         </AlertDescription>
       </Alert>
 
@@ -266,7 +278,11 @@ async function onCiphertextLoaded(text: string) {
           <textarea
             v-model="publicKeyText"
             rows="7"
-            :placeholder="keyIsBase64 ? '点击上方生成，或粘贴 base64 公钥…' : '点击上方生成，或粘贴 SPKI PEM…'"
+            :placeholder="
+              keyIsBase64
+                ? '点击上方生成，或粘贴 base64 公钥…'
+                : '点击上方生成，或粘贴 SPKI PEM…'
+            "
             spellcheck="false"
             class="w-full resize-y rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed outline-none placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           />
@@ -291,7 +307,11 @@ async function onCiphertextLoaded(text: string) {
           <textarea
             v-model="privateKeyText"
             rows="7"
-            :placeholder="keyIsBase64 ? '点击上方生成，或粘贴 base64 私钥…' : '点击上方生成，或粘贴 PKCS#8 PEM…'"
+            :placeholder="
+              keyIsBase64
+                ? '点击上方生成，或粘贴 base64 私钥…'
+                : '点击上方生成，或粘贴 PKCS#8 PEM…'
+            "
             spellcheck="false"
             class="w-full resize-y rounded-lg border border-input bg-background px-3 py-2 font-mono text-xs leading-relaxed outline-none placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           />
@@ -299,26 +319,27 @@ async function onCiphertextLoaded(text: string) {
       </div>
 
       <!-- 家族说明 -->
-      <Alert hint-id="asymmetric-family-rsa" v-if="currentAlgo.family === 'rsa'">
+      <Alert v-if="currentAlgo.family === 'rsa'" hint-id="asymmetric-family-rsa">
         <CircleHelp class="size-4" />
         <AlertDescription>
-          {{ currentAlgo.label }} 单次最多加密 {{ currentAlgo.maxPlaintextBytes }}
-          字节（约 {{ Math.floor((currentAlgo.maxPlaintextBytes as number) / 3) }} 个中文字符），
+          {{ currentAlgo.label }} 单次最多加密
+          {{ currentAlgo.maxPlaintextBytes }} 字节（约
+          {{ Math.floor((currentAlgo.maxPlaintextBytes as number) / 3) }} 个中文字符），
           长文本 / 大文件建议先用对称加密、再加密对称密钥（混合加密）。
         </AlertDescription>
       </Alert>
-      <Alert hint-id="asymmetric-family-ecc" v-else-if="currentAlgo.family === 'ecdh'">
+      <Alert v-else-if="currentAlgo.family === 'ecdh'" hint-id="asymmetric-family-ecc">
         <CircleHelp class="size-4" />
         <AlertDescription>
           ECC 混合加密：临时 ECDH 密钥协商会话密钥，经 HKDF 派生 AES-256-GCM
           密钥加密消息；会话密钥不直接传输，文件大小无限制。
         </AlertDescription>
       </Alert>
-      <Alert hint-id="asymmetric-family-mlkem" v-else>
+      <Alert v-else hint-id="asymmetric-family-mlkem">
         <CircleHelp class="size-4" />
         <AlertDescription>
-          {{ currentAlgo.label }}：NIST 后量子标准（FIPS 203），ML-KEM
-          封装会话密钥 + AES-256-GCM 加密消息，可抵抗量子计算机攻击；文件大小无限制。
+          {{ currentAlgo.label }}：NIST 后量子标准（FIPS 203），ML-KEM 封装会话密钥 +
+          AES-256-GCM 加密消息，可抵抗量子计算机攻击；文件大小无限制。
         </AlertDescription>
       </Alert>
 
@@ -334,7 +355,9 @@ async function onCiphertextLoaded(text: string) {
       </p>
 
       <!-- 加密 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <Lock class="size-4" />
           <h2 class="text-sm font-medium">用公钥加密</h2>
@@ -384,14 +407,20 @@ async function onCiphertextLoaded(text: string) {
       </section>
 
       <!-- 解密 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <UnlockKeyhole class="size-4" />
           <h2 class="text-sm font-medium">用私钥解密</h2>
         </div>
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm font-medium">密文（可粘贴或上传 .enc 文件）</span>
-          <FileUploadButton label="上传密文文件" accept=".enc,.txt,text/plain" @loaded="onCiphertextLoaded" />
+          <FileUploadButton
+            label="上传密文文件"
+            accept=".enc,.txt,text/plain"
+            @loaded="onCiphertextLoaded"
+          />
         </div>
         <textarea
           v-model="decryptInput"

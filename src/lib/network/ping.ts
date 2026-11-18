@@ -28,10 +28,7 @@ export function normalizeUrl(input: string): string {
 }
 
 /** 单次 HTTP 时延（ms）；请求失败或超时返回 null（计为丢包） */
-export async function pingOnce(
-  url: string,
-  timeoutMs = 5000,
-): Promise<number | null> {
+export async function pingOnce(url: string, timeoutMs = 5000): Promise<number | null> {
   const start = performance.now();
   try {
     await fetch(url, {
@@ -61,9 +58,7 @@ export async function pingHost(
   }
   const min = samples.length ? Math.min(...samples) : 0;
   const max = samples.length ? Math.max(...samples) : 0;
-  const avg = samples.length
-    ? samples.reduce((a, b) => a + b, 0) / samples.length
-    : 0;
+  const avg = samples.length ? samples.reduce((a, b) => a + b, 0) / samples.length : 0;
   return { url, samples, min, avg, max, loss, lossRate: count ? loss / count : 0 };
 }
 

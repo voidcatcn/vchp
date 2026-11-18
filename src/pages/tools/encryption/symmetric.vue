@@ -94,19 +94,13 @@ async function handleDecrypt() {
   errorMessage.value = "";
   busy.value = true;
   try {
-    const bytes = await symmetricDecryptBytes(
-      decryptInput.value,
-      password.value,
-    );
+    const bytes = await symmetricDecryptBytes(decryptInput.value, password.value);
     decryptedBytes.value = bytes;
     decryptedInfo.value = parseSymmetricPayload(decryptInput.value);
     // 文本模式直接展示；文件模式也顺带提供 UTF-8 预览
     decryptedText.value = tryBytesToText(bytes) ?? "";
   } catch (err) {
-    errorMessage.value = friendlyError(
-      err,
-      "解密失败：密码错误、密文被篡改或格式不正确",
-    );
+    errorMessage.value = friendlyError(err, "解密失败：密码错误、密文被篡改或格式不正确");
     decryptedBytes.value = null;
     decryptedText.value = "";
     decryptedInfo.value = null;
@@ -128,7 +122,8 @@ async function onCiphertextLoaded(text: string) {
 <template>
   <ToolLayout
     title="对称加密"
-    back-to="/tools/encryption" back-label="返回加密工具"
+    back-to="/tools/encryption"
+    back-label="返回加密工具"
     description="同一个密码既能加密也能解密，文本与文件都可以，全程本地计算喵～"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
@@ -139,16 +134,12 @@ async function onCiphertextLoaded(text: string) {
           <Select v-model="kdf">
             <SelectTrigger aria-label="密钥派生（KDF）">
               <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-            <SelectItem
-              v-for="item in kdfAlgorithms"
-              :key="item.id"
-              :value="item.id"
-            >
-              {{ item.label }}（{{ item.note }}）
-            </SelectItem>
-              </SelectContent>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="item in kdfAlgorithms" :key="item.id" :value="item.id">
+                {{ item.label }}（{{ item.note }}）
+              </SelectItem>
+            </SelectContent>
           </Select>
         </label>
         <label class="flex flex-1 flex-col gap-1.5">
@@ -156,16 +147,16 @@ async function onCiphertextLoaded(text: string) {
           <Select v-model="algorithm">
             <SelectTrigger aria-label="加密算法">
               <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-            <SelectItem
-              v-for="algo in symmetricAlgorithms"
-              :key="algo.id"
-              :value="algo.id"
-            >
-              {{ algo.label }}
-            </SelectItem>
-              </SelectContent>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="algo in symmetricAlgorithms"
+                :key="algo.id"
+                :value="algo.id"
+              >
+                {{ algo.label }}
+              </SelectItem>
+            </SelectContent>
           </Select>
         </label>
       </div>
@@ -185,8 +176,8 @@ async function onCiphertextLoaded(text: string) {
         <CircleHelp class="size-4" />
         <AlertDescription>
           {{ currentAlgo.note }}：密码经
-          {{ kdfAlgorithms.find((k) => k.id === kdf)?.label }} 拉伸为密钥
-          （Argon2 为内存困难型，更抗暴力破解），密文自带随机盐与 IV，同一原文每次结果都不同。
+          {{ kdfAlgorithms.find((k) => k.id === kdf)?.label }} 拉伸为密钥 （Argon2
+          为内存困难型，更抗暴力破解），密文自带随机盐与 IV，同一原文每次结果都不同。
         </AlertDescription>
       </Alert>
 
@@ -195,7 +186,9 @@ async function onCiphertextLoaded(text: string) {
       </p>
 
       <!-- 加密 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <Lock class="size-4" />
           <h2 class="text-sm font-medium">加密</h2>
@@ -246,14 +239,20 @@ async function onCiphertextLoaded(text: string) {
       </section>
 
       <!-- 解密 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <UnlockKeyhole class="size-4" />
           <h2 class="text-sm font-medium">解密</h2>
         </div>
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm font-medium">密文（可粘贴或上传 .enc 文件）</span>
-          <FileUploadButton label="上传密文文件" accept=".enc,.txt,text/plain" @loaded="onCiphertextLoaded" />
+          <FileUploadButton
+            label="上传密文文件"
+            accept=".enc,.txt,text/plain"
+            @loaded="onCiphertextLoaded"
+          />
         </div>
         <textarea
           v-model="decryptInput"
@@ -273,7 +272,10 @@ async function onCiphertextLoaded(text: string) {
         </Button>
         <div v-if="decryptedBytes" class="flex flex-col gap-1.5">
           <p v-if="decryptedInfo" class="text-xs text-muted-foreground">
-            密钥派生：{{ kdfAlgorithms.find((k) => k.id === decryptedInfo?.kdf)?.label ?? decryptedInfo?.kdf }}
+            密钥派生：{{
+              kdfAlgorithms.find((k) => k.id === decryptedInfo?.kdf)?.label ??
+              decryptedInfo?.kdf
+            }}
 
             ｜算法：{{ decryptedInfo?.algorithm }}（自动识别，与选择无关）
           </p>
@@ -301,7 +303,8 @@ async function onCiphertextLoaded(text: string) {
       <Alert hint-id="symmetric-keep">
         <KeyRound class="size-4" />
         <AlertDescription>
-          请妥善保管密码：密码遗失无法找回；CBC 模式无完整性校验，密码错误时可能解密出乱码。
+          请妥善保管密码：密码遗失无法找回；CBC
+          模式无完整性校验，密码错误时可能解密出乱码。
         </AlertDescription>
       </Alert>
     </div>

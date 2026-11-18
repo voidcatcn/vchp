@@ -5,10 +5,7 @@
  * 这里直接锁定渲染行为：shiki 高亮、标题 id/大纲、正文图片 URL 解析。
  */
 import { describe, expect, it } from "vitest";
-import {
-  createMarkdownRenderer,
-  renderPostContent,
-} from "@/lib/post-render";
+import { createMarkdownRenderer, renderPostContent } from "@/lib/post-render";
 
 describe("构建期渲染器 post-render", () => {
   it("代码块渲染为 shiki 高亮 HTML（含明暗双主题类）", async () => {
@@ -41,9 +38,7 @@ describe("构建期渲染器 post-render", () => {
   });
 
   it("相对图片路径经 resolveImage 重写为静态 URL", async () => {
-    const md = await createMarkdownRenderer(
-      (src, postId) => `/posts/${postId}/${src}`,
-    );
+    const md = await createMarkdownRenderer((src, postId) => `/posts/${postId}/${src}`);
     const { content } = renderPostContent(md, "![图](a.webp)", "p1");
     expect(content).toContain('src="/posts/p1/a.webp"');
   });
@@ -55,9 +50,7 @@ describe("构建期渲染器 post-render", () => {
   });
 
   it("绝对/远程图片 URL 不被重写", async () => {
-    const md = await createMarkdownRenderer(
-      (src) => `/rewritten/${src}`,
-    );
+    const md = await createMarkdownRenderer((src) => `/rewritten/${src}`);
     const { content } = renderPostContent(
       md,
       "![a](/abs.png) ![b](https://x.com/c.png)",
@@ -70,8 +63,7 @@ describe("构建期渲染器 post-render", () => {
 
   it("跨文章 slug 计数互不污染（结果 / 结果-1 独立）", async () => {
     const md = await createMarkdownRenderer(() => null);
-    const render = (id: string) =>
-      renderPostContent(md, "# 结果\n\n# 结果", id);
+    const render = (id: string) => renderPostContent(md, "# 结果\n\n# 结果", id);
     const a = render("a");
     const b = render("b");
     // 每篇内部重名 → -1；不同文章互不影响
@@ -79,4 +71,3 @@ describe("构建期渲染器 post-render", () => {
     expect(b.headings.map((h) => h.slug)).toEqual(["结果", "结果-1"]);
   });
 });
-

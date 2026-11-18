@@ -21,8 +21,7 @@ export interface IpLocation {
 export function isValidIp(ip: string): boolean {
   const parts = ip.trim().split(".");
   return (
-    parts.length === 4 &&
-    parts.every((o) => /^\d{1,3}$/.test(o) && Number(o) <= 255)
+    parts.length === 4 && parts.every((o) => /^\d{1,3}$/.test(o) && Number(o) <= 255)
   );
 }
 
@@ -68,9 +67,7 @@ async function queryBaidu(ip: string): Promise<string | null> {
     );
     const list = (data as { data?: Array<{ location?: unknown }> }).data;
     const location = list?.[0]?.location;
-    return typeof location === "string" && location.trim()
-      ? location.trim()
-      : null;
+    return typeof location === "string" && location.trim() ? location.trim() : null;
   } catch {
     return null;
   }
@@ -119,10 +116,7 @@ export async function lookupIp(ip: string): Promise<IpLocation> {
  * JSONP 走 script 标签、不受浏览器连接数限流，因此用固定并发池（默认 5）
  * 控制请求量，避免一次输入上百 IP 时狂发请求被接口限流。
  */
-export async function lookupIps(
-  ips: string[],
-  concurrency = 5,
-): Promise<IpLocation[]> {
+export async function lookupIps(ips: string[], concurrency = 5): Promise<IpLocation[]> {
   const valid = ips.map((s) => s.trim()).filter(Boolean);
   const results: IpLocation[] = new Array(valid.length);
   let next = 0;
@@ -132,9 +126,8 @@ export async function lookupIps(
       results[index] = await lookupIp(valid[index]);
     }
   }
-  const workers = Array.from(
-    { length: Math.min(concurrency, valid.length) },
-    () => worker(),
+  const workers = Array.from({ length: Math.min(concurrency, valid.length) }, () =>
+    worker(),
   );
   await Promise.all(workers);
   return results;

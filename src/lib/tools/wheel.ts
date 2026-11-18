@@ -114,7 +114,7 @@ export function rollForce(random: () => number = Math.random): number {
 export function winnerIndex(totalDeg: number, items: WheelItem[]): number {
   const total = totalWeight(items);
   if (total <= 0) return -1;
-  const angle = ((360 - (totalDeg % 360)) % 360 + 360) % 360;
+  const angle = (((360 - (totalDeg % 360)) % 360) + 360) % 360;
   let acc = 0;
   for (let i = 0; i < items.length; i++) {
     const start = (acc / total) * 360;
@@ -208,17 +208,15 @@ export function buildSlices(
       name: it.name,
     });
   }
-      // 圆环首尾相邻：最后一个扇区避免与第一个同色（issue #292）
-    if (slices.length > 2) {
-      const firstColor = slices[0].color;
-      const prevColor = slices[slices.length - 1].color;
-      if (prevColor === firstColor) {
-        const used = new Set([firstColor, prevColor]);
-        const alt = WHEEL_COLORS.find((c) => !used.has(c));
-        if (alt) slices[slices.length - 1].color = alt;
-      }
+  // 圆环首尾相邻：最后一个扇区避免与第一个同色（issue #292）
+  if (slices.length > 2) {
+    const firstColor = slices[0].color;
+    const prevColor = slices[slices.length - 1].color;
+    if (prevColor === firstColor) {
+      const used = new Set([firstColor, prevColor]);
+      const alt = WHEEL_COLORS.find((c) => !used.has(c));
+      if (alt) slices[slices.length - 1].color = alt;
     }
-    return slices;
+  }
+  return slices;
 }
-
-

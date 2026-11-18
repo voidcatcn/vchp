@@ -69,10 +69,7 @@ export async function downloadSpeed(
  * 目标返回 4xx/5xx 不影响计时，但网络级失败（拒绝/超时）会抛错，
  * 避免把「请求瞬间失败」误算成极高的上传速度。
  */
-export async function uploadSpeed(
-  url: string,
-  sizeBytes: number,
-): Promise<UploadResult> {
+export async function uploadSpeed(url: string, sizeBytes: number): Promise<UploadResult> {
   const blob = new Blob([new Uint8Array(sizeBytes)], { type: "text/plain" });
   const start = performance.now();
   try {

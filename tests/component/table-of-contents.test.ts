@@ -75,9 +75,7 @@ describe("TableOfContentsList", () => {
     const scrollSpy = vi.fn();
     const origScroll = HTMLElement.prototype.scrollIntoView;
     HTMLElement.prototype.scrollIntoView = scrollSpy;
-    const replaceSpy = vi
-      .spyOn(history, "replaceState")
-      .mockImplementation(() => {});
+    const replaceSpy = vi.spyOn(history, "replaceState").mockImplementation(() => {});
 
     const wrapper = mountList({ headings: sampleHeadings });
     const firstLink = wrapper.find("a");

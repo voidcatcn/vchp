@@ -16,8 +16,7 @@ import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "本地 Ping",
-  description:
-    "浏览器本地 Ping：HTTP 时延测量与丢包统计，支持批量目标与多样本。",
+  description: "浏览器本地 Ping：HTTP 时延测量与丢包统计，支持批量目标与多样本。",
   path: "/tools/network/ping",
 });
 
@@ -31,7 +30,9 @@ const SAMPLE = `baidu.com
 github.com
 cloudflare.com`;
 
-const busyCount = computed(() => input.value.split(/\r?\n/).filter((s) => s.trim()).length);
+const busyCount = computed(
+  () => input.value.split(/\r?\n/).filter((s) => s.trim()).length,
+);
 
 function fillSample() {
   input.value = SAMPLE;
@@ -75,7 +76,9 @@ function fmt(ms: number, hasSamples: boolean): string {
     back-label="返回网络工具"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <Activity class="size-4" />
@@ -102,12 +105,12 @@ function fmt(ms: number, hasSamples: boolean): string {
           <Select v-model="sampleCount">
             <SelectTrigger aria-label="每目标样本数">
               <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-            <SelectItem :value="1">1</SelectItem>
-            <SelectItem :value="4">4</SelectItem>
-            <SelectItem :value="8">8</SelectItem>
-              </SelectContent>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem :value="1">1</SelectItem>
+              <SelectItem :value="4">4</SelectItem>
+              <SelectItem :value="8">8</SelectItem>
+            </SelectContent>
           </Select>
         </label>
         <Button
@@ -126,7 +129,10 @@ function fmt(ms: number, hasSamples: boolean): string {
         {{ errorMessage }}
       </p>
 
-      <section v-if="results.length" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="results.length"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <span class="text-sm font-medium">结果</span>
         <div class="flex flex-col gap-1.5">
           <div
@@ -138,16 +144,26 @@ function fmt(ms: number, hasSamples: boolean): string {
               <span class="truncate font-mono text-sm">{{ stat.url }}</span>
               <span
                 class="shrink-0 rounded-full px-2 py-0.5 text-xs font-medium"
-                :class="stat.lossRate >= 0.5 ? 'bg-destructive/10 text-destructive' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'"
+                :class="
+                  stat.lossRate >= 0.5
+                    ? 'bg-destructive/10 text-destructive'
+                    : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                "
               >
                 {{ stat.lossRate >= 0.5 ? "不可达" : "正常" }}
               </span>
             </div>
-            <div class="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
+            <div
+              class="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-muted-foreground"
+            >
               <span>最小 {{ fmt(stat.min, stat.samples.length > 0) }}</span>
               <span>平均 {{ fmt(stat.avg, stat.samples.length > 0) }}</span>
               <span>最大 {{ fmt(stat.max, stat.samples.length > 0) }}</span>
-              <span>丢包 {{ stat.loss }}/{{ sampleCount }}（{{ Math.round(stat.lossRate * 100) }}%）</span>
+              <span
+                >丢包 {{ stat.loss }}/{{ sampleCount }}（{{
+                  Math.round(stat.lossRate * 100)
+                }}%）</span
+              >
             </div>
           </div>
         </div>
@@ -156,8 +172,8 @@ function fmt(ms: number, hasSamples: boolean): string {
       <Alert hint-id="ping-usage">
         <Info class="size-4" />
         <AlertDescription>
-          浏览器无法发送 ICMP，本工具以 HTTP 请求时延近似 Ping（no-cors 请求，无需目标支持跨域）；
-          结果受本地网络、DNS、目标服务端响应影响，仅供参考喵～
+          浏览器无法发送 ICMP，本工具以 HTTP 请求时延近似 Ping（no-cors
+          请求，无需目标支持跨域）； 结果受本地网络、DNS、目标服务端响应影响，仅供参考喵～
         </AlertDescription>
       </Alert>
     </div>

@@ -52,7 +52,7 @@ describe("countWords", () => {
   });
 
   it("HTML 标签不计入", () => {
-    expect(countWords("前后 <span class=\"x\">中间</span> 文字")).toBe(6); // 前后(2) + 中间(2) + 文字(2)
+    expect(countWords('前后 <span class="x">中间</span> 文字')).toBe(6); // 前后(2) + 中间(2) + 文字(2)
   });
 
   it("标题标记 # 不计入", () => {

@@ -13,10 +13,12 @@ const model = defineModel<boolean | "indeterminate">();
   <CheckboxRoot
     v-model="model"
     data-slot="checkbox"
-    :class="cn(
-      'peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
-      props.class,
-    )"
+    :class="
+      cn(
+        'peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+        props.class,
+      )
+    "
   >
     <CheckboxIndicator
       class="flex items-center justify-center text-current transition-none"

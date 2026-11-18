@@ -50,7 +50,9 @@ test("排名目录页：展示分类卡片并链接到详情页", async ({ page 
 
   await expect(page.getByRole("heading", { name: "排名" })).toBeVisible();
   for (const category of doc.categories) {
-    await expect(page.getByRole("link", { name: new RegExp(category.name) })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: new RegExp(category.name) }),
+    ).toBeVisible();
   }
 
   await page.getByRole("link", { name: new RegExp(first.name) }).click();
@@ -102,17 +104,19 @@ test("排名生成工具：编辑、导出并导入回读", async ({ page }) => 
   expect(toml).toContain('id = "food"');
 
   // 导入：粘贴一份单分类 TOML 并导入
-  await page.locator('textarea[aria-label="导入 TOML 内容"]').fill(
-    [
-      "[[categories]]",
-      'id = "movies"',
-      'name = "电影"',
-      "",
-      "  [[categories.items]]",
-      '  name = "星际穿越"',
-      "  score = 96",
-    ].join("\n"),
-  );
+  await page
+    .locator('textarea[aria-label="导入 TOML 内容"]')
+    .fill(
+      [
+        "[[categories]]",
+        'id = "movies"',
+        'name = "电影"',
+        "",
+        "  [[categories.items]]",
+        '  name = "星际穿越"',
+        "  score = 96",
+      ].join("\n"),
+    );
   await page.getByRole("button", { name: "导入", exact: true }).click();
   await expect(page.getByText(/导入成功：1 个分类/)).toBeVisible();
 

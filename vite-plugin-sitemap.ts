@@ -10,7 +10,6 @@ import { resolve, join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { Plugin, ResolvedConfig } from "vite";
 import { loadRankingsData } from "./vite-plugin-rankings.ts";
-import { loadSiteConfig } from "./vite-plugin-site-config.ts";
 
 /** 站点基础 URL（生产环境） */
 const SITE_URL = "https://meali.top";
@@ -52,8 +51,7 @@ function parseFrontmatter(raw: string): PostFrontmatter {
  */
 function resolveCover(id: string, cover: unknown): string | null {
   if (cover === null) return null;
-  const fileName =
-    typeof cover === "string" && cover.length > 0 ? cover : "cover.webp";
+  const fileName = typeof cover === "string" && cover.length > 0 ? cover : "cover.webp";
   return existsSync(join("src/posts", id, fileName))
     ? `${SITE_URL}/posts/${id}/${fileName}`
     : null;
@@ -168,12 +166,7 @@ export function generateSitemap(): Plugin {
       // 3. 排名分类路由：来自 src/rankings/data.toml（单一数据源）
       for (const category of loadRankingsData()) {
         urls.push(
-          urlNode(
-            `${SITE_URL}/rankings/${category.id}`,
-            buildDate,
-            0.5,
-            "weekly",
-          ),
+          urlNode(`${SITE_URL}/rankings/${category.id}`, buildDate, 0.5, "weekly"),
         );
       }
 

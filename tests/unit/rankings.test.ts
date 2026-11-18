@@ -112,15 +112,15 @@ name = "A"
   });
 
   it("缺少 name 抛错", () => {
-    expect(() =>
-      parseRankingsToml(`[[categories]]\nid = "a"\nitems = []`),
-    ).toThrow(/name/);
+    expect(() => parseRankingsToml(`[[categories]]\nid = "a"\nitems = []`)).toThrow(
+      /name/,
+    );
   });
 
   it("缺少 items 或 items 非数组抛错", () => {
-    expect(() =>
-      parseRankingsToml(`[[categories]]\nid = "a"\nname = "A"`),
-    ).toThrow(/items/);
+    expect(() => parseRankingsToml(`[[categories]]\nid = "a"\nname = "A"`)).toThrow(
+      /items/,
+    );
     expect(() =>
       parseRankingsToml(`[[categories]]\nid = "a"\nname = "A"\nitems = 1`),
     ).toThrow(/items/);
@@ -128,16 +128,22 @@ name = "A"
 
   it("非法分数抛错：非数字 / 超出 0-100", () => {
     expect(() =>
-      parseRankingsToml(`[[categories]]\nid = "a"\nname = "A"\n\n  [[categories.items]]\n  name = "x"\n  score = "high"`),
+      parseRankingsToml(
+        `[[categories]]\nid = "a"\nname = "A"\n\n  [[categories.items]]\n  name = "x"\n  score = "high"`,
+      ),
     ).toThrow(/score/);
     expect(() =>
-      parseRankingsToml(`[[categories]]\nid = "a"\nname = "A"\n\n  [[categories.items]]\n  name = "x"\n  score = 101`),
+      parseRankingsToml(
+        `[[categories]]\nid = "a"\nname = "A"\n\n  [[categories.items]]\n  name = "x"\n  score = 101`,
+      ),
     ).toThrow(/score/);
   });
 
   it("条目缺少 name 抛错", () => {
     expect(() =>
-      parseRankingsToml(`[[categories]]\nid = "a"\nname = "A"\n\n  [[categories.items]]\n  score = 50`),
+      parseRankingsToml(
+        `[[categories]]\nid = "a"\nname = "A"\n\n  [[categories.items]]\n  score = 50`,
+      ),
     ).toThrow(/name/);
   });
 });
@@ -186,7 +192,7 @@ describe("serializeRankingsToml（导出 → 再解析 往返一致）", () => {
   it("包含文件头注释，且跳过空可选字段", () => {
     const toml = serializeRankingsToml(sample);
     expect(toml).toContain("排名数据");
-    expect(toml).toContain('[[categories]]');
+    expect(toml).toContain("[[categories]]");
     expect(toml).toContain('id = "food"');
     expect(toml).toContain('brief = "麻辣鲜香"');
     // 空的可选字段不应出现在导出的 TOML 里
@@ -206,11 +212,9 @@ describe("serializeRankingsToml（导出 → 再解析 往返一致）", () => {
     const categories: RankingCategory[] = [
       {
         id: "x",
-        name: "带\"引号\"",
+        name: '带"引号"',
         description: null,
-        items: [
-          { name: "a\\b", brief: '说"你好"\n换行', comment: null, score: 70 },
-        ],
+        items: [{ name: "a\\b", brief: '说"你好"\n换行', comment: null, score: 70 }],
       },
     ];
     const toml = serializeRankingsToml(categories);
@@ -262,12 +266,7 @@ describe("sortRankingItems（分数从高到低）", () => {
       { name: "C", brief: null, comment: null, score: 70 },
       { name: "D", brief: null, comment: null, score: 60 },
     ];
-    expect(sortRankingItems(input).map((i) => i.name)).toEqual([
-      "B",
-      "A",
-      "C",
-      "D",
-    ]);
+    expect(sortRankingItems(input).map((i) => i.name)).toEqual(["B", "A", "C", "D"]);
   });
 
   it("不修改原数组", () => {

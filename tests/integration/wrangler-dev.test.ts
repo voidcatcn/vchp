@@ -32,17 +32,14 @@ interface HttpResult {
 
 function httpGet(pathname: string): Promise<HttpResult> {
   return new Promise((resolveR, reject) => {
-    const req = http.get(
-      { host: "127.0.0.1", port: PORT, path: pathname },
-      (res) => {
-        let body = "";
-        res.setEncoding("utf8");
-        res.on("data", (c: string) => (body += c));
-        res.on("end", () =>
-          resolveR({ status: res.statusCode ?? 0, body, headers: res.headers }),
-        );
-      },
-    );
+    const req = http.get({ host: "127.0.0.1", port: PORT, path: pathname }, (res) => {
+      let body = "";
+      res.setEncoding("utf8");
+      res.on("data", (c: string) => (body += c));
+      res.on("end", () =>
+        resolveR({ status: res.statusCode ?? 0, body, headers: res.headers }),
+      );
+    });
     req.on("error", reject);
     req.setTimeout(5000, () => req.destroy(new Error("http timeout")));
   });
@@ -53,9 +50,7 @@ describe("wrangler pages dev 本地模拟部署", () => {
 
   beforeAll(() => {
     if (!existsSync(DIST)) {
-      throw new Error(
-        `dist/ 不存在。请先执行 \`pnpm build\` 再跑 \`pnpm test:build\`。`,
-      );
+      throw new Error(`dist/ 不存在。请先执行 \`pnpm build\` 再跑 \`pnpm test:build\`。`);
     }
     // 直接调用本地 devDependency 的 wrangler（pnpm 安装后暴露在 PATH 中），
     // 避免 `pnpm dlx` 每次从 npm registry 下载。Windows 上需 shell: true 解析 .cmd。

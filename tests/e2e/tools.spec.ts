@@ -35,8 +35,12 @@ test.describe("工具页入口", () => {
     await expect(submenu.getByRole("link", { name: "单向加密" })).toBeVisible();
     await expect(submenu.getByRole("link", { name: "加密", exact: true })).toBeVisible();
     await expect(submenu.getByRole("link", { name: "转换", exact: true })).toBeVisible();
-    await expect(submenu.getByRole("link", { name: "对称加密", exact: true })).toBeVisible();
-    await expect(submenu.getByRole("link", { name: "非对称加密", exact: true })).toBeVisible();
+    await expect(
+      submenu.getByRole("link", { name: "对称加密", exact: true }),
+    ).toBeVisible();
+    await expect(
+      submenu.getByRole("link", { name: "非对称加密", exact: true }),
+    ).toBeVisible();
     await expect(submenu.getByRole("link", { name: "图片转换" })).toBeVisible();
     await expect(submenu.getByRole("link", { name: "视频转换" })).toBeVisible();
     await expect(submenu.getByRole("link", { name: "文档转换" })).toBeVisible();
@@ -50,10 +54,7 @@ test.describe("工具页入口", () => {
     // 模拟真实用户：鼠标先回到按钮（菜单仅从按钮 hover 唤起），再沿真实路径
     // 移入菜单。菜单关闭时是 visibility:hidden 不参与命中测试，直接瞬移到
     // 菜单内部区域无法唤起菜单，不是真实交互路径。
-    await page.mouse.move(
-      btnBox.x + btnBox.width / 2,
-      btnBox.y + btnBox.height / 2,
-    );
+    await page.mouse.move(btnBox.x + btnBox.width / 2, btnBox.y + btnBox.height / 2);
     const fromX = btnBox.x + btnBox.width / 2;
     const fromY = btnBox.y + btnBox.height / 2;
     const toX = itemBox.x + itemBox.width / 2;
@@ -110,9 +111,7 @@ test.describe("工具页功能", () => {
       mimeType: "text/plain",
       buffer: Buffer.from("abc"),
     });
-    await expect(
-      page.locator('textarea[aria-label*="SHA-256"]'),
-    ).toHaveValue(
+    await expect(page.locator('textarea[aria-label*="SHA-256"]')).toHaveValue(
       "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
     );
     await expect(page.getByText("hello.txt")).toBeVisible();
@@ -165,9 +164,7 @@ test.describe("工具页功能", () => {
       mimeType: "text/plain",
       buffer: Buffer.from(payload, "utf8"),
     });
-    await expect(page.locator('textarea[aria-label="解密结果"]')).toHaveValue(
-      plaintext,
-    );
+    await expect(page.locator('textarea[aria-label="解密结果"]')).toHaveValue(plaintext);
   });
 
   test("对称加密：加密后可用同一密码解密", async ({ page }) => {
@@ -242,12 +239,8 @@ test.describe("转换工具页", () => {
   test("文档转换：页面渲染并展示双向入口", async ({ page }) => {
     await page.goto("/tools/conversion/document");
     await expect(page.getByRole("heading", { name: "文档转换" })).toBeVisible();
-    await expect(
-      page.getByRole("tab", { name: /Markdown → DOCX/ }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("tab", { name: /DOCX → Markdown/ }),
-    ).toBeVisible();
+    await expect(page.getByRole("tab", { name: /Markdown → DOCX/ })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /DOCX → Markdown/ })).toBeVisible();
   });
 });
 

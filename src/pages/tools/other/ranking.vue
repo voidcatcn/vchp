@@ -230,13 +230,11 @@ function downloadToml() {
       </div>
 
       <!-- 编辑：分类选择 + 分类设置 + 条目列表 -->
-      <section
-        v-if="tab === 'edit'"
-        class="flex flex-col gap-3"
-        aria-label="编辑排名"
-      >
+      <section v-if="tab === 'edit'" class="flex flex-col gap-3" aria-label="编辑排名">
         <!-- 分类选择 -->
-        <div class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+        <div
+          class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+        >
           <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2">
               <FolderPlus class="size-4" />
@@ -298,7 +296,9 @@ function downloadToml() {
           </div>
           <div class="grid gap-3 sm:grid-cols-2">
             <label class="flex flex-col gap-1.5">
-              <span class="text-xs text-muted-foreground">id（URL 用，小写字母/数字/连字符）</span>
+              <span class="text-xs text-muted-foreground"
+                >id（URL 用，小写字母/数字/连字符）</span
+              >
               <input
                 v-model="selected.id"
                 data-slot="input"
@@ -377,22 +377,22 @@ function downloadToml() {
                 aria-label="条目评价"
               />
               <div class="flex flex-col items-stretch gap-1">
-              <input
-                type="number"
-                :value="item.score"
-                min="0"
-                max="100"
-                data-slot="input"
-                class="h-9 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
-                aria-label="条目分数"
-                @input="onScoreInput(item, $event)"
-              />
-              <span
-                class="self-center rounded-full border px-1.5 py-0.5 text-[10px] font-medium leading-none"
-                :class="tierOf(item.score).badgeClass"
-              >
-                {{ tierOf(item.score).label }}
-              </span>
+                <input
+                  type="number"
+                  :value="item.score"
+                  min="0"
+                  max="100"
+                  data-slot="input"
+                  class="h-9 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                  aria-label="条目分数"
+                  @input="onScoreInput(item, $event)"
+                />
+                <span
+                  class="self-center rounded-full border px-1.5 py-0.5 text-[10px] font-medium leading-none"
+                  :class="tierOf(item.score).badgeClass"
+                >
+                  {{ tierOf(item.score).label }}
+                </span>
               </div>
               <Button
                 type="button"
@@ -425,13 +425,11 @@ function downloadToml() {
       </section>
 
       <!-- 导入导出 -->
-      <section
-        v-if="tab === 'io'"
-        class="flex flex-col gap-4"
-        aria-label="导入导出"
-      >
+      <section v-if="tab === 'io'" class="flex flex-col gap-4" aria-label="导入导出">
         <!-- 导入 -->
-        <div class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+        <div
+          class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+        >
           <div class="flex items-center gap-2">
             <Upload class="size-4" />
             <h2 class="text-sm font-medium">导入 TOML</h2>
@@ -456,7 +454,10 @@ function downloadToml() {
               @change="onFileImport"
             />
           </div>
-          <Alert v-if="importMessage" :variant="importMessage.ok ? 'default' : 'destructive'">
+          <Alert
+            v-if="importMessage"
+            :variant="importMessage.ok ? 'default' : 'destructive'"
+          >
             <Check v-if="importMessage.ok" class="size-4" />
             <Info v-else class="size-4" />
             <AlertDescription>{{ importMessage.text }}</AlertDescription>
@@ -464,10 +465,14 @@ function downloadToml() {
         </div>
 
         <!-- 导出 -->
-        <div class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+        <div
+          class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+        >
           <div class="flex items-center gap-2">
             <Download class="size-4" />
-            <h2 class="text-sm font-medium">导出 TOML（{{ categories.length }} 个分类）</h2>
+            <h2 class="text-sm font-medium">
+              导出 TOML（{{ categories.length }} 个分类）
+            </h2>
           </div>
           <textarea
             ref="exportTextarea"
@@ -494,7 +499,9 @@ function downloadToml() {
           <Info class="size-4" />
           <AlertDescription>
             把导出的 TOML 完整粘贴到仓库的
-            <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">config/rankings.toml</code>
+            <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs"
+              >config/rankings.toml</code
+            >
             并提交，排名页（/rankings）就会自动更新喵～
           </AlertDescription>
         </Alert>

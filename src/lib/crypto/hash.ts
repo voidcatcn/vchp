@@ -44,8 +44,18 @@ export const hashAlgorithms: HashAlgoMeta[] = [
   { id: "SHA-256", label: "SHA-256（256 位）", note: "" },
   { id: "SHA-384", label: "SHA-384（384 位）", note: "" },
   { id: "SHA-512", label: "SHA-512（512 位）", note: "" },
-  { id: "HMAC-SHA256", label: "HMAC-SHA256（密钥散列）", note: "密钥即盐，可用于消息校验", needsKey: true },
-  { id: "HMAC-SHA512", label: "HMAC-SHA512（密钥散列）", note: "密钥即盐，可用于消息校验", needsKey: true },
+  {
+    id: "HMAC-SHA256",
+    label: "HMAC-SHA256（密钥散列）",
+    note: "密钥即盐，可用于消息校验",
+    needsKey: true,
+  },
+  {
+    id: "HMAC-SHA512",
+    label: "HMAC-SHA512（密钥散列）",
+    note: "密钥即盐，可用于消息校验",
+    needsKey: true,
+  },
   {
     id: "PBKDF2-SHA256",
     label: "PBKDF2-SHA256（加盐派生）",
@@ -54,7 +64,14 @@ export const hashAlgorithms: HashAlgoMeta[] = [
     needsSalt: true,
     needsIterations: true,
   },
-  { id: "SCRYPT", label: "scrypt（加盐派生）", note: "内存困难型，更抗暴力破解", needsPassword: true, needsSalt: true, needsScryptParams: true },
+  {
+    id: "SCRYPT",
+    label: "scrypt（加盐派生）",
+    note: "内存困难型，更抗暴力破解",
+    needsPassword: true,
+    needsSalt: true,
+    needsScryptParams: true,
+  },
 ];
 
 /** 带盐 / 密钥算法的附加输入 */
@@ -149,10 +166,7 @@ async function hmacDigest(
 }
 
 /** PBKDF2-HMAC-SHA256：密码 + 盐 + 迭代次数派生密钥 */
-async function pbkdf2Derive(
-  password: string,
-  options: HashOptions,
-): Promise<Uint8Array> {
+async function pbkdf2Derive(password: string, options: HashOptions): Promise<Uint8Array> {
   const iterations = options.iterations ?? 100_000;
   const outputBytes = options.outputBytes ?? 32;
   const baseKey = await crypto.subtle.importKey(
@@ -176,10 +190,7 @@ async function pbkdf2Derive(
 }
 
 /** scrypt：密码 + 盐 + N/r/p 派生密钥（纯 JS 异步，避免阻塞主线程） */
-async function scryptDerive(
-  password: string,
-  options: HashOptions,
-): Promise<Uint8Array> {
+async function scryptDerive(password: string, options: HashOptions): Promise<Uint8Array> {
   const N = options.scryptN ?? 16_384;
   const r = options.scryptR ?? 8;
   const p = options.scryptP ?? 1;
@@ -199,9 +210,8 @@ const MD5_K = Array.from({ length: 64 }, (_, i) =>
 );
 
 const MD5_SHIFT = [
-  7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
-  5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
-  4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+  7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9, 14, 20, 5, 9, 14, 20,
+  5, 9, 14, 20, 5, 9, 14, 20, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
   6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
 ];
 

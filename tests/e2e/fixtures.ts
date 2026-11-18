@@ -10,24 +10,21 @@ import { test as base } from "@playwright/test";
  */
 export const test = base.extend({
   page: async ({ context }, use) => {
-    await context.route(
-      /^(?!http:\/\/127\.0\.0\.1:4173)/,
-      (route) => {
-        // 图片返回 1x1 透明占位：不触发 @error，避免依赖 img 的断言失效
-        //（如友链封面）；其余资源返回空响应，脚本标签仍会出现在 DOM。
-        if (route.request().resourceType() === "image") {
-          return route.fulfill({
-            status: 200,
-            contentType: "image/png",
-            body: Buffer.from(
-              "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
-              "base64",
-            ),
-          });
-        }
-        return route.fulfill({ status: 200, body: "" });
-      },
-    );
+    await context.route(/^(?!http:\/\/127\.0\.0\.1:4173)/, (route) => {
+      // 图片返回 1x1 透明占位：不触发 @error，避免依赖 img 的断言失效
+      //（如友链封面）；其余资源返回空响应，脚本标签仍会出现在 DOM。
+      if (route.request().resourceType() === "image") {
+        return route.fulfill({
+          status: 200,
+          contentType: "image/png",
+          body: Buffer.from(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+            "base64",
+          ),
+        });
+      }
+      return route.fulfill({ status: 200, body: "" });
+    });
     const page = await context.newPage();
     await use(page);
   },

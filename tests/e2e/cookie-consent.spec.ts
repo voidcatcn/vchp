@@ -21,14 +21,13 @@ function decodedCookie(page: import("@playwright/test").Page) {
 
 // 判断统计脚本是否已注入
 function statScriptLoaded(page: import("@playwright/test").Page, prefix: string) {
-  return page.evaluate(
-    (p) => !!document.querySelector(`script[src^="${p}"]`),
-    prefix,
-  );
+  return page.evaluate((p) => !!document.querySelector(`script[src^="${p}"]`), prefix);
 }
 
 test.describe("Cookie 选择弹窗", () => {
-  test("首次访问弹出选择器：必要子项勾选且不可取消，统计子项默认勾选", async ({ page }) => {
+  test("首次访问弹出选择器：必要子项勾选且不可取消，统计子项默认勾选", async ({
+    page,
+  }) => {
     await page.goto(BASE + "/");
     await expect(page.getByText("Cookie 设置")).toBeVisible();
 
@@ -103,7 +102,9 @@ test.describe("Cookie 选择弹窗", () => {
     expect(await statScriptLoaded(page, "https://www.clarity.ms/")).toBe(false);
   });
 
-  test("父级全选联动：勾选父级全选子项，取消父级全不选，子项全选自动点亮父级", async ({ page }) => {
+  test("父级全选联动：勾选父级全选子项，取消父级全不选，子项全选自动点亮父级", async ({
+    page,
+  }) => {
     await page.goto(BASE + "/");
     await expect(page.getByText("Cookie 设置")).toBeVisible();
 
@@ -157,7 +158,10 @@ test.describe("Cookie 选择弹窗", () => {
     await expect(page.getByRole("checkbox", { name: "统计 Cookies" })).toBeVisible();
   });
 
-  test("已保存选择后再次访问不再弹窗，并按选择加载对应脚本", async ({ page, context }) => {
+  test("已保存选择后再次访问不再弹窗，并按选择加载对应脚本", async ({
+    page,
+    context,
+  }) => {
     await context.addCookies([
       {
         name: "cookie_consent",

@@ -2,11 +2,7 @@
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Menu, X } from "@lucide/vue";
 import { navItems } from "@/lib/nav";
 import { useRoutePrefetch } from "@/composables/useRoutePrefetch";
@@ -45,11 +41,11 @@ const { prefetchRoute } = useRoutePrefetch();
     >
       <div class="flex flex-col gap-0.5">
         <RouterLink
-          @pointerenter="prefetchRoute(item.to)"
-        v-for="item in navItems"
+          v-for="item in navItems"
           :key="item.to"
           :to="item.to"
           class="group flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground [&.router-link-active]:bg-muted [&.router-link-active]:text-foreground"
+          @pointerenter="prefetchRoute(item.to)"
           @click="open = false"
         >
           <component :is="item.icon" class="mobile-nav-icon size-4 shrink-0" />

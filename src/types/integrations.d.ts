@@ -14,7 +14,7 @@ declare module "virtual:integrations" {
       repoId: string;
       category: string;
       categoryId: string;
-      mapping: 'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number';
+      mapping: "pathname" | "url" | "title" | "og:title" | "specific" | "number";
       lang: string;
     };
   }

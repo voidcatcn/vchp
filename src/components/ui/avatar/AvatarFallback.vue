@@ -5,9 +5,7 @@ import { computed } from "vue";
 import { AvatarFallback } from "reka-ui";
 import { cn } from "@/lib/utils";
 
-const props = defineProps<
-  AvatarFallbackProps & { class?: HTMLAttributes["class"] }
->();
+const props = defineProps<AvatarFallbackProps & { class?: HTMLAttributes["class"] }>();
 
 // 内联实现 reactiveOmit：仅排除 "class" 字段，其余透传给 reka-ui
 const delegatedProps = computed(() => {

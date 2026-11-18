@@ -26,10 +26,7 @@ import { parse as parseYaml } from "yaml";
 import type { MarkdownIt } from "markdown-it";
 import type { Plugin, ResolvedConfig } from "vite";
 import { countWords, type Heading } from "./src/lib/post-text.ts";
-import {
-  createMarkdownRenderer,
-  renderPostContent,
-} from "./src/lib/post-render.ts";
+import { createMarkdownRenderer, renderPostContent } from "./src/lib/post-render.ts";
 
 /** 博客源目录 */
 const POSTS_DIR = resolve("src/posts");
@@ -68,18 +65,13 @@ function parseFrontmatter(raw: string): {
  */
 function resolveCover(id: string, cover: unknown): string | null {
   if (cover === null) return null;
-  const fileName =
-    typeof cover === "string" && cover.length > 0 ? cover : "cover.webp";
-  return existsSync(join(POSTS_DIR, id, fileName))
-    ? `/posts/${id}/${fileName}`
-    : null;
+  const fileName = typeof cover === "string" && cover.length > 0 ? cover : "cover.webp";
+  return existsSync(join(POSTS_DIR, id, fileName)) ? `/posts/${id}/${fileName}` : null;
 }
 
 /** 正文相对图片 → 静态 URL（文件存在才替换） */
 function resolvePostImage(src: string, postId: string): string | null {
-  return existsSync(join(POSTS_DIR, postId, src))
-    ? `/posts/${postId}/${src}`
-    : null;
+  return existsSync(join(POSTS_DIR, postId, src)) ? `/posts/${postId}/${src}` : null;
 }
 
 /** 解析单篇 frontmatter 元数据（封面解析依赖 fs，仅构建期） */

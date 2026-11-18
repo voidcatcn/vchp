@@ -44,10 +44,7 @@ function base64ToBytes(base64: string): Uint8Array {
  * 用答案解密指定联系项，降级链：WebCrypto → 纯 JS AES。
  * 答错则 GCM tag 校验失败，抛出错误（调用方捕获后提示验证失败）。
  */
-export async function decryptContact(
-  name: ContactName,
-  answer: string,
-): Promise<string> {
+export async function decryptContact(name: ContactName, answer: string): Promise<string> {
   const secret = contactSecret.secrets.find((s) => s.name === name);
   if (!secret) throw new Error(`未知联系项: ${name}`);
   const key = deriveKeyFromAnswer(answer);
@@ -65,8 +62,7 @@ export async function decryptAllContacts(
 ): Promise<Record<ContactName, string>> {
   const entries = await Promise.all(
     contactSecret.secrets.map(
-      async (secret) =>
-        [secret.name, await decryptContact(secret.name, answer)] as const,
+      async (secret) => [secret.name, await decryptContact(secret.name, answer)] as const,
     ),
   );
   return Object.fromEntries(entries) as Record<ContactName, string>;

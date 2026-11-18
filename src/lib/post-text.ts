@@ -69,12 +69,13 @@ export function slugify(text: string, scope: Map<string, number>): string {
     .replace(/_([^_]+)_/g, "$1")
     .trim();
   // 保留 unicode 字母/数字 + 空格 + -，其余替换为 -
-  const base = cleaned
-    .replace(/[^\p{L}\p{N}\s-]+/gu, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .toLowerCase() || "section";
+  const base =
+    cleaned
+      .replace(/[^\p{L}\p{N}\s-]+/gu, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .toLowerCase() || "section";
   // 重名计数后缀
   const count = scope.get(base) ?? 0;
   scope.set(base, count + 1);

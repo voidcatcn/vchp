@@ -70,13 +70,12 @@ const toml =
   "# label/icon 预设解析见 vite-plugin-contact-data（contact-presets）\n" +
   "# ============================================================\n\n" +
   "# 人机验证题目（展示给访客，用于解密加密联系）\n" +
-  "question = " + tomlStr(output.question) + "\n\n" +
+  "question = " +
+  tomlStr(output.question) +
+  "\n\n" +
   ITEMS.filter((item) => item.value || item.url)
     .map((item) => {
-      const lines = [
-        "[[public]]",
-        "type = " + tomlStr(item.type),
-      ];
+      const lines = ["[[public]]", "type = " + tomlStr(item.type)];
       if (item.value) lines.push("value = " + tomlStr(item.value));
       if (item.url) lines.push("url = " + tomlStr(item.url));
       return lines.join("\n") + "\n";
@@ -86,13 +85,15 @@ const toml =
   ITEMS.filter((item) => item.secret)
     .map((item) => {
       const e = encrypted[item.name];
-      return [
-        "[[secrets]]",
-        "type = " + tomlStr(item.type),
-        "name = " + tomlStr(item.name),
-        "ciphertext = " + tomlStr(e.ciphertext),
-        "nonce = " + tomlStr(e.nonce),
-      ].join("\n") + "\n";
+      return (
+        [
+          "[[secrets]]",
+          "type = " + tomlStr(item.type),
+          "name = " + tomlStr(item.name),
+          "ciphertext = " + tomlStr(e.ciphertext),
+          "nonce = " + tomlStr(e.nonce),
+        ].join("\n") + "\n"
+      );
     })
     .join("\n");
 

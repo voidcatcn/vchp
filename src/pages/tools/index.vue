@@ -6,8 +6,7 @@ import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "工具",
-  description:
-    "浏览器本地运行的工具集：加密、转换、网络与趣味小工具，全程本地计算。",
+  description: "浏览器本地运行的工具集：加密、转换、网络与趣味小工具，全程本地计算。",
   path: "/tools",
 });
 </script>
@@ -43,4 +42,3 @@ useSeo({
     </div>
   </main>
 </template>
-

@@ -48,10 +48,7 @@ const cards = computed(() =>
     </div>
 
     <!-- 分类卡片：美食 / 动漫 / 游戏 / 软件…… -->
-    <div
-      v-if="cards.length"
-      class="grid w-full max-w-2xl gap-3 sm:grid-cols-2"
-    >
+    <div v-if="cards.length" class="grid w-full max-w-2xl gap-3 sm:grid-cols-2">
       <RouterLink
         v-for="card in cards"
         :key="card.category.id"
@@ -68,7 +65,10 @@ const cards = computed(() =>
           />
         </div>
 
-        <p v-if="card.category.description" class="text-sm leading-snug text-muted-foreground">
+        <p
+          v-if="card.category.description"
+          class="text-sm leading-snug text-muted-foreground"
+        >
           {{ card.category.description }}
         </p>
 
@@ -84,7 +84,9 @@ const cards = computed(() =>
           </span>
         </div>
 
-        <div class="mt-auto flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <div
+          class="mt-auto flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
+        >
           <span>{{ card.count }} 项</span>
           <template v-if="card.avg !== null">
             <span class="text-muted-foreground/60">·</span>

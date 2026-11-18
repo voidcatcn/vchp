@@ -14,11 +14,7 @@ import {
 import ToolLayout from "@/components/ToolLayout.vue";
 import ToolFileInput from "@/components/ToolFileInput.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
-import {
-  convertImage,
-  imageFormats,
-  imageOutputName,
-} from "@/lib/conversion/image";
+import { convertImage, imageFormats, imageOutputName } from "@/lib/conversion/image";
 import { useSeo } from "@/composables/useSeo";
 
 useSeo({
@@ -38,9 +34,7 @@ const resultBytes = ref<Uint8Array<ArrayBuffer> | null>(null);
 const resultName = ref("");
 const previewUrl = ref("");
 
-const currentFormat = computed(
-  () => imageFormats.find((f) => f.id === formatId.value)!,
-);
+const currentFormat = computed(() => imageFormats.find((f) => f.id === formatId.value)!);
 
 // 卸载时释放预览 URL，避免内存泄漏
 onUnmounted(() => {
@@ -99,7 +93,9 @@ async function handleConvert() {
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
       <!-- 选择图片 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <ImageIcon class="size-4" />
           <h2 class="text-sm font-medium">选择图片</h2>
@@ -118,30 +114,28 @@ async function handleConvert() {
       </section>
 
       <!-- 输出格式 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex flex-col gap-3 sm:flex-row">
           <label class="flex flex-1 flex-col gap-1.5">
             <span class="text-sm font-medium">输出格式</span>
             <Select v-model="formatId">
               <SelectTrigger aria-label="输出格式">
                 <SelectValue placeholder="请选择" />
-                </SelectTrigger>
-                <SelectContent>
-              <SelectItem v-for="f in imageFormats" :key="f.id" :value="f.id">
-                {{ f.label }}{{ f.note ? `（${f.note}）` : "" }}
-              </SelectItem>
-                </SelectContent>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="f in imageFormats" :key="f.id" :value="f.id">
+                  {{ f.label }}{{ f.note ? `（${f.note}）` : "" }}
+                </SelectItem>
+              </SelectContent>
             </Select>
           </label>
           <label v-if="currentFormat.lossy" class="flex flex-1 flex-col gap-1.5">
-            <span class="text-sm font-medium">质量：{{ Math.round(quality * 100) }}%</span>
-            <Slider
-              v-model="quality"
-              :min="0.1"
-              :max="1"
-              :step="0.05"
-              class="py-2"
-            />
+            <span class="text-sm font-medium"
+              >质量：{{ Math.round(quality * 100) }}%</span
+            >
+            <Slider v-model="quality" :min="0.1" :max="1" :step="0.05" class="py-2" />
           </label>
         </div>
         <Button
@@ -164,7 +158,10 @@ async function handleConvert() {
       </p>
 
       <!-- 结果 -->
-      <div v-if="resultBytes" class="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <div
+        v-if="resultBytes"
+        class="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <span class="truncate text-sm font-medium">{{ resultName }}</span>
         <DownloadButton :filename="resultName" :data="resultBytes" />
       </div>
@@ -172,7 +169,8 @@ async function handleConvert() {
       <Alert hint-id="image-engine">
         <ImageIcon class="size-4" />
         <AlertDescription>
-          优先使用浏览器原生 Canvas 编码；遇到不支持的格式（如 AVIF）会自动改用 WASM 编码器，全程本地处理喵～
+          优先使用浏览器原生 Canvas 编码；遇到不支持的格式（如 AVIF）会自动改用 WASM
+          编码器，全程本地处理喵～
         </AlertDescription>
       </Alert>
     </div>

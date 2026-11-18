@@ -43,19 +43,14 @@ function inlineEntryCss(): Plugin {
       order: "post",
       handler(html, ctx) {
         if (!ctx.bundle) return html;
-        const linkRe =
-          /<link\s+[^>]*rel=["']stylesheet["'][^>]*?>/g;
+        const linkRe = /<link\s+[^>]*rel=["']stylesheet["'][^>]*?>/g;
         return html.replace(linkRe, (tag) => {
           const hrefMatch = tag.match(/href=["']([^"']+)["']/);
           if (!hrefMatch) return tag;
           // HTML 里是 /assets/xxx.css，bundle key 是 assets/xxx.css
           const href = hrefMatch[1].replace(/^\//, "");
           for (const [name, asset] of Object.entries(ctx.bundle)) {
-            if (
-              asset.type === "asset" &&
-              name === href &&
-              name.endsWith(".css")
-            ) {
+            if (asset.type === "asset" && name === href && name.endsWith(".css")) {
               const css = String(asset.source);
               // 已内联 → 从 bundle 移除，避免重复资源
               delete ctx.bundle[name];
@@ -144,7 +139,6 @@ export default defineConfig({
     ],
   },
 
-
   build: {
     target: "esnext",
     minify: "esbuild",
@@ -178,20 +172,21 @@ export default defineConfig({
               return "shiki";
             }
             if (id.includes("markdown-it")) return "md";
-          // @peculiar（x509 asn1 库）只被证书工具使用：拆出懒加载 chunk，
-          // vendor 体积显著下降，仅访问证书页时才下载（issue：速度优化）
-          if (
-            id.includes("@peculiar") ||
-            id.includes("tsyringe") ||
-            id.includes("reflect-metadata")
-          )
-            return "cert-libs";
+            // @peculiar（x509 asn1 库）只被证书工具使用：拆出懒加载 chunk，
+            // vendor 体积显著下降，仅访问证书页时才下载（issue：速度优化）
+            if (
+              id.includes("@peculiar") ||
+              id.includes("tsyringe") ||
+              id.includes("reflect-metadata")
+            )
+              return "cert-libs";
             if (id.includes("@noble/ciphers")) return "crypto";
             if (id.includes("unhead")) return "unhead";
             if (id.includes("@lucide")) return "lucide";
             if (id.includes("yaml")) return "md";
             // 匹配 vue / @vue/* 路径（但不匹配 vueuse、reka-ui）
-            if (/[\\/]node_modules[\\/](@vue[\\/]|vue[\\/]|vue$|vue@)/.test(id)) return "vue";
+            if (/[\\/]node_modules[\\/](@vue[\\/]|vue[\\/]|vue$|vue@)/.test(id))
+              return "vue";
             return "vendor";
           }
         },

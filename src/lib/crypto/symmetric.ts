@@ -20,10 +20,7 @@ import {
 } from "./utils";
 
 export type SymmetricAlgorithm =
-  | "AES-128-GCM"
-  | "AES-256-GCM"
-  | "AES-128-CBC"
-  | "AES-256-CBC";
+  "AES-128-GCM" | "AES-256-GCM" | "AES-128-CBC" | "AES-256-CBC";
 
 export type SymmetricMode = "GCM" | "CBC";
 
@@ -36,10 +33,34 @@ export interface SymmetricAlgoMeta {
 }
 
 export const symmetricAlgorithms: SymmetricAlgoMeta[] = [
-  { id: "AES-128-GCM", label: "AES-128-GCM", mode: "GCM", bits: 128, note: "推荐，带完整性校验" },
-  { id: "AES-256-GCM", label: "AES-256-GCM", mode: "GCM", bits: 256, note: "推荐，带完整性校验" },
-  { id: "AES-128-CBC", label: "AES-128-CBC", mode: "CBC", bits: 128, note: "无完整性校验" },
-  { id: "AES-256-CBC", label: "AES-256-CBC", mode: "CBC", bits: 256, note: "无完整性校验" },
+  {
+    id: "AES-128-GCM",
+    label: "AES-128-GCM",
+    mode: "GCM",
+    bits: 128,
+    note: "推荐，带完整性校验",
+  },
+  {
+    id: "AES-256-GCM",
+    label: "AES-256-GCM",
+    mode: "GCM",
+    bits: 256,
+    note: "推荐，带完整性校验",
+  },
+  {
+    id: "AES-128-CBC",
+    label: "AES-128-CBC",
+    mode: "CBC",
+    bits: 128,
+    note: "无完整性校验",
+  },
+  {
+    id: "AES-256-CBC",
+    label: "AES-256-CBC",
+    mode: "CBC",
+    bits: 256,
+    note: "无完整性校验",
+  },
 ];
 
 /** 密钥派生算法（KDF） */

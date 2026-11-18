@@ -15,8 +15,7 @@ import { useSeo } from "@/composables/useSeo";
 
 useSeo({
   title: "本地测速",
-  description:
-    "浏览器本地测速：下载 / 上传速度测试，实时进度与吞吐统计。",
+  description: "浏览器本地测速：下载 / 上传速度测试，实时进度与吞吐统计。",
   path: "/tools/network/speedtest",
 });
 
@@ -36,7 +35,8 @@ const isDownload = computed(() => mode.value === "download");
 
 function switchMode(m: Mode) {
   mode.value = m;
-  url.value = m === "download" ? DEFAULT_DOWNLOAD_URLS[0].url : DEFAULT_UPLOAD_URLS[0].url;
+  url.value =
+    m === "download" ? DEFAULT_DOWNLOAD_URLS[0].url : DEFAULT_UPLOAD_URLS[0].url;
   reset();
 }
 
@@ -109,14 +109,24 @@ function fmtBytes(bytes: number): string {
     back-label="返回网络工具"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
-        <div class="flex gap-1 rounded-xl border border-border bg-muted/60 p-1" role="tablist" aria-label="测速方向">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
+        <div
+          class="flex gap-1 rounded-xl border border-border bg-muted/60 p-1"
+          role="tablist"
+          aria-label="测速方向"
+        >
           <button
             type="button"
             role="tab"
             :aria-selected="mode === 'download'"
             class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="mode === 'download' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+            :class="
+              mode === 'download'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            "
             @click="switchMode('download')"
           >
             <Gauge class="size-4" />
@@ -127,7 +137,11 @@ function fmtBytes(bytes: number): string {
             role="tab"
             :aria-selected="mode === 'upload'"
             class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="mode === 'upload' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+            :class="
+              mode === 'upload'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            "
             @click="switchMode('upload')"
           >
             <Zap class="size-4" />
@@ -136,7 +150,9 @@ function fmtBytes(bytes: number): string {
         </div>
 
         <div class="flex flex-col gap-2">
-          <span class="text-sm font-medium">{{ isDownload ? "下载测速 URL" : "上传测速 URL" }}</span>
+          <span class="text-sm font-medium">{{
+            isDownload ? "下载测速 URL" : "上传测速 URL"
+          }}</span>
           <input
             v-model="url"
             type="url"
@@ -178,17 +194,19 @@ function fmtBytes(bytes: number): string {
               class="h-full rounded-full bg-primary transition-[width] duration-200"
               :style="{ width: `${progress}%` }"
             />
-            <div
-              v-else
-              class="h-full w-1/3 animate-pulse rounded-full bg-primary"
-            />
+            <div v-else class="h-full w-1/3 animate-pulse rounded-full bg-primary" />
           </div>
           <span class="text-xs text-muted-foreground">
             <template v-if="isDownload">
-              已下载 {{ fmtBytes(received) }}<template v-if="totalBytes"> / {{ fmtBytes(totalBytes) }}（{{ Math.round(progress) }}%）</template>
+              已下载 {{ fmtBytes(received)
+              }}<template v-if="totalBytes">
+                / {{ fmtBytes(totalBytes) }}（{{ Math.round(progress) }}%）</template
+              >
             </template>
             <template v-else>上传中…</template>
-            <template v-if="progressMbps">｜实时 {{ progressMbps.toFixed(1) }} Mbps</template>
+            <template v-if="progressMbps"
+              >｜实时 {{ progressMbps.toFixed(1) }} Mbps</template
+            >
           </span>
         </div>
       </section>
@@ -197,7 +215,10 @@ function fmtBytes(bytes: number): string {
         {{ errorMessage }}
       </p>
 
-      <section v-if="result" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="result"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm font-medium">测速结果</span>
           <span class="text-2xl font-semibold tracking-tight">
@@ -214,8 +235,8 @@ function fmtBytes(bytes: number): string {
       <Alert hint-id="speedtest-cors">
         <Info class="size-4" />
         <AlertDescription>
-          下载测速需目标支持跨域（CORS）才能读取数据流；上传测速通过 no-cors 发送数据块计时。
-          结果受本地网络、目标服务端带宽影响，仅供参考喵～
+          下载测速需目标支持跨域（CORS）才能读取数据流；上传测速通过 no-cors
+          发送数据块计时。 结果受本地网络、目标服务端带宽影响，仅供参考喵～
         </AlertDescription>
       </Alert>
     </div>

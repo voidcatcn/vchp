@@ -31,16 +31,23 @@ const busy = ref(false);
 const errorMessage = ref("");
 const parsed = ref<ParsedCert | null>(null);
 /** 实时查询结果：每个域名一项（成功带 cert，失败带 error） */
-const liveResults = ref<Array<{ domain: string; cert: LiveCert | null; error?: string }>>([]);
+const liveResults = ref<Array<{ domain: string; cert: LiveCert | null; error?: string }>>(
+  [],
+);
 /** 历史查询结果：每个域名的 CT 记录列表 */
-const historyResults = ref<Array<{ domain: string; entries: CrtShEntry[]; error?: string }>>([]);
+const historyResults = ref<
+  Array<{ domain: string; entries: CrtShEntry[]; error?: string }>
+>([]);
 const progressText = ref("");
 const doneCount = ref(0);
 
 const liveTotal = computed(
-  () => liveInput.value.split(/[\r\n,]+/).map((s) => s.trim()).filter(Boolean).length,
+  () =>
+    liveInput.value
+      .split(/[\r\n,]+/)
+      .map((s) => s.trim())
+      .filter(Boolean).length,
 );
-
 
 function switchMode(m: Mode) {
   mode.value = m;
@@ -64,7 +71,12 @@ function reset() {
 function splitDomains(input: string): string[] {
   return input
     .split(/[\r\n,]+/)
-    .map((s) => s.trim().replace(/^https?:\/\//i, "").replace(/\/.*$/, ""))
+    .map((s) =>
+      s
+        .trim()
+        .replace(/^https?:\/\//i, "")
+        .replace(/\/.*$/, ""),
+    )
     .filter(Boolean);
 }
 
@@ -178,7 +190,11 @@ function sourceLabel(source: LiveCert["source"]): string {
           role="tab"
           :aria-selected="mode === 'parse'"
           class="flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-          :class="mode === 'parse' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+          :class="
+            mode === 'parse'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          "
           @click="switchMode('parse')"
         >
           <ScrollText class="size-4" />
@@ -189,7 +205,11 @@ function sourceLabel(source: LiveCert["source"]): string {
           role="tab"
           :aria-selected="mode === 'live'"
           class="flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-          :class="mode === 'live' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+          :class="
+            mode === 'live'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          "
           @click="switchMode('live')"
         >
           <Globe class="size-4" />
@@ -200,7 +220,11 @@ function sourceLabel(source: LiveCert["source"]): string {
           role="tab"
           :aria-selected="mode === 'history'"
           class="flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-          :class="mode === 'history' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+          :class="
+            mode === 'history'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          "
           @click="switchMode('history')"
         >
           <History class="size-4" />
@@ -209,7 +233,10 @@ function sourceLabel(source: LiveCert["source"]): string {
       </div>
 
       <!-- 本地解析 -->
-      <section v-if="mode === 'parse'" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="mode === 'parse'"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <FileBadge class="size-4" />
           <h2 class="text-sm font-medium">证书 PEM 内容</h2>
@@ -248,13 +275,19 @@ function sourceLabel(source: LiveCert["source"]): string {
             <span class="text-muted-foreground">生效时间</span>
             <span class="text-right text-xs">{{ fmtDate(parsed.notBefore) }}</span>
           </div>
-          <div class="flex items-center justify-between gap-2 border-b border-border pb-1">
+          <div
+            class="flex items-center justify-between gap-2 border-b border-border pb-1"
+          >
             <span class="text-muted-foreground">过期时间</span>
             <span class="text-right text-xs">
               {{ fmtDate(parsed.notAfter) }}
               <span
                 class="ml-1 rounded-full px-2 py-0.5 text-xs font-medium"
-                :class="parsed.expired ? 'bg-destructive/10 text-destructive' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'"
+                :class="
+                  parsed.expired
+                    ? 'bg-destructive/10 text-destructive'
+                    : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                "
               >
                 {{ daysText(parsed.daysLeft) }}
               </span>
@@ -262,7 +295,9 @@ function sourceLabel(source: LiveCert["source"]): string {
           </div>
           <div class="flex justify-between gap-2 border-b border-border pb-1">
             <span class="text-muted-foreground">签名算法</span>
-            <span class="text-right font-mono text-xs">{{ parsed.signatureAlgorithm }}</span>
+            <span class="text-right font-mono text-xs">{{
+              parsed.signatureAlgorithm
+            }}</span>
           </div>
           <div class="flex flex-col gap-1">
             <span class="text-muted-foreground">备用名称（SAN）</span>
@@ -274,14 +309,21 @@ function sourceLabel(source: LiveCert["source"]): string {
               >
                 {{ name }}
               </span>
-              <span v-if="!parsed.subjectAltNames.length" class="text-xs text-muted-foreground">无</span>
+              <span
+                v-if="!parsed.subjectAltNames.length"
+                class="text-xs text-muted-foreground"
+                >无</span
+              >
             </div>
           </div>
         </div>
       </section>
 
       <!-- 实时证书 -->
-      <section v-if="mode === 'live'" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="mode === 'live'"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <Globe class="size-4" />
           <h2 class="text-sm font-medium">域名（每行一个，支持批处理）</h2>
@@ -313,7 +355,9 @@ function sourceLabel(source: LiveCert["source"]): string {
             class="rounded-xl border border-border bg-background px-3 py-2.5"
           >
             <div class="flex items-center justify-between gap-2">
-              <span class="truncate font-mono text-sm font-medium">{{ item.domain }}</span>
+              <span class="truncate font-mono text-sm font-medium">{{
+                item.domain
+              }}</span>
               <span
                 v-if="item.cert"
                 class="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
@@ -334,7 +378,9 @@ function sourceLabel(source: LiveCert["source"]): string {
               </div>
               <div class="mt-1 flex items-center justify-between gap-2">
                 <span class="shrink-0 text-xs text-muted-foreground">颁发者</span>
-                <span class="truncate font-mono text-xs">{{ item.cert.issuer || "—" }}</span>
+                <span class="truncate font-mono text-xs">{{
+                  item.cert.issuer || "—"
+                }}</span>
               </div>
               <div class="mt-1 flex items-center justify-between gap-2">
                 <span class="shrink-0 text-xs text-muted-foreground">有效期</span>
@@ -342,13 +388,21 @@ function sourceLabel(source: LiveCert["source"]): string {
                   {{ fmtDate(item.cert.notBefore) }} ~ {{ fmtDate(item.cert.notAfter) }}
                   <span
                     class="ml-1 rounded-full px-2 py-0.5 font-medium"
-                    :class="item.cert.expired ? 'bg-destructive/10 text-destructive' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'"
+                    :class="
+                      item.cert.expired
+                        ? 'bg-destructive/10 text-destructive'
+                        : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                    "
                   >
                     {{ daysText(item.cert.daysLeft) }}
                   </span>
                 </span>
               </div>
-              <p v-if="item.cert.subjectAltNames.length" class="mt-1 truncate text-xs text-muted-foreground" :title="item.cert.subjectAltNames.join(' ')">
+              <p
+                v-if="item.cert.subjectAltNames.length"
+                class="mt-1 truncate text-xs text-muted-foreground"
+                :title="item.cert.subjectAltNames.join(' ')"
+              >
                 SAN：{{ item.cert.subjectAltNames.join(" / ") }}
               </p>
             </template>
@@ -358,7 +412,10 @@ function sourceLabel(source: LiveCert["source"]): string {
       </section>
 
       <!-- 历史证书 -->
-      <section v-if="mode === 'history'" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="mode === 'history'"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <History class="size-4" />
           <h2 class="text-sm font-medium">域名（每行一个，支持批处理）</h2>
@@ -390,7 +447,9 @@ function sourceLabel(source: LiveCert["source"]): string {
             class="rounded-xl border border-border bg-background px-3 py-2.5"
           >
             <div class="flex items-center justify-between gap-2">
-              <span class="truncate font-mono text-sm font-medium">{{ result.domain }}</span>
+              <span class="truncate font-mono text-sm font-medium">{{
+                result.domain
+              }}</span>
               <span
                 v-if="!result.error"
                 class="shrink-0 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
@@ -399,7 +458,9 @@ function sourceLabel(source: LiveCert["source"]): string {
               </span>
             </div>
             <template v-if="!result.error">
-              <p v-if="!result.entries.length" class="mt-1 text-xs text-muted-foreground">无记录</p>
+              <p v-if="!result.entries.length" class="mt-1 text-xs text-muted-foreground">
+                无记录
+              </p>
               <div class="mt-1.5 flex flex-col gap-1.5">
                 <div
                   v-for="entry in result.entries.slice(0, 25)"
@@ -407,15 +468,27 @@ function sourceLabel(source: LiveCert["source"]): string {
                   class="rounded-lg border border-border px-2.5 py-1.5 text-xs"
                 >
                   <div class="flex items-center justify-between gap-2">
-                    <span class="truncate font-mono font-medium text-foreground">{{ entry.commonName || "（无通用名）" }}</span>
-                    <span class="shrink-0 text-muted-foreground">{{ fmtDate(entry.notAfter) }}</span>
+                    <span class="truncate font-mono font-medium text-foreground">{{
+                      entry.commonName || "（无通用名）"
+                    }}</span>
+                    <span class="shrink-0 text-muted-foreground">{{
+                      fmtDate(entry.notAfter)
+                    }}</span>
                   </div>
-                  <p class="mt-0.5 truncate text-muted-foreground" :title="entry.nameValue">
+                  <p
+                    class="mt-0.5 truncate text-muted-foreground"
+                    :title="entry.nameValue"
+                  >
                     SAN：{{ entry.nameValue || "—" }}
                   </p>
-                  <p class="truncate text-muted-foreground">颁发者：{{ entry.issuerName || "—" }}</p>
+                  <p class="truncate text-muted-foreground">
+                    颁发者：{{ entry.issuerName || "—" }}
+                  </p>
                 </div>
-                <p v-if="result.entries.length > 25" class="text-xs text-muted-foreground">
+                <p
+                  v-if="result.entries.length > 25"
+                  class="text-xs text-muted-foreground"
+                >
                   其余 {{ result.entries.length - 25 }} 条记录已省略
                 </p>
               </div>
@@ -433,8 +506,8 @@ function sourceLabel(source: LiveCert["source"]): string {
         <Info class="size-4" />
         <AlertDescription>
           实时证书由 SSL Labs 完成分析（首次约 30~90 秒），返回网站当前生效的证书；
-          历史证书来自 crt.sh 证书透明度日志（含已更换/已过期记录）。
-          PEM 解析完全在本地完成，不会上传喵～
+          历史证书来自 crt.sh 证书透明度日志（含已更换/已过期记录）。 PEM
+          解析完全在本地完成，不会上传喵～
         </AlertDescription>
       </Alert>
     </div>

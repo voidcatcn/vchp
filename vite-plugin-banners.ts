@@ -64,7 +64,9 @@ export function parseBannersToml(raw: string): BannerConfig[] {
       typeof record.end === "string" &&
       record.start.trim() !== "" &&
       record.end.trim() !== "";
-    const isLunar = record.lunar === true || (typeof record.lunar === "string" && record.lunar.trim() !== "");
+    const isLunar =
+      record.lunar === true ||
+      (typeof record.lunar === "string" && record.lunar.trim() !== "");
     if (!hasRange && !isLunar) {
       throw new Error(
         `banners[${index}]（${id}）需要日期范围（start + end，MM-DD）或 lunar 标记（天文台 API 动态判断）`,

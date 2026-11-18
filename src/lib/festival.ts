@@ -48,16 +48,11 @@ export function isLaborDayActive(
   search: string = typeof window === "undefined" ? "" : window.location.search,
   now: Date = new Date(),
 ): boolean {
-  return (
-    isLaborDay(now) ||
-    new URLSearchParams(search).get("egg") === LABOR_DAY_EGG
-  );
+  return isLaborDay(now) || new URLSearchParams(search).get("egg") === LABOR_DAY_EGG;
 }
 
 /** 按命中状态给 <html> 添加/移除劳动节彩蛋 class（幂等）。 */
-export function applyLaborDayClass(
-  active: boolean = isLaborDayActive(),
-): void {
+export function applyLaborDayClass(active: boolean = isLaborDayActive()): void {
   document.documentElement.classList.toggle(LABOR_DAY_CLASS, active);
 }
 
@@ -82,15 +77,12 @@ export function isNationalDayActive(
   now: Date = new Date(),
 ): boolean {
   return (
-    isNationalDay(now) ||
-    new URLSearchParams(search).get("egg") === NATIONAL_DAY_EGG
+    isNationalDay(now) || new URLSearchParams(search).get("egg") === NATIONAL_DAY_EGG
   );
 }
 
 /** 按命中状态给 <html> 添加/移除国庆彩蛋 class（幂等）。 */
-export function applyNationalDayClass(
-  active: boolean = isNationalDayActive(),
-): void {
+export function applyNationalDayClass(active: boolean = isNationalDayActive()): void {
   document.documentElement.classList.toggle(NATIONAL_DAY_CLASS, active);
 }
 

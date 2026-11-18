@@ -22,9 +22,7 @@ function listDir(dir: string): string[] {
 describe("dist/ 构建产物完整性", () => {
   beforeAll(() => {
     if (!existsSync(DIST)) {
-      throw new Error(
-        `dist/ 不存在。请先执行 \`pnpm build\` 再跑 \`pnpm test:build\`。`,
-      );
+      throw new Error(`dist/ 不存在。请先执行 \`pnpm build\` 再跑 \`pnpm test:build\`。`);
     }
   });
 

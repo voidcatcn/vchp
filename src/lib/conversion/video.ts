@@ -105,10 +105,7 @@ async function loadFFmpegBinary(): Promise<FFmpeg> {
     // Node 测试环境会抛 "ffmpeg.wasm does not support nodejs"，统一映射为不可用提示
     ffmpeg = new FFmpeg();
     await ffmpeg.load({
-      coreURL: await toBlobURL(
-        `${FFMPEG_CORE_BASE}/ffmpeg-core.js`,
-        "text/javascript",
-      ),
+      coreURL: await toBlobURL(`${FFMPEG_CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
       wasmURL: await toBlobURL(
         `${FFMPEG_CORE_BASE}/ffmpeg-core.wasm`,
         "application/wasm",
@@ -138,11 +135,10 @@ export async function convertVideo(
 
   // readFile 可能返回文本（encoding 场景）；这里固定按字节处理并复制到 ArrayBuffer 上
 
-  const bytes = typeof data === "string"
-
-    ? new TextEncoder().encode(data)
-
-    : (new Uint8Array(data) as Uint8Array<ArrayBuffer>);
+  const bytes =
+    typeof data === "string"
+      ? new TextEncoder().encode(data)
+      : (new Uint8Array(data) as Uint8Array<ArrayBuffer>);
 
   return { bytes, outputName };
 }

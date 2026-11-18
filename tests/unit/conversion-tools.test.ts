@@ -21,13 +21,7 @@ describe("图片转换：输出文件名", () => {
   });
 
   it("格式列表包含 PNG/JPEG/WebP/AVIF/BMP", () => {
-    expect(imageFormats.map((f) => f.id)).toEqual([
-      "png",
-      "jpeg",
-      "webp",
-      "avif",
-      "bmp",
-    ]);
+    expect(imageFormats.map((f) => f.id)).toEqual(["png", "jpeg", "webp", "avif", "bmp"]);
   });
 });
 

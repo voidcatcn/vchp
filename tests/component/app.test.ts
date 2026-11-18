@@ -9,7 +9,7 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import { createMemoryHistory, createRouter, type Router } from "vue-router";
+import { createMemoryHistory, createRouter } from "vue-router";
 import { nextTick } from "vue";
 import { routes } from "vue-router/auto-routes";
 import App from "@/App.vue";
@@ -68,7 +68,14 @@ describe("App shell", () => {
       expect(wrapper.find(`a[href="${href}"]`).exists()).toBe(true);
     }
     // 六个工具链接常驻 DOM（显示/隐藏由 CSS group-hover 控制）
-    for (const href of ["/tools/encryption/hash", "/tools/encryption/symmetric", "/tools/encryption/asymmetric", "/tools/conversion/image", "/tools/conversion/video", "/tools/conversion/document"]) {
+    for (const href of [
+      "/tools/encryption/hash",
+      "/tools/encryption/symmetric",
+      "/tools/encryption/asymmetric",
+      "/tools/conversion/image",
+      "/tools/conversion/video",
+      "/tools/conversion/document",
+    ]) {
       expect(wrapper.find(`a[href="${href}"]`).exists()).toBe(true);
     }
   });
@@ -135,9 +142,11 @@ describe("移动端悬浮导航（MobileNav）", () => {
     expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
 
     // 模拟点击主题切换按钮（弹出层外部）：pointerdown 触发 dismissable 关闭
-    wrapper.find('button[aria-label*="模式"]').element.dispatchEvent(
-      new PointerEvent("pointerdown", { bubbles: true, cancelable: true }),
-    );
+    wrapper
+      .find('button[aria-label*="模式"]')
+      .element.dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, cancelable: true }),
+      );
     await nextTick();
     await flushPromises();
     await nextTick();

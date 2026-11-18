@@ -84,7 +84,9 @@ describe("/tools/network/cidr CIDR 展开", () => {
     await wrapper.find("textarea").setValue("999.1.1.0/24\n10.0.0.0/30");
     await findButton(wrapper, "展开").trigger("click");
     await settle();
-    const output = (wrapper.find('textarea[aria-label="CIDR 展开结果"]').element as HTMLTextAreaElement).value;
+    const output = (
+      wrapper.find('textarea[aria-label="CIDR 展开结果"]').element as HTMLTextAreaElement
+    ).value;
     expect(output).toContain("10.0.0.0");
     expect(wrapper.text()).toContain("不是合法的 CIDR");
   });

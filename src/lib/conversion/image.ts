@@ -41,7 +41,14 @@ export const imageFormats: ImageFormat[] = [
     lossy: true,
     note: "WASM 编码，全平台支持",
   },
-  { id: "bmp", label: "BMP", mime: "image/bmp", ext: "bmp", lossy: false, note: "体积较大" },
+  {
+    id: "bmp",
+    label: "BMP",
+    mime: "image/bmp",
+    ext: "bmp",
+    lossy: false,
+    note: "体积较大",
+  },
 ];
 
 /** 输出文件名：保留原文件主名，替换扩展名 */
@@ -108,23 +115,34 @@ async function encodeWithJsquash(
   switch (format.id) {
     case "webp": {
       const { default: encodeWebp } = await import("@jsquash/webp/encode.js");
-      return new Blob([await encodeWebp(imageData, { quality: qualityPercent(quality) })], {
-        type: format.mime,
-      });
+      return new Blob(
+        [await encodeWebp(imageData, { quality: qualityPercent(quality) })],
+        {
+          type: format.mime,
+        },
+      );
     }
     case "avif": {
       const { default: encodeAvif } = await import("@jsquash/avif/encode.js");
-      return new Blob([await encodeAvif(imageData, { quality: qualityPercent(quality), bitDepth: 8 })], { type: format.mime });
+      return new Blob(
+        [await encodeAvif(imageData, { quality: qualityPercent(quality), bitDepth: 8 })],
+        { type: format.mime },
+      );
     }
     case "jpeg": {
       const { default: encodeJpeg } = await import("@jsquash/jpeg/encode.js");
-      return new Blob([await encodeJpeg(imageData, { quality: qualityPercent(quality) })], {
-        type: format.mime,
-      });
+      return new Blob(
+        [await encodeJpeg(imageData, { quality: qualityPercent(quality) })],
+        {
+          type: format.mime,
+        },
+      );
     }
     case "png": {
       const { default: encodePng } = await import("@jsquash/png/encode.js");
-      return new Blob([await encodePng(imageData, { bitDepth: 8 })], { type: format.mime });
+      return new Blob([await encodePng(imageData, { bitDepth: 8 })], {
+        type: format.mime,
+      });
     }
     default:
       throw new Error(`当前浏览器不支持导出 ${format.label} 格式，请换一种格式`);

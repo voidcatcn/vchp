@@ -45,24 +45,21 @@ export const TIERS: readonly TierInfo[] = [
   {
     id: "elite",
     label: "人上人",
-    badgeClass:
-      "border-sky-500/40 bg-sky-500/10 text-sky-600 dark:text-sky-400",
+    badgeClass: "border-sky-500/40 bg-sky-500/10 text-sky-600 dark:text-sky-400",
     barClass: "bg-sky-500",
     min: 70,
   },
   {
     id: "npc",
     label: "NPC",
-    badgeClass:
-      "border-slate-400/50 bg-slate-400/10 text-slate-500 dark:text-slate-400",
+    badgeClass: "border-slate-400/50 bg-slate-400/10 text-slate-500 dark:text-slate-400",
     barClass: "bg-slate-400",
     min: 60,
   },
   {
     id: "done",
     label: "拉完了",
-    badgeClass:
-      "border-red-500/40 bg-red-500/10 text-red-600 dark:text-red-400",
+    badgeClass: "border-red-500/40 bg-red-500/10 text-red-600 dark:text-red-400",
     barClass: "bg-red-500",
     min: 0,
   },

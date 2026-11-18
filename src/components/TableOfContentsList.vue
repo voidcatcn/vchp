@@ -20,9 +20,7 @@ const toc = computed<Heading[]>(() => {
   const list = props.headings;
   if (list.length === 0) return [];
   const hasH2 = list.some((h) => h.level === 2);
-  const filterLevel = hasH2
-    ? (h: Heading) => h.level >= 2
-    : (h: Heading) => h.level >= 1;
+  const filterLevel = hasH2 ? (h: Heading) => h.level >= 2 : (h: Heading) => h.level >= 1;
   return list.filter(filterLevel);
 });
 
@@ -47,9 +45,7 @@ function handleClick(e: MouseEvent, slug: string) {
 
 <template>
   <nav aria-label="文章目录">
-    <p
-      class="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase"
-    >
+    <p class="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
       目录
     </p>
     <ul v-if="toc.length > 0" class="flex flex-col gap-1 text-sm">

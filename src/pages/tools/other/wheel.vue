@@ -54,9 +54,7 @@ function resetDefaults() {
 resetDefaults();
 
 /** 参与抽取 / 转盘的选项：占比必须大于 0 */
-const activeItems = computed(() =>
-  items.value.filter((it) => it.ratio > 0),
-);
+const activeItems = computed(() => items.value.filter((it) => it.ratio > 0));
 const ratioSum = computed(() => round2(totalWeight(items.value)));
 
 function setName(item: WheelItem, raw: string) {
@@ -135,11 +133,14 @@ function spin() {
   spinDeg.value += force;
   // 每 360° 约 0.5s，力度越大转得越久
   spinDuration.value = Math.max(0.8, (force / 360) * 0.5);
-  spinTimer = setTimeout(() => {
-    spinning.value = false;
-    const actNow = activeItems.value;
-    lastWinner.value = actNow[winnerIndex(spinDeg.value, actNow)] ?? null;
-  }, spinDuration.value * 1000 + 80);
+  spinTimer = setTimeout(
+    () => {
+      spinning.value = false;
+      const actNow = activeItems.value;
+      lastWinner.value = actNow[winnerIndex(spinDeg.value, actNow)] ?? null;
+    },
+    spinDuration.value * 1000 + 80,
+  );
 }
 
 onBeforeUnmount(() => {
@@ -172,7 +173,11 @@ function nameText(name: string): string {
           role="tab"
           :aria-selected="tab === 'draw'"
           class="flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-          :class="tab === 'draw' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+          :class="
+            tab === 'draw'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          "
           @click="tab = 'draw'"
         >
           <Dices class="size-4" />
@@ -183,7 +188,11 @@ function nameText(name: string): string {
           role="tab"
           :aria-selected="tab === 'wheel'"
           class="flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-          :class="tab === 'wheel' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+          :class="
+            tab === 'wheel'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          "
           @click="tab = 'wheel'"
         >
           <Disc3 class="size-4" />
@@ -284,12 +293,7 @@ function nameText(name: string): string {
         <div
           class="flex w-full flex-col items-center gap-4 rounded-2xl border border-border bg-card p-6 dark:bg-input/30"
         >
-          <p
-            v-if="drawResult"
-            class="text-center"
-            role="status"
-            aria-live="polite"
-          >
+          <p v-if="drawResult" class="text-center" role="status" aria-live="polite">
             <span class="block text-4xl font-semibold sm:text-5xl">
               {{ nameText(drawResult?.name ?? "") }}
             </span>
@@ -298,10 +302,7 @@ function nameText(name: string): string {
           <p v-else-if="drawFlicker" class="text-4xl font-semibold text-muted-foreground">
             {{ nameText(drawFlicker?.name ?? "") }}
           </p>
-          <p
-            v-else
-            class="text-sm text-muted-foreground"
-          >
+          <p v-else class="text-sm text-muted-foreground">
             点击下方按钮，按占比加权随机抽取一个选项喵～
           </p>
           <Button
@@ -376,7 +377,11 @@ function nameText(name: string): string {
                   class="fill-white"
                   font-size="12.5"
                   font-weight="600"
-                  style="paint-order: stroke; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2px;"
+                  style="
+                    paint-order: stroke;
+                    stroke: rgba(0, 0, 0, 0.35);
+                    stroke-width: 2px;
+                  "
                 >
                   {{ nameText(s.name) }}
                 </text>
@@ -398,7 +403,11 @@ function nameText(name: string): string {
                   class="fill-white"
                   font-size="15"
                   font-weight="600"
-                  style="paint-order: stroke; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2px;"
+                  style="
+                    paint-order: stroke;
+                    stroke: rgba(0, 0, 0, 0.35);
+                    stroke-width: 2px;
+                  "
                 >
                   {{ nameText(wheelSlices[0].name) }}
                 </text>
@@ -418,11 +427,7 @@ function nameText(name: string): string {
           </Button>
         </div>
 
-        <p
-          v-if="items.length === 0"
-          class="text-sm text-muted-foreground"
-          role="status"
-        >
+        <p v-if="items.length === 0" class="text-sm text-muted-foreground" role="status">
           列表为空，先在上方添加选项喵～
         </p>
         <p
@@ -454,5 +459,3 @@ function nameText(name: string): string {
     </div>
   </ToolLayout>
 </template>
-
-

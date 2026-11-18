@@ -38,9 +38,7 @@ import {
 describe("单向加密（哈希）", () => {
   it("MD5 标准测试向量", async () => {
     expect(await hashText("MD5", "")).toBe("d41d8cd98f00b204e9800998ecf8427e");
-    expect(await hashText("MD5", "abc")).toBe(
-      "900150983cd24fb0d6963f7d28e17f72",
-    );
+    expect(await hashText("MD5", "abc")).toBe("900150983cd24fb0d6963f7d28e17f72");
     expect(await hashText("MD5", "The quick brown fox jumps over the lazy dog")).toBe(
       "9e107d9d372bb6826bd81d3542a419d6",
     );
@@ -92,7 +90,11 @@ describe("对称加密", () => {
 
   for (const algo of symmetricAlgorithms) {
     it(`${algo.id} 加解密往返（默认 Argon2id）`, async () => {
-      const payload = await symmetricEncrypt(algo.id, plaintext, "correct horse battery staple");
+      const payload = await symmetricEncrypt(
+        algo.id,
+        plaintext,
+        "correct horse battery staple",
+      );
       expect(payload.startsWith(`v2:argon2id:${algo.id}:`)).toBe(true);
       // 自描述格式：v2:<KDF>:<算法>:<盐>:<IV>:<数据>
       expect(payload.split(":")).toHaveLength(6);
@@ -287,11 +289,7 @@ describe("非对称加密：ECC（ECDH 混合加密）", () => {
       expect(pair.publicKey).toContain("-----BEGIN PUBLIC KEY-----");
       expect(pair.privateKey).toContain("-----BEGIN PRIVATE KEY-----");
 
-      const ciphertext = await encryptWithPublicKey(
-        algo,
-        pair.publicKey,
-        plaintext,
-      );
+      const ciphertext = await encryptWithPublicKey(algo, pair.publicKey, plaintext);
       expect(ciphertext.startsWith(`v1:ecdh:`)).toBe(true);
       expect(await decryptWithPrivateKey(algo, pair.privateKey, ciphertext)).toBe(
         plaintext,
@@ -310,11 +308,7 @@ describe("非对称加密：后量子 ML-KEM", () => {
       expect(pair.publicKey).not.toContain("BEGIN");
       expect(pair.privateKey).not.toContain("BEGIN");
 
-      const ciphertext = await encryptWithPublicKey(
-        algo,
-        pair.publicKey,
-        plaintext,
-      );
+      const ciphertext = await encryptWithPublicKey(algo, pair.publicKey, plaintext);
       expect(ciphertext.startsWith(`v1:mlkem:${algo}:`)).toBe(true);
       expect(await decryptWithPrivateKey(algo, pair.privateKey, ciphertext)).toBe(
         plaintext,
@@ -325,11 +319,7 @@ describe("非对称加密：后量子 ML-KEM", () => {
   it("错误私钥解密失败", async () => {
     const pairA = await generateKeyPairText("ML-KEM-768");
     const pairB = await generateKeyPairText("ML-KEM-768");
-    const ciphertext = await encryptWithPublicKey(
-      "ML-KEM-768",
-      pairA.publicKey,
-      "机密",
-    );
+    const ciphertext = await encryptWithPublicKey("ML-KEM-768", pairA.publicKey, "机密");
     await expect(
       decryptWithPrivateKey("ML-KEM-768", pairB.privateKey, ciphertext),
     ).rejects.toThrow();
@@ -353,11 +343,9 @@ describe("单向加密：文件字节哈希（hashBytes）", () => {
 
   it("HMAC-SHA256 对文件字节 + 密钥计算正确", async () => {
     expect(
-      await hashBytes(
-        "HMAC-SHA256",
-        enc("The quick brown fox jumps over the lazy dog"),
-        { secret: "key" },
-      ),
+      await hashBytes("HMAC-SHA256", enc("The quick brown fox jumps over the lazy dog"), {
+        secret: "key",
+      }),
     ).toBe("f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8");
   });
 
@@ -368,17 +356,20 @@ describe("单向加密：文件字节哈希（hashBytes）", () => {
   });
 });
 
-
 describe("对称加密：文件字节往返", () => {
   it("AES-256-GCM 二进制字节加密 → 解密 无损还原", async () => {
-    const bytes = new Uint8Array([0, 1, 2, 128, 250, 251, 252, 255]) as Uint8Array<ArrayBuffer>;
+    const bytes = new Uint8Array([
+      0, 1, 2, 128, 250, 251, 252, 255,
+    ]) as Uint8Array<ArrayBuffer>;
     const payload = await symmetricEncryptBytes("AES-256-GCM", bytes, "pw");
     const out = await symmetricDecryptBytes(payload, "pw");
     expect(Buffer.from(out).equals(Buffer.from(bytes))).toBe(true);
   });
 
   it("AES-128-CBC 二进制字节往返", async () => {
-    const bytes = new Uint8Array([9, 8, 7, 6, 5, 4, 3, 2, 1, 0]) as Uint8Array<ArrayBuffer>;
+    const bytes = new Uint8Array([
+      9, 8, 7, 6, 5, 4, 3, 2, 1, 0,
+    ]) as Uint8Array<ArrayBuffer>;
     const payload = await symmetricEncryptBytes("AES-128-CBC", bytes, "pw");
     const out = await symmetricDecryptBytes(payload, "pw");
     expect(Buffer.from(out).equals(Buffer.from(bytes))).toBe(true);

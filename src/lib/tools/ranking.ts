@@ -53,4 +53,3 @@ export function sanitizeScore(raw: string): number {
   if (raw.trim() === "" || !Number.isFinite(n)) return SCORE_MIN;
   return Math.round(Math.min(SCORE_MAX, Math.max(SCORE_MIN, n)));
 }
-

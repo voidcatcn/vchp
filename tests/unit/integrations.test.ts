@@ -32,13 +32,13 @@ lang = "zh-CN"
   });
 
   it("缺少 [umami] 抛错", () => {
-    expect(() => parseIntegrationsToml("[clarity]\nscript = \"x\"")).toThrow(/umami/);
+    expect(() => parseIntegrationsToml('[clarity]\nscript = "x"')).toThrow(/umami/);
   });
 
   it("giscus 缺少必填键抛错", () => {
     expect(() =>
       parseIntegrationsToml(
-        "[umami]\nscript = \"s\"\nwebsiteId = \"w\"\n\n[clarity]\nscript = \"c\"\n\n[giscus]\nrepo = \"owner/repo\"",
+        '[umami]\nscript = "s"\nwebsiteId = "w"\n\n[clarity]\nscript = "c"\n\n[giscus]\nrepo = "owner/repo"',
       ),
     ).toThrow(/repoId/);
   });

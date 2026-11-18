@@ -109,13 +109,7 @@ export async function createMarkdownRenderer(
       return self.renderToken(tokens, idx, options);
     };
 
-  instance.renderer.rules.heading_open = function (
-    tokens,
-    idx,
-    options,
-    env,
-    self,
-  ) {
+  instance.renderer.rules.heading_open = function (tokens, idx, options, env, self) {
     const token = tokens[idx];
     const level = Number(token.tag.slice(1)) as Heading["level"];
 
@@ -151,4 +145,3 @@ export function renderPostContent(
   const env: RenderEnv = { postId, toc };
   return { content: md.render(rawContent, env), headings: env.toc };
 }
-

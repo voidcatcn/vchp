@@ -34,10 +34,7 @@ describe("占比与列表", () => {
   });
 
   it("addItemBalanced：未编辑时继续默认平分，总和保持 100", () => {
-    const two = equalize([
-      createWheelItem("A"),
-      createWheelItem("B"),
-    ]);
+    const two = equalize([createWheelItem("A"), createWheelItem("B")]);
     const three = addItemBalanced(two);
     expect(three).toHaveLength(3);
     expect(three.map((it) => it.ratio)).toEqual([33.33, 33.34, 33.33]);
@@ -104,7 +101,11 @@ describe("旋转命中判定", () => {
   });
 
   it("非等分扇区：按占比边界判定", () => {
-    const items = [createWheelItem("A", 25), createWheelItem("B", 50), createWheelItem("C", 25)];
+    const items = [
+      createWheelItem("A", 25),
+      createWheelItem("B", 50),
+      createWheelItem("C", 25),
+    ];
     // 扇区：A=[0,90) B=[90,270) C=[270,360)
     expect(winnerIndex(0, items)).toBe(0);
     expect(winnerIndex(45, items)).toBe(2); // 转到 315°
@@ -144,5 +145,3 @@ describe("轮盘扇区生成", () => {
     expect(slices[1].path).toContain("L 130.00 4.00 A 126 126 0 0 1 130.00 4.00");
   });
 });
-
-

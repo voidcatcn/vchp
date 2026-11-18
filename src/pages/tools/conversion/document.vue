@@ -2,13 +2,7 @@
 import { computed, ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  ArrowLeftRight,
-  FileCode,
-  Loader2,
-  RefreshCw,
-  WifiOff,
-} from "@lucide/vue";
+import { ArrowLeftRight, FileCode, Loader2, RefreshCw, WifiOff } from "@lucide/vue";
 import ToolLayout from "@/components/ToolLayout.vue";
 import ToolFileInput from "@/components/ToolFileInput.vue";
 import FileUploadButton from "@/components/FileUploadButton.vue";
@@ -81,8 +75,7 @@ async function handleConvert() {
       resultName.value = docxFile.value.name.replace(/\.docx$/i, "") + ".md";
     }
   } catch (err) {
-    errorMessage.value =
-      err instanceof Error ? err.message : "转换失败，请重试";
+    errorMessage.value = err instanceof Error ? err.message : "转换失败，请重试";
   } finally {
     busy.value = false;
     loadingEngine.value = false;
@@ -99,18 +92,28 @@ async function handleConvert() {
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
       <!-- 转换方向 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <ArrowLeftRight class="size-4" />
           <h2 class="text-sm font-medium">转换方向</h2>
         </div>
-        <div class="flex gap-1 rounded-xl border border-border bg-muted/60 p-1" role="tablist" aria-label="转换方向">
+        <div
+          class="flex gap-1 rounded-xl border border-border bg-muted/60 p-1"
+          role="tablist"
+          aria-label="转换方向"
+        >
           <button
             type="button"
             role="tab"
             :aria-selected="direction === 'md2docx'"
             class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="direction === 'md2docx' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+            :class="
+              direction === 'md2docx'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            "
             @click="setDirection('md2docx')"
           >
             <FileCode class="size-4" />
@@ -121,7 +124,11 @@ async function handleConvert() {
             role="tab"
             :aria-selected="direction === 'docx2md'"
             class="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="direction === 'docx2md' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'"
+            :class="
+              direction === 'docx2md'
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            "
             @click="setDirection('docx2md')"
           >
             <FileCode class="size-4" />
@@ -131,7 +138,9 @@ async function handleConvert() {
       </section>
 
       <!-- 输入 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <template v-if="direction === 'md2docx'">
           <div class="flex items-center justify-between gap-2">
             <span class="text-sm font-medium">Markdown 内容</span>
@@ -172,7 +181,11 @@ async function handleConvert() {
         </p>
       </section>
 
-      <p v-if="errorMessage && !wasmUnavailable" class="text-sm text-destructive" role="alert">
+      <p
+        v-if="errorMessage && !wasmUnavailable"
+        class="text-sm text-destructive"
+        role="alert"
+      >
         {{ errorMessage }}
       </p>
 
@@ -195,11 +208,17 @@ async function handleConvert() {
       </Alert>
 
       <!-- 结果 -->
-      <div v-if="direction === 'md2docx' && resultDocx" class="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <div
+        v-if="direction === 'md2docx' && resultDocx"
+        class="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <span class="truncate text-sm font-medium">{{ resultName }}</span>
         <DownloadButton :filename="resultName" :data="resultDocx" />
       </div>
-      <section v-if="direction === 'docx2md' && resultMarkdown" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="direction === 'docx2md' && resultMarkdown"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm font-medium">转换结果</span>
           <div class="flex items-center gap-2">
@@ -222,7 +241,8 @@ async function handleConvert() {
       <Alert hint-id="document-engine">
         <FileCode class="size-4" />
         <AlertDescription>
-          文档转换由 pandoc-wasm 驱动，按需从 CDN 加载，文件不上传，全程本地处理；若加载失败请检查网络后重试。
+          文档转换由 pandoc-wasm 驱动，按需从 CDN
+          加载，文件不上传，全程本地处理；若加载失败请检查网络后重试。
         </AlertDescription>
       </Alert>
     </div>

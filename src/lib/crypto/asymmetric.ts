@@ -45,15 +45,63 @@ export interface AsymmetricAlgoMeta {
 }
 
 export const asymmetricAlgorithms: AsymmetricAlgoMeta[] = [
-  { id: "RSA-OAEP-2048", label: "RSA-OAEP 2048 位", family: "rsa", bits: 2048, maxPlaintextBytes: 190 },
-  { id: "RSA-OAEP-3072", label: "RSA-OAEP 3072 位", family: "rsa", bits: 3072, maxPlaintextBytes: 318 },
-  { id: "RSA-OAEP-4096", label: "RSA-OAEP 4096 位", family: "rsa", bits: 4096, maxPlaintextBytes: 446 },
-  { id: "ECDH-P-256", label: "ECC ECDH-P-256（混合加密）", family: "ecdh", curve: "P-256" },
-  { id: "ECDH-P-384", label: "ECC ECDH-P-384（混合加密）", family: "ecdh", curve: "P-384" },
-  { id: "ECDH-P-521", label: "ECC ECDH-P-521（混合加密）", family: "ecdh", curve: "P-521" },
-  { id: "ML-KEM-512", label: "后量子 ML-KEM-512（FIPS 203）", family: "mlkem", postQuantum: true },
-  { id: "ML-KEM-768", label: "后量子 ML-KEM-768（FIPS 203）", family: "mlkem", postQuantum: true },
-  { id: "ML-KEM-1024", label: "后量子 ML-KEM-1024（FIPS 203）", family: "mlkem", postQuantum: true },
+  {
+    id: "RSA-OAEP-2048",
+    label: "RSA-OAEP 2048 位",
+    family: "rsa",
+    bits: 2048,
+    maxPlaintextBytes: 190,
+  },
+  {
+    id: "RSA-OAEP-3072",
+    label: "RSA-OAEP 3072 位",
+    family: "rsa",
+    bits: 3072,
+    maxPlaintextBytes: 318,
+  },
+  {
+    id: "RSA-OAEP-4096",
+    label: "RSA-OAEP 4096 位",
+    family: "rsa",
+    bits: 4096,
+    maxPlaintextBytes: 446,
+  },
+  {
+    id: "ECDH-P-256",
+    label: "ECC ECDH-P-256（混合加密）",
+    family: "ecdh",
+    curve: "P-256",
+  },
+  {
+    id: "ECDH-P-384",
+    label: "ECC ECDH-P-384（混合加密）",
+    family: "ecdh",
+    curve: "P-384",
+  },
+  {
+    id: "ECDH-P-521",
+    label: "ECC ECDH-P-521（混合加密）",
+    family: "ecdh",
+    curve: "P-521",
+  },
+  {
+    id: "ML-KEM-512",
+    label: "后量子 ML-KEM-512（FIPS 203）",
+    family: "mlkem",
+    postQuantum: true,
+  },
+  {
+    id: "ML-KEM-768",
+    label: "后量子 ML-KEM-768（FIPS 203）",
+    family: "mlkem",
+    postQuantum: true,
+  },
+  {
+    id: "ML-KEM-1024",
+    label: "后量子 ML-KEM-1024（FIPS 203）",
+    family: "mlkem",
+    postQuantum: true,
+  },
 ];
 
 /** 密钥文本对：RSA / ECDH 为 PEM，ML-KEM 为 base64 */
@@ -84,13 +132,8 @@ function keyImportParams(): RsaHashedImportParams {
 }
 
 /** 生成 RSA-OAEP 密钥对（可导出 PEM） */
-export async function generateRsaKeyPair(
-  bits: number,
-): Promise<CryptoKeyPair> {
-  return crypto.subtle.generateKey(keyGenParams(bits), true, [
-    "encrypt",
-    "decrypt",
-  ]);
+export async function generateRsaKeyPair(bits: number): Promise<CryptoKeyPair> {
+  return crypto.subtle.generateKey(keyGenParams(bits), true, ["encrypt", "decrypt"]);
 }
 
 /** 导出公钥为 SPKI PEM 文本 */
@@ -132,11 +175,7 @@ export async function rsaEncryptBytes(
   publicKey: CryptoKey,
   bytes: Uint8Array<ArrayBuffer>,
 ): Promise<string> {
-  const ciphertext = await crypto.subtle.encrypt(
-    { name: "RSA-OAEP" },
-    publicKey,
-    bytes,
-  );
+  const ciphertext = await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, bytes);
   return bytesToBase64(new Uint8Array(ciphertext));
 }
 
@@ -187,20 +226,36 @@ function pemDecode(label: string, pem: string): Uint8Array<ArrayBuffer> {
 
 const ECDH_KEY_USAGES = ["deriveBits"] as const;
 
-
 async function ecdhImportPublicKey(pem: string, curve: string): Promise<CryptoKey> {
   const der = pemDecode("PUBLIC KEY", pem);
-  return crypto.subtle.importKey("spki", der, { name: "ECDH", namedCurve: curve }, true, []);
+  return crypto.subtle.importKey(
+    "spki",
+    der,
+    { name: "ECDH", namedCurve: curve },
+    true,
+    [],
+  );
 }
 
 async function ecdhImportPrivateKey(pem: string, curve: string): Promise<CryptoKey> {
   const der = pemDecode("PRIVATE KEY", pem);
-  return crypto.subtle.importKey("pkcs8", der, { name: "ECDH", namedCurve: curve }, true, ECDH_KEY_USAGES);
+  return crypto.subtle.importKey(
+    "pkcs8",
+    der,
+    { name: "ECDH", namedCurve: curve },
+    true,
+    ECDH_KEY_USAGES,
+  );
 }
 
 /** HKDF-SHA256：把共享密钥拉伸为 AES-256-GCM 密钥（info 区分用途） */
-async function hkdfToAesGcm(sharedSecret: Uint8Array<ArrayBuffer>, info: string): Promise<CryptoKey> {
-  const baseKey = await crypto.subtle.importKey("raw", sharedSecret, "HKDF", false, ["deriveKey"]);
+async function hkdfToAesGcm(
+  sharedSecret: Uint8Array<ArrayBuffer>,
+  info: string,
+): Promise<CryptoKey> {
+  const baseKey = await crypto.subtle.importKey("raw", sharedSecret, "HKDF", false, [
+    "deriveKey",
+  ]);
   return crypto.subtle.deriveKey(
     { name: "HKDF", hash: "SHA-256", salt: randomBytes(0), info: textToBytes(info) },
     baseKey,
@@ -246,11 +301,7 @@ async function ecdhEncryptBytes(
   );
   const aesKey = await hkdfToAesGcm(new Uint8Array(sharedSecret), "ecdh");
   const iv = randomBytes(12);
-  const ciphertext = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    aesKey,
-    bytes,
-  );
+  const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, aesKey, bytes);
   const ephemeralPubDer = await crypto.subtle.exportKey("spki", ephemeral.publicKey);
   return [
     "v1",
@@ -309,7 +360,8 @@ const MLKEM_VARIANTS = {
 
 /** 生成 ML-KEM 密钥对，密钥以 base64 文本呈现 */
 function mlkemGenerateKeyPair(algo: AsymmetricAlgorithm): KeyPairText {
-  const { publicKey, secretKey } = MLKEM_VARIANTS[algo as keyof typeof MLKEM_VARIANTS].keygen();
+  const { publicKey, secretKey } =
+    MLKEM_VARIANTS[algo as keyof typeof MLKEM_VARIANTS].keygen();
   return {
     publicKey: bytesToBase64(publicKey),
     privateKey: bytesToBase64(secretKey),
@@ -327,19 +379,11 @@ async function mlkemEncryptBytes(
 ): Promise<string> {
   const kem = MLKEM_VARIANTS[algo as keyof typeof MLKEM_VARIANTS];
   const { cipherText, sharedSecret } = kem.encapsulate(base64ToBytes(publicKeyB64));
-  const aesKey = await crypto.subtle.importKey(
-    "raw",
-    sharedSecret,
-    "AES-GCM",
-    false,
-    ["encrypt"],
-  );
+  const aesKey = await crypto.subtle.importKey("raw", sharedSecret, "AES-GCM", false, [
+    "encrypt",
+  ]);
   const iv = randomBytes(12);
-  const ciphertext = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    aesKey,
-    bytes,
-  );
+  const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, aesKey, bytes);
   return [
     "v1",
     "mlkem",
@@ -370,13 +414,9 @@ async function mlkemDecryptBytes(
     base64ToBytes(parts[3]),
     base64ToBytes(privateKeyB64),
   );
-  const aesKey = await crypto.subtle.importKey(
-    "raw",
-    sharedSecret,
-    "AES-GCM",
-    false,
-    ["decrypt"],
-  );
+  const aesKey = await crypto.subtle.importKey("raw", sharedSecret, "AES-GCM", false, [
+    "decrypt",
+  ]);
   const plaintext = await crypto.subtle.decrypt(
     { name: "AES-GCM", iv: base64ToBytes(parts[4]) },
     aesKey,
@@ -454,7 +494,5 @@ export async function decryptWithPrivateKey(
   privateKeyText: string,
   payload: string,
 ): Promise<string> {
-  return bytesToText(
-    await decryptBytesWithPrivateKey(algo, privateKeyText, payload),
-  );
+  return bytesToText(await decryptBytesWithPrivateKey(algo, privateKeyText, payload));
 }

@@ -7,7 +7,12 @@ import MobileNav from "@/components/MobileNav.vue";
 import NationalDayBanner from "@/components/NationalDayBanner.vue";
 import MidAutumnBanner from "@/components/MidAutumnBanner.vue";
 import LaborDayBanner from "@/components/LaborDayBanner.vue";
-import { applyMidAutumnClass, isLaborDayActive, isMidAutumnActive, isNationalDayActive } from "@/lib/festival";
+import {
+  applyMidAutumnClass,
+  isLaborDayActive,
+  isMidAutumnActive,
+  isNationalDayActive,
+} from "@/lib/festival";
 import CookieConsentDialog from "@/components/CookieConsentDialog.vue";
 import { navItems } from "@/lib/nav";
 import { useRoutePrefetch } from "@/composables/useRoutePrefetch";
@@ -21,9 +26,7 @@ type Theme = "dark" | "light";
 function getInitialTheme(): Theme {
   const saved = localStorage.getItem(THEME_KEY);
   if (saved === "dark" || saved === "light") return saved;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 function applyTheme(theme: Theme) {
@@ -154,7 +157,9 @@ const desktopNavLinkClass = [
                   {{ group.label }}
                 </RouterLink>
                 <!-- 分组内工具（缩进一级） -->
-                <div class="mb-1 flex flex-col gap-0.5 border-l border-border pl-2 ml-1.5">
+                <div
+                  class="mb-1 flex flex-col gap-0.5 border-l border-border pl-2 ml-1.5"
+                >
                   <RouterLink
                     v-for="child in group.items"
                     :key="child.to"
@@ -173,11 +178,7 @@ const desktopNavLinkClass = [
             </div>
           </div>
         </div>
-        <RouterLink
-          v-else
-          :to="item.to"
-          :class="desktopNavLinkClass"
-        >
+        <RouterLink v-else :to="item.to" :class="desktopNavLinkClass">
           <component :is="item.icon" class="nav-icon size-4" />
           {{ item.label }}
         </RouterLink>

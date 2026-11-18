@@ -59,7 +59,9 @@ async function handleExpand() {
     back-label="返回网络工具"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <Network class="size-4" />
@@ -96,11 +98,18 @@ async function handleExpand() {
       <p v-if="errorMessage" class="text-sm text-destructive" role="alert">
         {{ errorMessage }}
       </p>
-      <p v-if="warning" class="whitespace-pre-line text-sm text-amber-600 dark:text-amber-400" role="alert">
+      <p
+        v-if="warning"
+        class="whitespace-pre-line text-sm text-amber-600 dark:text-amber-400"
+        role="alert"
+      >
         {{ warning }}
       </p>
 
-      <section v-if="result" class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        v-if="result"
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="text-sm font-medium">展开结果</span>
           <div class="flex items-center gap-2">
@@ -108,7 +117,11 @@ async function handleExpand() {
               {{ result.engine === "wasm" ? "Rust wasm" : "JS 回退" }} 引擎
             </span>
             <CopyButton :text="result.text" :disabled="!result.text" />
-            <DownloadButton filename="cidr-ips.txt" :data="result.text" :disabled="!result.text" />
+            <DownloadButton
+              filename="cidr-ips.txt"
+              :data="result.text"
+              :disabled="!result.text"
+            />
           </div>
         </div>
         <p class="text-xs text-muted-foreground">

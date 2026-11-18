@@ -13,11 +13,7 @@ import {
 import ToolLayout from "@/components/ToolLayout.vue";
 import ToolFileInput from "@/components/ToolFileInput.vue";
 import DownloadButton from "@/components/DownloadButton.vue";
-import {
-  convertVideo,
-  loadFFmpeg,
-  videoPresets,
-} from "@/lib/conversion/video";
+import { convertVideo, loadFFmpeg, videoPresets } from "@/lib/conversion/video";
 import { useSeo } from "@/composables/useSeo";
 
 useSeo({
@@ -36,9 +32,7 @@ const errorMessage = ref("");
 const resultBytes = ref<Uint8Array<ArrayBuffer> | null>(null);
 const resultName = ref("");
 
-const currentPreset = computed(
-  () => videoPresets.find((p) => p.id === presetId.value)!,
-);
+const currentPreset = computed(() => videoPresets.find((p) => p.id === presetId.value)!);
 
 /** WASM 加载失败时展示独立提示（区别于普通错误） */
 const wasmUnavailable = computed(() => errorMessage.value.includes("WASM"));
@@ -78,8 +72,7 @@ async function handleConvert() {
     resultName.value = outputName;
     progress.value = 1;
   } catch (err) {
-    errorMessage.value =
-      err instanceof Error ? err.message : "转换失败，请重试";
+    errorMessage.value = err instanceof Error ? err.message : "转换失败，请重试";
   } finally {
     loadingEngine.value = false;
     busy.value = false;
@@ -96,7 +89,9 @@ async function handleConvert() {
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
       <!-- 选择文件 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <div class="flex items-center gap-2">
           <VideoIcon class="size-4" />
           <h2 class="text-sm font-medium">选择文件</h2>
@@ -109,18 +104,20 @@ async function handleConvert() {
       </section>
 
       <!-- 输出格式 -->
-      <section class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <section
+        class="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <label class="flex flex-col gap-1.5">
           <span class="text-sm font-medium">输出格式</span>
           <Select v-model="presetId">
             <SelectTrigger aria-label="输出格式">
               <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-            <SelectItem v-for="p in videoPresets" :key="p.id" :value="p.id">
-              {{ p.label }}{{ p.note ? `（${p.note}）` : "" }}
-            </SelectItem>
-              </SelectContent>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="p in videoPresets" :key="p.id" :value="p.id">
+                {{ p.label }}{{ p.note ? `（${p.note}）` : "" }}
+              </SelectItem>
+            </SelectContent>
           </Select>
         </label>
         <Button
@@ -151,7 +148,11 @@ async function handleConvert() {
         </div>
       </section>
 
-      <p v-if="errorMessage && !wasmUnavailable" class="text-sm text-destructive" role="alert">
+      <p
+        v-if="errorMessage && !wasmUnavailable"
+        class="text-sm text-destructive"
+        role="alert"
+      >
         {{ errorMessage }}
       </p>
 
@@ -174,7 +175,10 @@ async function handleConvert() {
       </Alert>
 
       <!-- 结果 -->
-      <div v-if="resultBytes" class="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30">
+      <div
+        v-if="resultBytes"
+        class="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-4 dark:bg-input/30"
+      >
         <span class="truncate text-sm font-medium">{{ resultName }}</span>
         <DownloadButton :filename="resultName" :data="resultBytes" />
       </div>
@@ -182,7 +186,8 @@ async function handleConvert() {
       <Alert hint-id="video-engine">
         <VideoIcon class="size-4" />
         <AlertDescription>
-          转码引擎（ffmpeg.wasm）按需从 CDN 加载，文件不上传，全程本地处理；若加载失败请检查网络后重试。
+          转码引擎（ffmpeg.wasm）按需从 CDN
+          加载，文件不上传，全程本地处理；若加载失败请检查网络后重试。
         </AlertDescription>
       </Alert>
     </div>

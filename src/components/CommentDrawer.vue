@@ -2,11 +2,7 @@
 import { defineAsyncComponent } from "vue";
 import { integrations } from "virtual:integrations";
 import { MessageSquare } from "@lucide/vue";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 // 异步加载 Giscus：chunk 在 [id].vue onMounted 时已预拉过
 const Giscus = defineAsyncComponent({

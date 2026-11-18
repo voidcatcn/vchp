@@ -156,9 +156,7 @@ export function useCookieConsent() {
   );
   /** 统计子项是否部分勾选（父级半选） */
   const statisticsPartial = computed(
-    () =>
-      (statistics.value.umami || statistics.value.clarity) &&
-      !statisticsAll.value,
+    () => (statistics.value.umami || statistics.value.clarity) && !statisticsAll.value,
   );
 
   /** 父级开关：勾选 = 全选统计子项，取消 = 全部取消（半选点击视为全选） */

@@ -105,9 +105,7 @@ function toId(raw: unknown, index: number): string {
   }
   const id = raw.trim();
   if (!ID_PATTERN.test(id)) {
-    throw new Error(
-      `categories[${index}].id 仅允许小写字母/数字/连字符，收到: ${id}`,
-    );
+    throw new Error(`categories[${index}].id 仅允许小写字母/数字/连字符，收到: ${id}`);
   }
   return id;
 }
@@ -131,7 +129,9 @@ export function parseRankingsToml(raw: string): RankingCategory[] {
     }
     const items = record.items;
     if (items === undefined) {
-      throw new Error(`categories[${index}].items 缺失（需要 [[categories.items]] 列表）`);
+      throw new Error(
+        `categories[${index}].items 缺失（需要 [[categories.items]] 列表）`,
+      );
     }
     if (!Array.isArray(items)) {
       throw new Error(`categories[${index}].items 必须是 [[categories.items]] 数组表`);
@@ -180,7 +180,11 @@ const TOML_HEADER = `# =========================================================
 /** 序列化分类列表 → TOML 文本（含文件头注释，可整体粘贴回 data.toml） */
 export function serializeRankingsToml(categories: RankingCategory[]): string {
   const blocks = categories.map((category) => {
-    const lines = [`[[categories]]`, `id = "${escapeTomlString(category.id)}"`, `name = "${escapeTomlString(category.name)}"`];
+    const lines = [
+      `[[categories]]`,
+      `id = "${escapeTomlString(category.id)}"`,
+      `name = "${escapeTomlString(category.name)}"`,
+    ];
     if (category.description) {
       lines.push(`description = "${escapeTomlString(category.description)}"`);
     }
@@ -204,4 +208,3 @@ export function slugifyId(name: string): string {
   // 中文名称没有可用字符时给个安全默认值，用户可手动改名
   return base || "category";
 }
-

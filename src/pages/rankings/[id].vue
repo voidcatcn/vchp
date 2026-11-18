@@ -2,11 +2,7 @@
 import { computed, ref, watch } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { ArrowLeft, Award, Crown, Hash, Medal } from "@lucide/vue";
-import {
-  getRankingById,
-  sortRankingItems,
-  tierOf,
-} from "@/lib/rankings";
+import { getRankingById, sortRankingItems, tierOf } from "@/lib/rankings";
 import { useSeo } from "@/composables/useSeo";
 
 const route = useRoute<"/rankings/[id]">();
@@ -17,9 +13,7 @@ const category = computed(() => getRankingById(String(route.params.id ?? "")));
 useSeo({
   title: computed(() => (category.value ? `${category.value.name}排名` : "排名不存在")),
   description: computed(
-    () =>
-      category.value?.description ??
-      "这个排名分类不存在，可能被删掉了喵～",
+    () => category.value?.description ?? "这个排名分类不存在，可能被删掉了喵～",
   ),
   path: computed(() => `/rankings/${String(route.params.id ?? "")}`),
 });
@@ -134,9 +128,9 @@ const sortedItems = computed(() =>
             "
           >
             <Crown v-if="index === 0" class="size-3.5" />
-              <Medal v-else-if="index === 1" class="size-3.5" />
-              <Award v-else-if="index === 2" class="size-3.5" />
-              {{ index + 1 }}
+            <Medal v-else-if="index === 1" class="size-3.5" />
+            <Award v-else-if="index === 2" class="size-3.5" />
+            {{ index + 1 }}
           </span>
 
           <!-- 名称 / 简洁 / 评价 -->
@@ -191,9 +185,7 @@ const sortedItems = computed(() =>
     <template v-else>
       <div class="flex flex-col items-center gap-3 text-center">
         <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">排名不存在</h1>
-        <p class="text-muted-foreground">
-          这个排名分类找不到，可能被改名或删掉了喵～
-        </p>
+        <p class="text-muted-foreground">这个排名分类找不到，可能被改名或删掉了喵～</p>
         <RouterLink
           to="/rankings"
           class="text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"

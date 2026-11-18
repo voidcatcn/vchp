@@ -8,7 +8,13 @@ import { describe, expect, it } from "vitest";
 import { encodeBmp } from "@/lib/conversion/image";
 
 /** 构造一个 w×h 的纯色 ImageData 测试样本 */
-function solidImage(width: number, height: number, r: number, g: number, b: number): ImageData {
+function solidImage(
+  width: number,
+  height: number,
+  r: number,
+  g: number,
+  b: number,
+): ImageData {
   const data = new Uint8ClampedArray(width * height * 4);
   for (let i = 0; i < width * height; i++) {
     data[i * 4] = r;
@@ -58,7 +64,9 @@ describe("encodeBmp（24 位 BMP 编码器）", () => {
     expect(view.getUint16(28, true)).toBe(24);
     // 像素数据：自下而上，第一行像素 = 原图最后一行（绿）
     const pixelStart = 54;
-    expect([buf[pixelStart], buf[pixelStart + 1], buf[pixelStart + 2]]).toEqual([0, 255, 0]);
+    expect([buf[pixelStart], buf[pixelStart + 1], buf[pixelStart + 2]]).toEqual([
+      0, 255, 0,
+    ]);
     // 最后一行像素 = 原图第一行（红），BMP 存 BGR：RGB(255,0,0) → [0,0,255]
     const lastRow = pixelStart + rowSize * (height - 1);
     expect([buf[lastRow], buf[lastRow + 1], buf[lastRow + 2]]).toEqual([0, 0, 255]);

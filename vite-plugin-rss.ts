@@ -81,9 +81,7 @@ function entryNode(post: FeedPost): string {
     `    <id>${escapeXml(url)}</id>`,
     `    <published>${toIso(post.createTime)}</published>`,
     `    <updated>${toIso(post.createTime)}</updated>`,
-    ...(post.desc
-      ? [`    <summary type="html">${escapeXml(post.desc)}</summary>`]
-      : []),
+    ...(post.desc ? [`    <summary type="html">${escapeXml(post.desc)}</summary>`] : []),
     ...post.tag.map((t) => `    <category term="${escapeXml(t)}"/>`),
     `    <content type="html"><![CDATA[${content}]]></content>`,
     `  </entry>`,

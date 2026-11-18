@@ -4,7 +4,7 @@ import { X } from "@lucide/vue";
 import { useHintSettings } from "@/composables/useHintSettings";
 import { cn } from "@/lib/utils";
 import type { AlertVariants } from ".";
-import { alertVariants } from "."
+import { alertVariants } from ".";
 
 const props = defineProps<{
   class?: HTMLAttributes["class"];

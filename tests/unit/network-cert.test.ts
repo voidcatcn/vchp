@@ -97,7 +97,9 @@ describe("fetchLiveCertificate 实时证书查询", () => {
     globalThis.fetch = vi.fn(async () => {
       throw new TypeError("Failed to fetch");
     }) as unknown as typeof fetch;
-    await expect(fetchLiveCertificate("example.com")).rejects.toThrow(/SSL Labs|CT 日志|不可达/);
+    await expect(fetchLiveCertificate("example.com")).rejects.toThrow(
+      /SSL Labs|CT 日志|不可达/,
+    );
   });
 
   it("空域名：抛错", async () => {

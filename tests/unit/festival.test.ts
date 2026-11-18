@@ -62,7 +62,9 @@ describe("isLaborDayActive（日期或参数二选一）", () => {
   });
 
   it("参数可与其它查询参数共存", () => {
-    expect(isLaborDayActive("?a=1&egg=cn_labor_day&b=2", new Date(2026, 0, 1))).toBe(true);
+    expect(isLaborDayActive("?a=1&egg=cn_labor_day&b=2", new Date(2026, 0, 1))).toBe(
+      true,
+    );
   });
 
   it("非劳动节且无参数：不激活", () => {
@@ -116,7 +118,9 @@ describe("isNationalDayActive（日期或参数二选一）", () => {
   });
 
   it("参数可与其它查询参数共存", () => {
-    expect(isNationalDayActive("?a=1&egg=cn_birthday&b=2", new Date(2026, 0, 1))).toBe(true);
+    expect(isNationalDayActive("?a=1&egg=cn_birthday&b=2", new Date(2026, 0, 1))).toBe(
+      true,
+    );
   });
 
   it("非国庆且无参数：不激活", () => {

@@ -16,10 +16,7 @@ import { createPandocInstance, type PandocInstance } from "pandoc-wasm/core";
 let pandoc: PandocInstance;
 
 beforeAll(async () => {
-  const wasmPath = resolve(
-    process.cwd(),
-    "node_modules/pandoc-wasm/src/pandoc.wasm",
-  );
+  const wasmPath = resolve(process.cwd(), "node_modules/pandoc-wasm/src/pandoc.wasm");
   const binary = readFileSync(wasmPath);
   pandoc = await createPandocInstance(
     binary.buffer.slice(binary.byteOffset, binary.byteOffset + binary.byteLength),

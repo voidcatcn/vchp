@@ -48,9 +48,7 @@ const computing = ref(false);
 const mode = ref<"text" | "file">("text");
 const file = ref<File | null>(null);
 
-const currentAlgo = computed(() =>
-  hashAlgorithms.find((a) => a.id === algorithm.value)!,
-);
+const currentAlgo = computed(() => hashAlgorithms.find((a) => a.id === algorithm.value)!);
 
 /** 文件模式仅对散列与 HMAC 可用；密码派生算法自动回到文本模式 */
 const fileModeSupported = computed(() => !currentAlgo.value.needsPassword);
@@ -87,9 +85,7 @@ watch(
         } else {
           // 文本模式：密码派生类算法（PBKDF2 / scrypt）把密码作为 text 传入；
           // HMAC 把消息作为 text、密钥放 options.secret
-          const message = currentAlgo.value.needsPassword
-            ? secret.value
-            : input.value;
+          const message = currentAlgo.value.needsPassword ? secret.value : input.value;
           output.value = await hashText(algorithm.value, message, {
             secret: currentAlgo.value.needsKey ? secret.value : undefined,
             salt: salt.value,
@@ -115,7 +111,8 @@ watch(
 <template>
   <ToolLayout
     title="单向加密"
-    back-to="/tools/encryption" back-label="返回加密工具"
+    back-to="/tools/encryption"
+    back-label="返回加密工具"
     description="输入文本或上传文件，实时计算不可逆结果，全程本地计算喵～"
   >
     <div class="flex w-full max-w-2xl flex-col gap-4">
@@ -125,27 +122,41 @@ watch(
         <Select v-model="algorithm">
           <SelectTrigger aria-label="加密算法">
             <SelectValue placeholder="请选择" />
-            </SelectTrigger>
-            <SelectContent>
-          <SelectGroup>
-            <SelectLabel>散列摘要</SelectLabel>
-            <SelectItem v-for="algo in hashAlgorithms.filter((a) => !a.needsKey && !a.needsPassword)" :key="algo.id" :value="algo.id">
-              {{ algo.label }}
-            </SelectItem>
-          </SelectGroup>
-          <SelectGroup>
-            <SelectLabel>密钥散列（HMAC）</SelectLabel>
-            <SelectItem v-for="algo in hashAlgorithms.filter((a) => a.needsKey)" :key="algo.id" :value="algo.id">
-              {{ algo.label }}
-            </SelectItem>
-          </SelectGroup>
-          <SelectGroup>
-            <SelectLabel>加盐密码派生</SelectLabel>
-            <SelectItem v-for="algo in hashAlgorithms.filter((a) => a.needsPassword)" :key="algo.id" :value="algo.id">
-              {{ algo.label }}
-            </SelectItem>
-          </SelectGroup>
-            </SelectContent>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>散列摘要</SelectLabel>
+              <SelectItem
+                v-for="algo in hashAlgorithms.filter(
+                  (a) => !a.needsKey && !a.needsPassword,
+                )"
+                :key="algo.id"
+                :value="algo.id"
+              >
+                {{ algo.label }}
+              </SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>密钥散列（HMAC）</SelectLabel>
+              <SelectItem
+                v-for="algo in hashAlgorithms.filter((a) => a.needsKey)"
+                :key="algo.id"
+                :value="algo.id"
+              >
+                {{ algo.label }}
+              </SelectItem>
+            </SelectGroup>
+            <SelectGroup>
+              <SelectLabel>加盐密码派生</SelectLabel>
+              <SelectItem
+                v-for="algo in hashAlgorithms.filter((a) => a.needsPassword)"
+                :key="algo.id"
+                :value="algo.id"
+              >
+                {{ algo.label }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
         </Select>
       </label>
 
@@ -163,7 +174,11 @@ watch(
           <textarea
             v-model="input"
             rows="4"
-            :placeholder="currentAlgo.needsKey ? '输入要计算 HMAC 的消息…' : '在这里输入要计算摘要的文本…'"
+            :placeholder="
+              currentAlgo.needsKey
+                ? '输入要计算 HMAC 的消息…'
+                : '在这里输入要计算摘要的文本…'
+            "
             class="w-full resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm leading-relaxed outline-none placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
           />
         </label>
@@ -176,7 +191,10 @@ watch(
       </Transition>
 
       <!-- 密钥 / 密码 -->
-      <label v-if="currentAlgo.needsKey || currentAlgo.needsPassword" class="flex flex-col gap-1.5">
+      <label
+        v-if="currentAlgo.needsKey || currentAlgo.needsPassword"
+        class="flex flex-col gap-1.5"
+      >
         <span class="text-sm font-medium">
           {{ currentAlgo.needsKey ? "密钥" : "密码" }}
         </span>
@@ -184,7 +202,9 @@ watch(
           v-model="secret"
           :type="currentAlgo.needsKey ? 'text' : 'password'"
           autocomplete="off"
-          :placeholder="currentAlgo.needsKey ? 'HMAC 的共享密钥（文件模式同样适用）' : '要派生的密码'"
+          :placeholder="
+            currentAlgo.needsKey ? 'HMAC 的共享密钥（文件模式同样适用）' : '要派生的密码'
+          "
           class="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm outline-none placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
         />
       </label>
@@ -232,13 +252,13 @@ watch(
           <Select v-model="scryptN">
             <SelectTrigger aria-label="内存成本 N">
               <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-            <SelectItem :value="16384">2¹⁴ (16K)</SelectItem>
-            <SelectItem :value="32768">2¹⁵ (32K)</SelectItem>
-            <SelectItem :value="65536">2¹⁶ (64K)</SelectItem>
-            <SelectItem :value="131072">2¹⁷ (128K)</SelectItem>
-              </SelectContent>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem :value="16384">2¹⁴ (16K)</SelectItem>
+              <SelectItem :value="32768">2¹⁵ (32K)</SelectItem>
+              <SelectItem :value="65536">2¹⁶ (64K)</SelectItem>
+              <SelectItem :value="131072">2¹⁷ (128K)</SelectItem>
+            </SelectContent>
           </Select>
         </label>
         <label class="flex flex-col gap-1.5">
@@ -282,25 +302,27 @@ watch(
       </div>
 
       <!-- 安全提示 -->
-      <Alert hint-id="hash-weak-algo" v-if="currentAlgo.id === 'MD5' || currentAlgo.id === 'SHA-1'">
+      <Alert
+        v-if="currentAlgo.id === 'MD5' || currentAlgo.id === 'SHA-1'"
+        hint-id="hash-weak-algo"
+      >
         <Fingerprint class="size-4" />
         <AlertDescription>
-          MD5 与 SHA-1 已被证明可碰撞，仅用于兼容旧系统；新场景请选
-          SHA-256 及以上喵～
+          MD5 与 SHA-1 已被证明可碰撞，仅用于兼容旧系统；新场景请选 SHA-256 及以上喵～
         </AlertDescription>
       </Alert>
-      <Alert hint-id="hash-salt" v-if="currentAlgo.needsSalt">
+      <Alert v-if="currentAlgo.needsSalt" hint-id="hash-salt">
         <CircleHelp class="size-4" />
         <AlertDescription>
           {{ currentAlgo.label }} 适合存储密码指纹：每次用随机盐派生，同一密码结果也不同；
           生产环境建议 scrypt 且 N ≥ 2¹⁵、迭代次数尽量高。
         </AlertDescription>
       </Alert>
-      <Alert hint-id="hash-no-salt" v-else>
+      <Alert v-else hint-id="hash-no-salt">
         <CircleHelp class="size-4" />
         <AlertDescription>
-          哈希不可逆：文本适合校验内容，文件适合校验下载完整性；存储密码请用
-          PBKDF2 / scrypt / argon2 等加盐算法，避免裸 SHA 被彩虹表破解。
+          哈希不可逆：文本适合校验内容，文件适合校验下载完整性；存储密码请用 PBKDF2 /
+          scrypt / argon2 等加盐算法，避免裸 SHA 被彩虹表破解。
         </AlertDescription>
       </Alert>
     </div>

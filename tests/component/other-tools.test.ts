@@ -65,9 +65,7 @@ describe("/tools/other/wheel 随机转盘", () => {
     ]);
     // 删除按钮 + 末尾增加按钮
     expect(findButton(wrapper, "增加").exists()).toBe(true);
-    expect(
-      wrapper.findAll('button[aria-label^="删除"]').length,
-    ).toBe(3);
+    expect(wrapper.findAll('button[aria-label^="删除"]').length).toBe(3);
   });
 
   it("点击增加后默认平分到新选项", async () => {
@@ -129,4 +127,3 @@ describe("/tools/other/wheel 随机转盘", () => {
     expect(wrapper.text()).toContain("选项 A");
   });
 });
-

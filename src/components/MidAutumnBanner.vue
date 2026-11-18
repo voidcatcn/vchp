@@ -15,16 +15,16 @@ import { HKO_LUNAR_API_DOC } from "@/lib/festival";
     >
       <MoonStar class="size-4" aria-hidden="true" />
       <span>中秋快乐</span>
-    
-    <button
-      type="button"
-      class="-mr-1 rounded-full p-0.5 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-      aria-label="关闭横幅"
-      @click="emit('close')"
-    >
-      <X class="size-3.5" aria-hidden="true" />
-    </button>
-  </div>
+
+      <button
+        type="button"
+        class="-mr-1 rounded-full p-0.5 transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+        aria-label="关闭横幅"
+        @click="emit('close')"
+      >
+        <X class="size-3.5" aria-hidden="true" />
+      </button>
+    </div>
     <a
       :href="HKO_LUNAR_API_DOC"
       target="_blank"

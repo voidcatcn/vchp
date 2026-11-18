@@ -5,10 +5,7 @@
  * - 本地解析：粘贴 PEM 证书，用 @peculiar/x509 解析（主题、颁发者、有效期、SAN 等），纯本地可靠
  * - 在线查询：crt.sh 证书透明度日志按域名查询（可能受浏览器 CORS 限制，失败会提示）
  */
-import {
-  SubjectAlternativeNameExtension,
-  X509Certificate,
-} from "@peculiar/x509";
+import { SubjectAlternativeNameExtension, X509Certificate } from "@peculiar/x509";
 
 export interface ParsedCert {
   subject: string;
@@ -43,8 +40,13 @@ export function parseCertificatePem(pem: string): ParsedCert {
         uniformResourceIdentifier?: string;
       }>;
       subjectAltNames = names
-        .map((n) =>
-          n.dNSName ?? n.iPAddress ?? n.rfc822Name ?? n.uniformResourceIdentifier ?? String(n),
+        .map(
+          (n) =>
+            n.dNSName ??
+            n.iPAddress ??
+            n.rfc822Name ??
+            n.uniformResourceIdentifier ??
+            String(n),
         )
         .filter((s) => s.length > 0);
     }
@@ -88,7 +90,6 @@ export interface CrtShEntry {
  * 注意：经公共代理转发意味着查询的域名会出现在代理服务方的日志中。
  */
 const FETCH_CHANNELS: Array<{ name: string; wrap: (url: string) => string }> = [
-
   { name: "直连", wrap: (url) => url },
   {
     name: "allorigins 代理",
@@ -245,9 +246,7 @@ function pickSslLabsCert(result: SslLabsResult): LiveCert | null {
     domain,
     subject: cert.subject ?? domain,
     issuer:
-      cert.issuerLabel ??
-      [cert.issuerOrg, cert.issuerCN].filter(Boolean).join(" ") ??
-      "",
+      cert.issuerLabel ?? [cert.issuerOrg, cert.issuerCN].filter(Boolean).join(" ") ?? "",
     notBefore,
     notAfter,
     daysLeft: daysFromIso(notAfter),
@@ -292,7 +291,7 @@ export async function fetchLiveCertificate(
       await new Promise((r) => setTimeout(r, 5000));
     }
     throw new Error("SSL Labs 分析超时，请稍后重试或使用「历史证书查询」");
-  } catch (err) {
+  } catch {
     // SSL Labs 全线不可达（CORS / 网络 / 超时）→ 回退 crt.sh 取最新记录（近似当前）
     onStatus?.("SSL Labs 不可达，改用 crt.sh 最新记录（近似当前证书）…");
   }

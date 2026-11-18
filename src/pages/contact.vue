@@ -16,13 +16,9 @@ import {
   MessageCircle,
   MessageSquare,
   Check,
-
   Play,
-
   Camera,
-
   Rss,
-
   Tv,
   UnlockKeyhole,
   Info,
@@ -32,10 +28,7 @@ import {
   Globe,
   QrCode,
 } from "@lucide/vue";
-import {
-  contactSecret,
-  decryptAllContacts,
-} from "@/lib/contact-crypto";
+import { contactSecret, decryptAllContacts } from "@/lib/contact-crypto";
 import { siteConfig } from "virtual:site-config";
 import { useSeo } from "@/composables/useSeo";
 
@@ -97,12 +90,12 @@ const publicContacts = contactSecret.public.map((item) => ({
 
 /** 跳转型公开联系（点击导航） */
 const linkContacts = publicContacts.filter(
-  (item): item is (typeof item) & { url: string } => item.url !== undefined,
+  (item): item is typeof item & { url: string } => item.url !== undefined,
 );
 
 /** 复制型公开联系（点击复制明文；带 url 的项由跳转卡渲染，不重复） */
 const copyContacts = publicContacts.filter(
-  (item): item is (typeof item) & { value: string } =>
+  (item): item is typeof item & { value: string } =>
     item.value !== undefined && item.url === undefined,
 );
 
@@ -171,7 +164,9 @@ function resetDialog() {
   <main class="mt-6 flex w-full flex-col items-center gap-6">
     <div class="flex flex-col items-center gap-2 text-center">
       <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">联系</h1>
-      <p class="text-muted-foreground">想和 {{ siteConfig.name }} 说点什么？选个方式吧喵～</p>
+      <p class="text-muted-foreground">
+        想和 {{ siteConfig.name }} 说点什么？选个方式吧喵～
+      </p>
     </div>
 
     <!-- 操作提示：明文联系点击直接复制/跳转，加密联系验证后复制 -->
@@ -209,16 +204,16 @@ function resetDialog() {
       >
         <div class="flex w-full items-center justify-between">
           <component :is="item.icon" class="size-5" />
-          <Check
-            v-if="copiedKey === item.name"
-            class="size-4 text-emerald-500"
-          />
+          <Check v-if="copiedKey === item.name" class="size-4 text-emerald-500" />
         </div>
         <span class="text-xs text-muted-foreground">{{ item.label }}</span>
         <span v-if="revealState === 'locked'" class="text-sm font-medium">
           点击查看
         </span>
-        <span v-else-if="copiedKey === item.name" class="text-sm font-medium text-emerald-500">
+        <span
+          v-else-if="copiedKey === item.name"
+          class="text-sm font-medium text-emerald-500"
+        >
           已复制
         </span>
         <span v-else class="text-sm font-medium break-all">
@@ -258,13 +253,13 @@ function resetDialog() {
       >
         <div class="flex w-full items-center justify-between">
           <component :is="item.icon" class="size-5" />
-          <Check
-            v-if="copiedKey === item.label"
-            class="size-4 text-emerald-500"
-          />
+          <Check v-if="copiedKey === item.label" class="size-4 text-emerald-500" />
         </div>
         <span class="text-xs text-muted-foreground">{{ item.label }}</span>
-        <span v-if="copiedKey === item.label" class="text-sm font-medium text-emerald-500">
+        <span
+          v-if="copiedKey === item.label"
+          class="text-sm font-medium text-emerald-500"
+        >
           已复制
         </span>
         <span v-else class="text-sm font-medium break-all">
@@ -312,7 +307,11 @@ function resetDialog() {
               {{ errorMessage }}
             </p>
           </div>
-          <Button type="submit" :disabled="decrypting" class="w-full border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80">
+          <Button
+            type="submit"
+            :disabled="decrypting"
+            class="w-full border-border bg-card text-card-foreground hover:bg-card/80 dark:bg-card dark:text-card-foreground dark:hover:bg-card/80"
+          >
             <Loader2 v-if="decrypting" class="size-4 animate-spin" />
             <Send v-else class="size-4" />
             {{ decrypting ? "解密中…" : "提交" }}

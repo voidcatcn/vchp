@@ -82,10 +82,7 @@ export function validateLinks(links) {
     } catch {
       errors.push(`${label} url 不是合法链接: ${link.url}`);
     }
-    if (
-      link.priority !== undefined &&
-      !PRIORITIES.has(link.priority)
-    ) {
+    if (link.priority !== undefined && !PRIORITIES.has(link.priority)) {
       errors.push(`${label} priority 必须是 high/default/low，收到: ${link.priority}`);
     }
     if (link.cover !== undefined && typeof link.cover !== "string") {
@@ -174,7 +171,9 @@ async function getDataTomlPatch() {
       throw new Error(`获取 PR 文件失败: ${res.status}`);
     }
     const files = await res.json();
-    const target = Array.isArray(files) ? files.find((f) => f.filename === LINKS_FILE) : undefined;
+    const target = Array.isArray(files)
+      ? files.find((f) => f.filename === LINKS_FILE)
+      : undefined;
     return target?.patch ?? "";
   }
   // 本地调试回退：与基线分支对比
@@ -225,19 +224,16 @@ async function postComment(body) {
     console.log("（未检测到 GitHub 评论环境，仅输出结果）\n" + body);
     return;
   }
-  const res = await fetch(
-    `https://api.github.com/repos/${repo}/issues/${pr}/comments`,
-    {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${token}`,
-        "content-type": "application/json",
-        "x-github-api-version": "2022-11-28",
-        "user-agent": "friend-links-checker",
-      },
-      body: JSON.stringify({ body }),
+  const res = await fetch(`https://api.github.com/repos/${repo}/issues/${pr}/comments`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+      "x-github-api-version": "2022-11-28",
+      "user-agent": "friend-links-checker",
     },
-  );
+    body: JSON.stringify({ body }),
+  });
   if (!res.ok) {
     throw new Error(`评论失败: ${res.status} ${await res.text()}`);
   }
@@ -271,7 +267,9 @@ async function main() {
   }
   const allErrors = validateLinks(links);
   if (allErrors.length > 0) {
-    await fail(`❌ 友链格式校验未通过\n\n${allErrors.map((e) => `- ${e}`).join("\n")}\n\n请修正后重新推送喵～`);
+    await fail(
+      `❌ 友链格式校验未通过\n\n${allErrors.map((e) => `- ${e}`).join("\n")}\n\n请修正后重新推送喵～`,
+    );
   }
 
   // 2. 只取新增 / 修改的友链条目
@@ -283,13 +281,17 @@ async function main() {
   }
   const changed = extractChangedLinks(patch);
   if (changed.length === 0) {
-    await fail("❌ 未检测到 config/links.toml 中新增或修改的友链，请修改该文件后重新推送喵～");
+    await fail(
+      "❌ 未检测到 config/links.toml 中新增或修改的友链，请修改该文件后重新推送喵～",
+    );
   }
 
   // 3. 校验改动条目的字段
   const changeErrors = validateLinks(changed);
   if (changeErrors.length > 0) {
-    await fail(`❌ 新增/修改友链格式校验未通过\n\n${changeErrors.map((e) => `- ${e}`).join("\n")}\n\n请修正后重新推送喵～`);
+    await fail(
+      `❌ 新增/修改友链格式校验未通过\n\n${changeErrors.map((e) => `- ${e}`).join("\n")}\n\n请修正后重新推送喵～`,
+    );
   }
 
   // 4. 只检测改动条目的可达性
@@ -321,7 +323,9 @@ async function main() {
 }
 
 // 仅直接运行时执行检测（被 import 时只导出函数，便于单元测试）
-const isMain = process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
+const isMain =
+  process.argv[1] !== undefined &&
+  import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isMain) {
   await main();
 }

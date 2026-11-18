@@ -20,10 +20,7 @@ import VideoPage from "@/pages/tools/conversion/video.vue";
 import DocumentPage from "@/pages/tools/conversion/document.vue";
 import { Select } from "@/components/ui/select";
 import { symmetricEncrypt } from "@/lib/crypto/symmetric";
-import {
-  encryptWithPublicKey,
-  generateKeyPairText,
-} from "@/lib/crypto/asymmetric";
+import { encryptWithPublicKey, generateKeyPairText } from "@/lib/crypto/asymmetric";
 
 async function mountAt(component: unknown, initialRoute: string) {
   const router = createRouter({ history: createMemoryHistory(), routes });
@@ -46,10 +43,7 @@ async function settle() {
 
 // 设置 shadcn Select 的选中值（组件级 v-model 触发，绕过 DOM 交互；
 // 真实 UI 交互由 E2E 覆盖）
-function setSelectValue(
-  wrapper: ReturnType<typeof mount>,
-  value: string,
-) {
+function setSelectValue(wrapper: ReturnType<typeof mount>, value: string) {
   const selectComponent = wrapper.findComponent(Select);
   if (!selectComponent.exists()) throw new Error("找不到 Select 组件");
   selectComponent.vm.$emit("update:modelValue", value);
@@ -168,11 +162,9 @@ describe("/tools/encryption/symmetric 对称加密页", () => {
     const payload = await waitForValue(wrapper, 'textarea[aria-label="加密结果"]');
     expect(payload.startsWith("v2:argon2id:AES-256-GCM:")).toBe(true);
 
-    await wrapper
-      .find('textarea[placeholder*="粘贴本工具生成的密文"]')
-      .setValue(payload);
+    await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
-    expect(await waitForValue(wrapper, 'textarea[aria-label=""]'))
+    expect(await waitForValue(wrapper, 'textarea[aria-label=""]'));
   });
 });
 
@@ -186,8 +178,12 @@ describe("/tools/encryption/asymmetric 非对称加密页", () => {
     await settle();
 
     // 公钥/私钥 PEM 生成并展示
-    const publicPem = (wrapper.find('textarea[placeholder*="SPKI PEM"]').element as HTMLTextAreaElement).value;
-    const privatePem = (wrapper.find('textarea[placeholder*="PKCS#8 PEM"]').element as HTMLTextAreaElement).value;
+    const publicPem = (
+      wrapper.find('textarea[placeholder*="SPKI PEM"]').element as HTMLTextAreaElement
+    ).value;
+    const privatePem = (
+      wrapper.find('textarea[placeholder*="PKCS#8 PEM"]').element as HTMLTextAreaElement
+    ).value;
     expect(publicPem).toContain("-----BEGIN PUBLIC KEY-----");
     expect(privatePem).toContain("-----BEGIN PRIVATE KEY-----");
 
@@ -196,11 +192,11 @@ describe("/tools/encryption/asymmetric 非对称加密页", () => {
     const payload = await waitForValue(wrapper, 'textarea[aria-label="公钥加密结果"]');
     expect(payload.length).toBeGreaterThan(0);
 
-    await wrapper
-      .find('textarea[placeholder*="粘贴本工具生成的密文"]')
-      .setValue(payload);
+    await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(
+      plaintext,
+    );
   });
 });
 
@@ -210,7 +206,9 @@ describe("/tools/encryption/hash 带盐与密钥算法", () => {
     setSelectValue(wrapper, "HMAC-SHA256");
     await settle();
     await wrapper.find('input[placeholder*="共享密钥"]').setValue("key");
-    await wrapper.find("textarea").setValue("The quick brown fox jumps over the lazy dog");
+    await wrapper
+      .find("textarea")
+      .setValue("The quick brown fox jumps over the lazy dog");
     await settle();
 
     const output = wrapper.find('textarea[aria-label*="HMAC-SHA256"]');
@@ -246,8 +244,12 @@ describe("/tools/encryption/asymmetric ECC 与后量子", () => {
     await findButton(wrapper, "生成密钥对").trigger("click");
     await settle();
 
-    const publicPem = (wrapper.find('textarea[placeholder*="SPKI PEM"]').element as HTMLTextAreaElement).value;
-    const privatePem = (wrapper.find('textarea[placeholder*="PKCS#8 PEM"]').element as HTMLTextAreaElement).value;
+    const publicPem = (
+      wrapper.find('textarea[placeholder*="SPKI PEM"]').element as HTMLTextAreaElement
+    ).value;
+    const privatePem = (
+      wrapper.find('textarea[placeholder*="PKCS#8 PEM"]').element as HTMLTextAreaElement
+    ).value;
     expect(publicPem).toContain("-----BEGIN PUBLIC KEY-----");
     expect(privatePem).toContain("-----BEGIN PRIVATE KEY-----");
 
@@ -258,7 +260,9 @@ describe("/tools/encryption/asymmetric ECC 与后量子", () => {
 
     await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(
+      plaintext,
+    );
   });
 
   it("ML-KEM-768（后量子）：生成密钥 → 加密 → 解密 往返", async () => {
@@ -269,8 +273,12 @@ describe("/tools/encryption/asymmetric ECC 与后量子", () => {
     await findButton(wrapper, "生成密钥对").trigger("click");
     await settle();
 
-    const publicKey = (wrapper.find('textarea[placeholder*="base64 公钥"]').element as HTMLTextAreaElement).value;
-    const privateKey = (wrapper.find('textarea[placeholder*="base64 私钥"]').element as HTMLTextAreaElement).value;
+    const publicKey = (
+      wrapper.find('textarea[placeholder*="base64 公钥"]').element as HTMLTextAreaElement
+    ).value;
+    const privateKey = (
+      wrapper.find('textarea[placeholder*="base64 私钥"]').element as HTMLTextAreaElement
+    ).value;
     expect(publicKey.length).toBeGreaterThan(0);
     expect(privateKey.length).toBeGreaterThan(0);
 
@@ -281,7 +289,9 @@ describe("/tools/encryption/asymmetric ECC 与后量子", () => {
 
     await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(
+      plaintext,
+    );
   });
 });
 
@@ -318,7 +328,6 @@ describe("/tools/encryption/hash 文件上传", () => {
   });
 });
 
-
 describe("/tools/encryption/symmetric 文件模式", () => {
   it("上传文件 → 加密 → 解密 还原明文", async () => {
     const wrapper = await mountAt(SymmetricPage, "/tools/encryption/symmetric");
@@ -332,7 +341,10 @@ describe("/tools/encryption/symmetric 文件模式", () => {
     await settle();
     const fileInput = wrapper.find('input[aria-label="选择要处理的文件"]');
     const file = new File([plaintext], "note.txt", { type: "text/plain" });
-    Object.defineProperty(fileInput.element, "files", { value: [file], configurable: true });
+    Object.defineProperty(fileInput.element, "files", {
+      value: [file],
+      configurable: true,
+    });
     await fileInput.trigger("change");
     await settle();
 
@@ -347,7 +359,9 @@ describe("/tools/encryption/symmetric 文件模式", () => {
     // 解密：粘贴密文，还原明文（文件模式也提供 UTF-8 预览）
     await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="解密结果"]')).toBe(
+      plaintext,
+    );
     // 下载按钮存在
     expect(wrapper.text()).toContain("下载");
   });
@@ -371,7 +385,10 @@ describe("/tools/encryption/asymmetric 文件模式", () => {
     await settle();
     const fileInput = wrapper.find('input[aria-label="选择要处理的文件"]');
     const file = new File([plaintext], "secret.txt", { type: "text/plain" });
-    Object.defineProperty(fileInput.element, "files", { value: [file], configurable: true });
+    Object.defineProperty(fileInput.element, "files", {
+      value: [file],
+      configurable: true,
+    });
     await fileInput.trigger("change");
     await settle();
 
@@ -381,10 +398,11 @@ describe("/tools/encryption/asymmetric 文件模式", () => {
 
     await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(
+      plaintext,
+    );
   });
 });
-
 
 describe("友好错误提示", () => {
   it("对称解密密码错误：显示友好提示而非原始报错", async () => {
@@ -392,9 +410,7 @@ describe("友好错误提示", () => {
     const payload = await symmetricEncrypt("AES-256-GCM", "机密内容", "right-password");
 
     await wrapper.find('input[type="password"]').setValue("wrong-password");
-    await wrapper
-      .find('textarea[placeholder*="粘贴本工具生成的密文"]')
-      .setValue(payload);
+    await wrapper.find('textarea[placeholder*="粘贴本工具生成的密文"]').setValue(payload);
     await findButton(wrapper, "解密").trigger("click");
     await waitForText(wrapper, "解密失败：密码错误、密文被篡改或格式不正确");
 
@@ -404,7 +420,6 @@ describe("友好错误提示", () => {
     expect(text).not.toMatch(/OperationError|Decryption failed|decrypt/i);
   });
 });
-
 
 describe("上传解密文件与密钥", () => {
   it("对称加密：上传密文文件后自动解密", async () => {
@@ -417,7 +432,9 @@ describe("上传解密文件与密钥", () => {
     const file = new File([payload], "secret.enc", { type: "text/plain" });
     Object.defineProperty(up.element, "files", { value: [file], configurable: true });
     await up.trigger("change");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="解密结果"]')).toBe(
+      plaintext,
+    );
   });
 
   it("非对称：上传公钥/私钥文件与密文文件后解密", async () => {
@@ -439,7 +456,10 @@ describe("上传解密文件与密钥", () => {
     await pubUp.trigger("change");
     await settle();
     expect(
-      (wrapper.find('textarea[placeholder*="base64 公钥"]').element as HTMLTextAreaElement).value,
+      (
+        wrapper.find('textarea[placeholder*="base64 公钥"]')
+          .element as HTMLTextAreaElement
+      ).value,
     ).toBe(pair.publicKey);
 
     // 上传私钥文件
@@ -458,7 +478,9 @@ describe("上传解密文件与密钥", () => {
       configurable: true,
     });
     await ctUp.trigger("change");
-    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(plaintext);
+    expect(await waitForValue(wrapper, 'textarea[aria-label="私钥解密结果"]')).toBe(
+      plaintext,
+    );
   });
 });
 
@@ -466,9 +488,7 @@ describe("转换工具页", () => {
   it("图片转换：渲染页面与文件选择入口", async () => {
     const wrapper = await mountAt(ImagePage, "/tools/conversion/image");
     expect(wrapper.text()).toContain("图片转换");
-    expect(
-      wrapper.find('input[aria-label="选择要处理的文件"]').exists(),
-    ).toBe(true);
+    expect(wrapper.find('input[aria-label="选择要处理的文件"]').exists()).toBe(true);
   });
 
   it("视频转换：WASM 引擎加载失败时展示不可用提示", async () => {

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
 import { computed } from "vue";
-import {
-  SliderRange,
-  SliderRoot,
-  SliderThumb,
-  SliderTrack,
-} from "reka-ui";
+import { SliderRange, SliderRoot, SliderThumb, SliderTrack } from "reka-ui";
 import { cn } from "@/lib/utils";
 
 /**
@@ -48,9 +43,7 @@ const model = computed<number[]>({
       )
     "
   >
-    <SliderTrack
-      class="relative h-1.5 w-full grow overflow-hidden rounded-full bg-muted"
-    >
+    <SliderTrack class="relative h-1.5 w-full grow overflow-hidden rounded-full bg-muted">
       <SliderRange class="absolute h-full bg-primary" />
     </SliderTrack>
     <SliderThumb

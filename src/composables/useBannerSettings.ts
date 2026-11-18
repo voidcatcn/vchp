@@ -97,10 +97,10 @@ export function useBannerSettings() {
 
   /** 全站提示开关 */
   function setMaster(value: boolean): void {
-  prefs.value.master = value;
-  save();
-  applyMasterClass();
-}
+    prefs.value.master = value;
+    save();
+    applyMasterClass();
+  }
 
   /** 设置页按横幅启停 */
   function setEnabled(id: BannerId, value: boolean): void {
