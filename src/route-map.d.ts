@@ -94,6 +94,34 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/tools/accelerate/': RouteRecordInfo<
+      '/tools/accelerate/',
+      '/tools/accelerate',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/tools/accelerate/github': RouteRecordInfo<
+      '/tools/accelerate/github',
+      '/tools/accelerate/github',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/tools/accelerate/mirrors': RouteRecordInfo<
+      '/tools/accelerate/mirrors',
+      '/tools/accelerate/mirrors',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/tools/accelerate/sourceforge': RouteRecordInfo<
+      '/tools/accelerate/sourceforge',
+      '/tools/accelerate/sourceforge',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/tools/asymmetric': RouteRecordInfo<
       '/tools/asymmetric',
       '/tools/asymmetric',
@@ -314,6 +342,38 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tools/index.vue': {
       routes:
         | '/tools/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/tools/accelerate/index.vue': {
+      routes:
+        | '/tools/accelerate/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/tools/accelerate/github.vue': {
+      routes:
+        | '/tools/accelerate/github'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/tools/accelerate/mirrors.vue': {
+      routes:
+        | '/tools/accelerate/mirrors'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/tools/accelerate/sourceforge.vue': {
+      routes:
+        | '/tools/accelerate/sourceforge'
       views:
         | never
       pathParamNames:

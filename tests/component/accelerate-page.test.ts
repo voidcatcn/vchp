@@ -35,7 +35,9 @@ describe("/tools/accelerate/github 页面交互", () => {
     const out = wrapper.find('textarea[aria-label="GitHub 加速结果"]');
     expect(out.exists()).toBe(true);
     expect(
-      (out.element as HTMLTextAreaElement).value.startsWith("https://gh.meali.top/https://github.com/"),
+      (out.element as HTMLTextAreaElement).value.startsWith(
+        "https://gh.meali.top/https://github.com/",
+      ),
     ).toBe(true);
 
     // 新窗口打开链接与输出一致
