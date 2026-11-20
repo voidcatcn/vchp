@@ -18,6 +18,7 @@ import {
   detectPlatform,
   extractOwnerRepo,
   matchReleaseAssets,
+  parseSemver,
   type PlatformMatch,
 } from "@/lib/tools/accelerate";
 import { useSeo } from "@/composables/useSeo";
@@ -57,6 +58,7 @@ const showRelease = computed(
 const releaseState = ref<"idle" | "loading" | "ok" | "error">("idle");
 const releaseError = ref("");
 const releaseTag = ref("");
+const releaseSemver = computed(() => parseSemver(releaseTag.value));
 const releaseDate = ref("");
 const assets = ref<PlatformMatch[]>([]);
 const userPlatform = detectPlatform();
@@ -151,7 +153,14 @@ function formatSize(bytes: number): string {
 
         <template v-if="releaseState === 'ok'">
           <p class="text-xs text-muted-foreground">
-            {{ releaseTag }}（发布于 {{ releaseDate || "未知日期" }}）— 当前平台
+            {{ releaseTag
+            }}<template v-if="releaseSemver"
+              >（v{{ releaseSemver.major }}.{{ releaseSemver.minor }}.{{
+                releaseSemver.patch
+              }}<template v-if="releaseSemver.prerelease"
+                >-{{ releaseSemver.prerelease }}</template
+              >）</template
+            >（发布于 {{ releaseDate || "未知日期" }}）— 当前平台
             {{ platformLabel }} 的安装包已置顶
           </p>
           <ul class="flex max-h-72 flex-col gap-1.5 overflow-y-auto">
@@ -182,9 +191,10 @@ function formatSize(bytes: number): string {
                   :href="assetUrl(m.asset)"
                   target="_blank"
                   rel="noopener noreferrer"
+                  download
                   aria-label="下载"
                 >
-                  <ExternalLink class="size-4" />
+                  <Download class="size-4" />
                 </a>
               </Button>
             </li>

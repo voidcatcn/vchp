@@ -7,10 +7,14 @@ import {
   detectPlatform,
   extractOwnerRepo,
   matchReleaseAssets,
+  mirrorSyncDate,
   parseMirrorStatus,
+  parseSemver,
+  compareSemver,
   pickLatestLts,
   pickGoFile,
   fetchLatestRelease,
+  formatRelativeTime,
   pickNodeFile,
 } from "@/lib/tools/accelerate";
 
@@ -225,5 +229,44 @@ describe("Go 自动选版", () => {
     );
     expect(result.version).toBe("go1.23.4");
     expect(result.url).toBe("https://mirrors.cernet.edu.cn/golang/go1.23.4.windows-amd64.zip");
+  });
+});
+
+describe("semver 解析与比较", () => {
+  it("常见版本格式解析", () => {
+    expect(parseSemver("v22.11.0")).toEqual({ major: 22, minor: 11, patch: 0, prerelease: "" });
+    expect(parseSemver("go1.23.4")).toEqual({ major: 1, minor: 23, patch: 4, prerelease: "" });
+    expect(parseSemver("1.0.0-beta.1")).toEqual({
+      major: 1,
+      minor: 0,
+      patch: 0,
+      prerelease: "beta.1",
+    });
+    expect(parseSemver("not-a-version")).toBeNull();
+  });
+
+  it("compareSemver：prerelease 低于正式版", () => {
+    const a = parseSemver("1.0.0-beta.1")!;
+    const b = parseSemver("1.0.0")!;
+    expect(compareSemver(a, b)).toBeLessThan(0);
+    expect(compareSemver(b, a)).toBeGreaterThan(0);
+    expect(compareSemver(a, a)).toBe(0);
+  });
+});
+
+describe("同步时间解析与相对展示", () => {
+  it("mirrorSyncDate 从 S 时间戳解析", () => {
+    const d = mirrorSyncDate("S1794976642X1795063042");
+    expect(d).not.toBeNull();
+    expect(d!.getFullYear()).toBe(new Date(Number("1794976642") * 1000).getFullYear());
+    expect(mirrorSyncDate(undefined)).toBeNull();
+  });
+
+  it("formatRelativeTime 相对时间", () => {
+    const now = new Date();
+    expect(formatRelativeTime(new Date(now.getTime() - 30_000), now)).toBe("刚刚");
+    expect(formatRelativeTime(new Date(now.getTime() - 5 * 60_000), now)).toBe("5 分钟前");
+    expect(formatRelativeTime(new Date(now.getTime() - 3 * 3_600_000), now)).toBe("3 小时前");
+    expect(formatRelativeTime(new Date(now.getTime() - 2 * 86_400_000), now)).toBe("2 天前");
   });
 });

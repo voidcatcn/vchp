@@ -220,6 +220,8 @@ export interface MirrorEntry {
   desc: string;
   size: string;
   status: MirrorSyncStatus;
+  /** 上次成功同步时间（由 status 的 S 时间戳解析） */
+  syncedAt: Date | null;
 }
 
 /**
@@ -348,4 +350,66 @@ export async function fetchLatestRelease(
     };
   }
   throw new Error(`不支持的发行：${provider.id}`);
+}
+
+// ============================================================
+// 版本解析（semver）与相对时间
+// ============================================================
+
+export interface Semver {
+  major: number;
+  minor: number;
+  patch: number;
+  prerelease: string;
+}
+
+/**
+ * 解析常见版本格式：v 前缀可选、go/Go 前缀可选、支持 -prerelease。
+ * 例：v22.11.0 → 22.11.0；go1.23.4 → 1.23.4；1.0.0-beta.1 → prerelease。
+ * 解析失败返回 null。
+ */
+export function parseSemver(version: string): Semver | null {
+  const m = version.trim().match(/^(?:v|go)?(\d+)\.(\d+)\.(\d+)(?:-([\w.-]+))?$/i);
+  if (!m) return null;
+  return {
+    major: Number(m[1]),
+    minor: Number(m[2]),
+    patch: Number(m[3]),
+    prerelease: m[4] ?? "",
+  };
+}
+
+/** semver 比较：返回正数表示 a 更新；prerelease 低于正式版 */
+export function compareSemver(a: Semver, b: Semver): number {
+  for (const k of ["major", "minor", "patch"] as const) {
+    if (a[k] !== b[k]) return a[k] - b[k];
+  }
+  // 有 prerelease 的低于无 prerelease 的
+  if (a.prerelease !== b.prerelease) {
+    if (!a.prerelease) return 1;
+    if (!b.prerelease) return -1;
+    return a.prerelease < b.prerelease ? -1 : 1;
+  }
+  return 0;
+}
+
+/** 从 MirrorZ status 的 S 时间戳解析上次成功同步时间 */
+export function mirrorSyncDate(status: string | undefined): Date | null {
+  const m = status?.match(/(?:^|S)(\d{9,})/);
+  if (!m) return null;
+  const ts = Number(m[1]) * 1000;
+  return Number.isFinite(ts) ? new Date(ts) : null;
+}
+
+/** 相对时间：刚刚 / N 分钟前 / N 小时前 / N 天前 / 日期 */
+export function formatRelativeTime(date: Date, now: Date = new Date()): string {
+  const diffMs = now.getTime() - date.getTime();
+  const minutes = Math.floor(diffMs / 60_000);
+  if (minutes < 1) return "刚刚";
+  if (minutes < 60) return `${minutes} 分钟前`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} 小时前`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} 天前`;
+  return date.toLocaleDateString("zh-CN");
 }

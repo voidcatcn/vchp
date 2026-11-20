@@ -26,6 +26,9 @@ import {
   detectPlatform,
   fetchLatestRelease,
   parseMirrorStatus,
+  formatRelativeTime,
+  mirrorSyncDate,
+  parseSemver,
   type MirrorEntry,
 } from "@/lib/tools/accelerate";
 import { useSeo } from "@/composables/useSeo";
@@ -50,6 +53,7 @@ const distroError = ref("");
 const distroVersion = ref("");
 const distroNote = ref("");
 const distroUrl = ref("");
+const semver = computed(() => parseSemver(distroVersion.value));
 
 async function fetchLatest() {
   const provider = accelerateData.distros.find((d) => d.id === distro.value);
@@ -96,6 +100,7 @@ function parseMirrorzDoc(doc: unknown, out: Map<string, MirrorEntry>) {
       desc: String(m.desc ?? ""),
       size: String(m.size ?? ""),
       status: parseMirrorStatus(m.status as string | undefined),
+      syncedAt: mirrorSyncDate(m.status as string | undefined),
     });
   }
 }
@@ -162,6 +167,12 @@ onMounted(fetchMirrors);
           <p class="text-xs text-muted-foreground">
             {{ distroVersion }}（{{ distroNote }}）— 已按 {{ platformLabel }} /
             {{ platform.arch }} 自动选择
+            <span
+              v-if="semver"
+              class="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] text-primary"
+            >
+              v{{ semver.major }}.{{ semver.minor }}.{{ semver.patch }}<template v-if="semver.prerelease">-{{ semver.prerelease }}</template>
+            </span>
           </p>
           <textarea
             :value="distroUrl"
@@ -173,7 +184,7 @@ onMounted(fetchMirrors);
           <div class="flex flex-wrap items-center gap-2">
             <CopyButton :text="distroUrl" />
             <Button as-child variant="outline" size="sm">
-              <a :href="distroUrl" target="_blank" rel="noopener noreferrer">
+              <a :href="distroUrl" target="_blank" rel="noopener noreferrer" download>
                 <Download class="size-4" />
                 镜像下载
               </a>
@@ -238,6 +249,9 @@ onMounted(fetchMirrors);
                   <span class="truncate text-sm font-medium">{{ m.cname }}</span>
                   <span v-if="m.size" class="shrink-0 text-xs text-muted-foreground">
                     {{ m.size }}
+                  <span v-if="m.syncedAt" class="shrink-0 text-xs text-muted-foreground/70">
+                    同步于 {{ formatRelativeTime(m.syncedAt) }}
+                  </span>
                   </span>
                 </div>
                 <p v-if="m.desc" class="truncate text-xs text-muted-foreground">
