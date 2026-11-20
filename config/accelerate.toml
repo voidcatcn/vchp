@@ -71,11 +71,22 @@ path = "/qt"
 name = "Blender"
 path = "/blender"
 
-# Node.js 版本助手：官方版本数据（含 CORS 头，浏览器可直连）与镜像 dist 前缀
-[nodejs]
-indexJson = "https://nodejs.org/dist/index.json"
-mirrorDist = "https://mirrors.cernet.edu.cn/nodejs-release/dist/"
+# 自动选版发行：官方版本 JSON（含 CORS 头，浏览器可直连）与镜像前缀
+[[distros]]
+id = "nodejs"
+label = "Node.js"
+api = "https://nodejs.org/dist/index.json"
+mirrorBase = "https://mirrors.cernet.edu.cn/nodejs-release/dist/"
 
-# 实时镜像列表数据源（MirrorZ 协议，需允许 CORS）
-[mirrorList]
+[[distros]]
+id = "go"
+label = "Go"
+api = "https://go.dev/dl/?mode=json"
+mirrorBase = "https://mirrors.cernet.edu.cn/golang/"
+
+# 实时镜像列表数据源（MirrorZ 协议，需允许 CORS；多源聚合取交集并集）
+[[mirrorSources]]
 url = "https://mirror.lzu.edu.cn/.mirrorz.json"
+
+[[mirrorSources]]
+url = "https://mirrors.sdu.edu.cn/mirrorz.json"

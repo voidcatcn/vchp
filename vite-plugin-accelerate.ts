@@ -21,12 +21,19 @@ export interface MirrorShortcut {
   path: string;
 }
 
+export interface DistroProvider {
+  id: string;
+  label: string;
+  api: string;
+  mirrorBase: string;
+}
+
 export interface AccelerateData {
   github: GithubChannel[];
   sourceforge: { base: string };
   mirrors: { app: string; shortcut: MirrorShortcut[] };
-  nodejs: { indexJson: string; mirrorDist: string };
-  mirrorList: { url: string };
+  distros: DistroProvider[];
+  mirrorSources: { url: string }[];
 }
 
 /** 解析并校验 accelerate.toml（构建期快速失败） */
@@ -65,26 +72,38 @@ export function parseAccelerateToml(raw: string): AccelerateData {
     }
     return { name, path };
   });
-  const nodejsRaw = (doc.nodejs ?? {}) as Record<string, unknown>;
-  const nodeIndex = String(nodejsRaw.indexJson ?? "");
-  const nodeMirrorDist = String(nodejsRaw.mirrorDist ?? "");
-  if (!/^https?:\/\//.test(nodeIndex) || !/^https?:\/\/.+\/$/.test(nodeMirrorDist)) {
-    throw new Error("accelerate.toml 的 [nodejs] 需要 indexJson 与以 / 结尾的 mirrorDist");
+  const distrosRaw = Array.isArray(doc.distros) ? doc.distros : [];
+  if (distrosRaw.length === 0) {
+    throw new Error("accelerate.toml 必须至少定义一个 [[distros]] 自动选版发行");
   }
-  const mirrorListRaw = (doc.mirrorList ?? {}) as Record<string, unknown>;
-  const mirrorListUrl = String(mirrorListRaw.url ?? "");
-  if (!/^https?:\/\//.test(mirrorListUrl)) {
-    throw new Error("accelerate.toml 的 [mirrorList] url 必须是 http(s) 地址");
+  const distros = distrosRaw.map((entry) => {
+    const e = entry as Record<string, unknown>;
+    const id = String(e.id ?? "");
+    const label = String(e.label ?? "");
+    const api = String(e.api ?? "");
+    const mirrorBase = String(e.mirrorBase ?? "");
+    if (!id || !label || !/^https?:\/\//.test(api) || !/^https?:\/\/.+\/$/.test(mirrorBase)) {
+      throw new Error(
+        "accelerate.toml 的 [[distros]] 需要 id/label/api 与以 / 结尾的 mirrorBase",
+      );
+    }
+    return { id, label, api, mirrorBase };
+  });
+  const mirrorSourcesRaw = Array.isArray(doc.mirrorSources) ? doc.mirrorSources : [];
+  const mirrorSources = mirrorSourcesRaw
+    .map((entry) => ({ url: String((entry as Record<string, unknown>).url ?? "") }))
+    .filter((m) => /^https?:\/\//.test(m.url));
+  if (mirrorSources.length === 0) {
+    throw new Error("accelerate.toml 必须至少定义一个 [[mirrorSources]] 数据源");
   }
   return {
     github,
     sourceforge: { base: sourceforgeBase },
     mirrors: { app, shortcut },
-    nodejs: { indexJson: nodeIndex, mirrorDist: nodeMirrorDist },
-    mirrorList: { url: mirrorListUrl },
+    distros,
+    mirrorSources,
   };
 }
-
 export function loadAccelerateData(): AccelerateData {
   return parseAccelerateToml(readFileSync(ACCELERATE_FILE, "utf-8"));
 }

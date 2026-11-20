@@ -40,12 +40,11 @@ export function buildGithubUrl(input: string, channelBase: string): string | nul
   const bare = stripPrefix(input);
   if (!bare) return null;
   const hit = findGithubHost(bare);
-  const target =
-    hit
-      ? `https://${bare.slice(hit.at)}`
-      : /^[\w-]+\/[\w.-]+/.test(bare)
-        ? `https://github.com/${bare}`
-        : null;
+  const target = hit
+    ? `https://${bare.slice(hit.at)}`
+    : /^[\w-]+\/[\w.-]+/.test(bare)
+      ? `https://github.com/${bare}`
+      : null;
   return target ? `${channelBase}${target}` : null;
 }
 
@@ -58,7 +57,8 @@ export function buildSourceforgeUrl(input: string, base: string): string | null 
   if (!s) return null;
   s = s.replace(/^https?:\/\//i, "");
   const at = s.indexOf(SOURCEFORGE_HOST);
-  const path = at !== -1 ? s.slice(at + SOURCEFORGE_HOST.length) : s.startsWith("/") ? s : `/${s}`;
+  const path =
+    at !== -1 ? s.slice(at + SOURCEFORGE_HOST.length) : s.startsWith("/") ? s : `/${s}`;
   if (!/^\/projects\/[\w.-]+/.test(path)) return null;
   return `${base}${path.replace(/^\/+/, "")}`;
 }
@@ -130,7 +130,8 @@ export function matchReleaseAssets(
       const archHit = archRe.test(asset.name);
       const noArch = !/x64|x86_64|amd64|arm64|aarch64|32\b/i.test(asset.name);
       const recommended = osHit && (archHit || noArch);
-      const plausible = osHit || (!isOtherOs && noArch && !/\.(sha256|sig|txt|json)$/i.test(asset.name));
+      const plausible =
+        osHit || (!isOtherOs && noArch && !/\.(sha256|sig|txt|json)$/i.test(asset.name));
       return { asset, recommended, plausible: plausible && !recommended };
     })
     .sort((a, b) => {
@@ -210,18 +211,141 @@ export function buildNodeDownloadUrl(
 // MirrorZ 同步状态解析
 // ============================================================
 
-export type MirrorSyncStatus = "ok" | "syncing" | "error" | "unknown";
+export type MirrorSyncStatus = "ok" | "syncing" | "pending" | "error" | "unknown";
+
+/** 实时镜像列表条目（由 MirrorZ mirrors[] 规整而来） */
+export interface MirrorEntry {
+  cname: string;
+  url: string;
+  desc: string;
+  size: string;
+  status: MirrorSyncStatus;
+}
 
 /**
- * 解析 MirrorZ status 字段：S<更新时间戳>X<错误时间戳>。
- * 有错误且错误晚于更新 → error；仅更新 → ok；缺失 → unknown。
+ * 解析 MirrorZ status：首字母即最近状态标记。
+ * S=成功 X=下次同步（非错误！）Y=同步中 D=等待 F=失败 N=新镜像。
+ * 例如 "S1794976642X1795063042"（成功，附下次同步时间）→ ok。
  */
 export function parseMirrorStatus(status: string | undefined): MirrorSyncStatus {
-  if (!status) return "unknown";
-  const m = status.match(/^S(\d+)(?:X(\d+))?/);
-  if (!m) return "unknown";
-  const updated = Number(m[1]);
-  const errored = m[2] ? Number(m[2]) : 0;
-  if (errored > updated) return "error";
-  return "ok";
+  const first = status?.[0];
+  switch (first) {
+    case "S":
+    case "N":
+      return "ok";
+    case "Y":
+      return "syncing";
+    case "D":
+      return "pending";
+    case "F":
+      return "error";
+    default:
+      return "unknown";
+  }
+}
+
+// ============================================================
+// 自动选版 provider：Node.js / Go（官方 JSON，CORS 开放）
+// ============================================================
+
+export interface DistroProvider {
+  id: string;
+  label: string;
+  api: string;
+  mirrorBase: string;
+}
+
+/** Go 官方 dl JSON 元素（files.filename 为完整下载文件名） */
+export interface GoRelease {
+  version: string;
+  stable: boolean;
+  files: { filename: string; os: string; arch: string; kind: string }[];
+}
+
+const GO_OS: Record<PlatformInfo["os"], string> = {
+  windows: "windows",
+  macos: "darwin",
+  linux: "linux",
+};
+
+/**
+ * Go：取最新 stable 版本中匹配当前平台的 archive 文件名。
+ * windows 优先 zip（msi 为 installer 不取），macos 取 pkg。
+ */
+export function pickGoFile(release: GoRelease, platform: PlatformInfo): string | null {
+  const os = GO_OS[platform.os];
+  // Go 官方文件名用 amd64/arm64 命名（x64 → amd64）
+  const arch = platform.arch === "x64" ? "amd64" : "arm64";
+  // windows 优先 zip 安装包；macos 优先 pkg；linux 用 tar 归档
+  const kinds =
+    platform.os === "windows"
+      ? ["archive", "installer"]
+      : platform.os === "macos"
+        ? ["installer", "archive"]
+        : ["archive"];
+  for (const kind of kinds) {
+    const hit = release.files.find(
+      (f) => f.os === os && f.arch === arch && f.kind === kind,
+    );
+    if (hit) return hit.filename;
+  }
+  return null;
+}
+
+/** Go 镜像下载链接：golang 镜像根路径直接拼文件名 */
+export function buildGoDownloadUrl(mirrorBase: string, file: string): string {
+  return `${mirrorBase}${file}`;
+}
+// ============================================================
+// 发行获取分发器（页面薄壳，逻辑集中此处便于测试）
+// ============================================================
+
+export interface DistroResult {
+  /** 展示用版本号（如 v22.11.0 / go1.23.4） */
+  version: string;
+  /** 当前平台安装包文件名 */
+  file: string;
+  /** 镜像下载链接 */
+  url: string;
+  /** 附加说明（LTS 代号 / stable 等） */
+  note: string;
+}
+
+/**
+ * 拉取发行最新版本并生成镜像下载链接。
+ * - nodejs：index.json 首个 lts 行；版本路径 v{ver}/
+ * - go：dl json 首 stable 项；golang 镜像根直接拼文件名
+ */
+export async function fetchLatestRelease(
+  provider: DistroProvider,
+  platform: PlatformInfo,
+): Promise<DistroResult> {
+  const res = await fetch(provider.api);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (provider.id === "nodejs") {
+    const dists = (await res.json()) as NodeDist[];
+    const dist = pickLatestLts(dists);
+    if (!dist) throw new Error("未找到 LTS 版本");
+    const file = pickNodeFile(dist, platform);
+    if (!file) throw new Error("未匹配到当前平台安装包");
+    return {
+      version: dist.version,
+      file,
+      url: buildNodeDownloadUrl(provider.mirrorBase, dist, file),
+      note: `${dist.lts} LTS`,
+    };
+  }
+  if (provider.id === "go") {
+    const releases = (await res.json()) as GoRelease[];
+    const release = releases.find((r) => r.stable) ?? releases[0];
+    const file = pickGoFile(release, platform);
+    if (!file) throw new Error("未匹配到当前平台安装包");
+    return {
+      version: release.version,
+      file,
+      url: buildGoDownloadUrl(provider.mirrorBase, file),
+      note: "stable",
+    };
+  }
+  throw new Error(`不支持的发行：${provider.id}`);
 }

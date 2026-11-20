@@ -11,12 +11,18 @@ declare module "virtual:accelerate-data" {
     name: string;
     path: string;
   }
+  export interface DistroProvider {
+    id: string;
+    label: string;
+    api: string;
+    mirrorBase: string;
+  }
   export interface AccelerateData {
     github: GithubChannel[];
     sourceforge: { base: string };
     mirrors: { app: string; shortcut: MirrorShortcut[] };
-    nodejs: { indexJson: string; mirrorDist: string };
-    mirrorList: { url: string };
+    distros: DistroProvider[];
+    mirrorSources: { url: string }[];
   }
   export const accelerateData: AccelerateData;
 }

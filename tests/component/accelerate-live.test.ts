@@ -153,12 +153,12 @@ describe("/tools/accelerate/mirrors 实时列表与 Node LTS", () => {
     const pf2 = detectPlatform();
     await wrapper
       .findAll("button")
-      .find((b) => b.text().includes("获取最新 LTS"))!
+      .find((b) => b.text().includes("获取最新版本"))!
       .trigger("click");
     await settle();
 
     expect(wrapper.text()).toContain("22.11.0");
-    const out = wrapper.find('textarea[aria-label="Node.js 镜像下载链接"]');
+    const out = wrapper.find('textarea[aria-label="镜像下载链接"]');
     const nodeFile =
       pf2.os === "linux" ? "node-v22.11.0-linux-x64.tar.xz" : "node-v22.11.0-win-x64.zip";
     expect((out.element as HTMLTextAreaElement).value).toBe(

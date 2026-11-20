@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   buildGithubUrl,
+  buildGoDownloadUrl,
   buildNodeDownloadUrl,
   buildSourceforgeUrl,
   detectPlatform,
@@ -8,6 +9,8 @@ import {
   matchReleaseAssets,
   parseMirrorStatus,
   pickLatestLts,
+  pickGoFile,
+  fetchLatestRelease,
   pickNodeFile,
 } from "@/lib/tools/accelerate";
 
@@ -18,7 +21,9 @@ describe("GitHub 加速链接拼接", () => {
         "https://github.com/user/repo/releases/download/v1.0/file.zip",
         "https://gh.meali.top/",
       ),
-    ).toBe("https://gh.meali.top/https://github.com/user/repo/releases/download/v1.0/file.zip");
+    ).toBe(
+      "https://gh.meali.top/https://github.com/user/repo/releases/download/v1.0/file.zip",
+    );
   });
 
   it("裸路径：补 github.com 前缀", () => {
@@ -66,13 +71,21 @@ describe("SourceForge 加速链接拼接", () => {
   });
 
   it("裸路径：自动补 projects 前缀结构", () => {
-    expect(buildSourceforgeUrl("/projects/7-zip/files/7z.exe", "https://v4.gh-proxy.org/sourceforge/")).toBe(
-      "https://v4.gh-proxy.org/sourceforge/projects/7-zip/files/7z.exe",
-    );
+    expect(
+      buildSourceforgeUrl(
+        "/projects/7-zip/files/7z.exe",
+        "https://v4.gh-proxy.org/sourceforge/",
+      ),
+    ).toBe("https://v4.gh-proxy.org/sourceforge/projects/7-zip/files/7z.exe");
   });
 
   it("非 projects 路径返回 null", () => {
-    expect(buildSourceforgeUrl("https://sourceforge.net/about", "https://v4.gh-proxy.org/sourceforge/")).toBeNull();
+    expect(
+      buildSourceforgeUrl(
+        "https://sourceforge.net/about",
+        "https://v4.gh-proxy.org/sourceforge/",
+      ),
+    ).toBeNull();
   });
 });
 
@@ -107,7 +120,9 @@ describe("平台检测与 Release 资产匹配", () => {
   it("owner/repo 提取", () => {
     expect(extractOwnerRepo("vuejs/core")).toBe("vuejs/core");
     expect(extractOwnerRepo("https://github.com/vuejs/core/releases")).toBe("vuejs/core");
-    expect(extractOwnerRepo("https://api.github.com/repos/vuejs/core")).toBe("vuejs/core");
+    expect(extractOwnerRepo("https://api.github.com/repos/vuejs/core")).toBe(
+      "vuejs/core",
+    );
   });
 });
 
@@ -118,7 +133,13 @@ describe("Node.js LTS 自动选版", () => {
       version: "v22.11.0",
       lts: "Jod",
       date: "2024-10-30",
-      files: ["win-x64-zip", "osx-arm64-pkg", "linux-x64-tarxz", "linux-arm64-tarxz", "src"],
+      files: [
+        "win-x64-zip",
+        "osx-arm64-pkg",
+        "linux-x64-tarxz",
+        "linux-arm64-tarxz",
+        "src",
+      ],
     },
   ];
 
@@ -129,8 +150,12 @@ describe("Node.js LTS 自动选版", () => {
 
   it("按平台拼安装包文件名", () => {
     const dist = pickLatestLts(dists)!;
-    expect(pickNodeFile(dist, detectPlatform("Windows x64"))).toBe("node-v22.11.0-win-x64.zip");
-    expect(pickNodeFile(dist, detectPlatform("Macintosh; Intel Mac OS X; arm64"))).toBe("node-v22.11.0-osx-arm64.pkg");
+    expect(pickNodeFile(dist, detectPlatform("Windows x64"))).toBe(
+      "node-v22.11.0-win-x64.zip",
+    );
+    expect(pickNodeFile(dist, detectPlatform("Macintosh; Intel Mac OS X; arm64"))).toBe(
+      "node-v22.11.0-osx-arm64.pkg",
+    );
     expect(pickNodeFile(dist, detectPlatform("Linux x86_64"))).toBe(
       "node-v22.11.0-linux-x64.tar.xz",
     );
@@ -144,17 +169,61 @@ describe("Node.js LTS 自动选版", () => {
         dist,
         "node-v22.11.0-win-x64.zip",
       ),
-    ).toBe("https://mirrors.cernet.edu.cn/nodejs-release/dist/v22.11.0/node-v22.11.0-win-x64.zip");
+    ).toBe(
+      "https://mirrors.cernet.edu.cn/nodejs-release/dist/v22.11.0/node-v22.11.0-win-x64.zip",
+    );
   });
 });
 
 describe("MirrorZ 同步状态解析", () => {
-  it("S 更新时间戳 + X 错误时间戳", () => {
-    // 更新 1795000000，错误 1794000000（早于更新）→ 正常
-    expect(parseMirrorStatus("S1795000000X1794000000")).toBe("ok");
-    // 错误晚于更新 → error
-    expect(parseMirrorStatus("S1794000000X1795000000")).toBe("error");
+  it("首字母即状态：S/N 成功、Y 同步中、D 等待、F 失败", () => {
+    // X 后缀是「下次同步时间」而非错误标记
+    expect(parseMirrorStatus("S1794976642X1795063042")).toBe("ok");
+    expect(parseMirrorStatus("N")).toBe("ok");
+    expect(parseMirrorStatus("Y1794000000")).toBe("syncing");
+    expect(parseMirrorStatus("D1794000000")).toBe("pending");
+    expect(parseMirrorStatus("F1794000000")).toBe("error");
     expect(parseMirrorStatus(undefined)).toBe("unknown");
     expect(parseMirrorStatus("garbage")).toBe("unknown");
+  });
+});
+
+describe("Go 自动选版", () => {
+  const release = {
+    version: "go1.23.4",
+    stable: true,
+    files: [
+      { filename: "go1.23.4.windows-amd64.msi", os: "windows", arch: "amd64", kind: "installer" },
+      { filename: "go1.23.4.windows-amd64.zip", os: "windows", arch: "amd64", kind: "archive" },
+      { filename: "go1.23.4.linux-amd64.tar.gz", os: "linux", arch: "amd64", kind: "archive" },
+      { filename: "go1.23.4.darwin-arm64.pkg", os: "darwin", arch: "arm64", kind: "installer" },
+    ],
+  };
+
+  it("按平台选 archive 文件名", () => {
+    expect(pickGoFile(release, detectPlatform("Windows x64"))).toBe("go1.23.4.windows-amd64.zip");
+    expect(pickGoFile(release, detectPlatform("Linux x86_64"))).toBe("go1.23.4.linux-amd64.tar.gz");
+    expect(pickGoFile(release, detectPlatform("Macintosh arm64"))).toBe("go1.23.4.darwin-arm64.pkg");
+  });
+
+  it("镜像下载链接：golang 根路径拼文件名", () => {
+    expect(buildGoDownloadUrl("https://mirrors.cernet.edu.cn/golang/", "go1.23.4.windows-amd64.zip")).toBe(
+      "https://mirrors.cernet.edu.cn/golang/go1.23.4.windows-amd64.zip",
+    );
+  });
+
+  it("fetchLatestRelease 分发：go provider", async () => {
+    globalThis.fetch = vi.fn(async () =>
+      new Response(JSON.stringify([release]), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    ) as typeof fetch;
+    const result = await fetchLatestRelease(
+      { id: "go", label: "Go", api: "https://go.dev/dl/?mode=json", mirrorBase: "https://mirrors.cernet.edu.cn/golang/" },
+      detectPlatform("Windows x64"),
+    );
+    expect(result.version).toBe("go1.23.4");
+    expect(result.url).toBe("https://mirrors.cernet.edu.cn/golang/go1.23.4.windows-amd64.zip");
   });
 });

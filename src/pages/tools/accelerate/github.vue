@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import CopyButton from "@/components/CopyButton.vue";
 import Input from "@/components/ui/input/Input.vue";
 import { Download, ExternalLink, Loader2, Search, Zap } from "@lucide/vue";
@@ -29,7 +35,9 @@ const input = ref("");
 // ---------- 链接拼接（原功能） ----------
 const accelerated = computed(() => buildGithubUrl(input.value, channel.value) ?? "");
 const urlValid = computed(
-  () => input.value.trim() !== "" && /(github\.com|raw\.githubusercontent|gist|codeload)/i.test(input.value),
+  () =>
+    input.value.trim() !== "" &&
+    /(github\.com|raw\.githubusercontent|gist|codeload)/i.test(input.value),
 );
 
 // ---------- Release 解析（owner/repo） ----------
@@ -106,7 +114,11 @@ function formatSize(bytes: number): string {
             <SelectValue placeholder="请选择" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem v-for="ch in accelerateData.github" :key="ch.base" :value="ch.base">
+            <SelectItem
+              v-for="ch in accelerateData.github"
+              :key="ch.base"
+              :value="ch.base"
+            >
               {{ ch.label }}
             </SelectItem>
           </SelectContent>
@@ -124,7 +136,10 @@ function formatSize(bytes: number): string {
       </label>
 
       <!-- Release 解析（owner/repo 模式） -->
-      <div v-if="showRelease" class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
+      <div
+        v-if="showRelease"
+        class="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4"
+      >
         <div class="flex items-center justify-between gap-2">
           <span class="text-sm font-medium">解析 Release：{{ releaseRepo }}</span>
           <Button size="sm" :disabled="releaseState === 'loading'" @click="fetchRelease">
@@ -157,11 +172,18 @@ function formatSize(bytes: number): string {
                     适合 {{ platformLabel }}
                   </span>
                 </p>
-                <p class="text-xs text-muted-foreground">{{ formatSize(m.asset.size) }}</p>
+                <p class="text-xs text-muted-foreground">
+                  {{ formatSize(m.asset.size) }}
+                </p>
               </div>
               <CopyButton :text="assetUrl(m.asset)" />
               <Button as-child variant="ghost" size="icon">
-                <a :href="assetUrl(m.asset)" target="_blank" rel="noopener noreferrer" aria-label="下载">
+                <a
+                  :href="assetUrl(m.asset)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="下载"
+                >
                   <ExternalLink class="size-4" />
                 </a>
               </Button>
@@ -205,8 +227,8 @@ function formatSize(bytes: number): string {
       >
         <Zap class="mt-0.5 size-4 shrink-0" />
         <span>
-          Release 解析经当前渠道代理 GitHub API（无后端，全程浏览器直连）；
-          支持 github.com / raw / gist / api / codeload 链接拼接，已加速链接自动还原重拼。
+          Release 解析经当前渠道代理 GitHub API（无后端，全程浏览器直连）； 支持
+          github.com / raw / gist / api / codeload 链接拼接，已加速链接自动还原重拼。
         </span>
       </div>
     </div>
