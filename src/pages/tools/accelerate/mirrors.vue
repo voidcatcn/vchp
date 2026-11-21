@@ -167,6 +167,9 @@ onMounted(fetchMirrors);
           <p class="text-xs text-muted-foreground">
             {{ distroVersion }}（{{ distroNote }}）— 已按 {{ platformLabel }} /
             {{ platform.arch }} 自动选择
+            <span v-if="semver" class="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] text-primary">
+              v{{ semver.major }}.{{ semver.minor }}.{{ semver.patch }}
+            </span>
             <span
               v-if="semver"
               class="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] text-primary"
@@ -249,6 +252,9 @@ onMounted(fetchMirrors);
                   <span class="truncate text-sm font-medium">{{ m.cname }}</span>
                   <span v-if="m.size" class="shrink-0 text-xs text-muted-foreground">
                     {{ m.size }}
+                  <span v-if="m.syncedAt" class="shrink-0 text-xs text-muted-foreground/70">
+                    同步于 {{ formatRelativeTime(m.syncedAt) }}
+                  </span>
                   <span v-if="m.syncedAt" class="shrink-0 text-xs text-muted-foreground/70">
                     同步于 {{ formatRelativeTime(m.syncedAt) }}
                   </span>
