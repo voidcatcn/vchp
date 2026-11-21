@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/select";
 import CopyButton from "@/components/CopyButton.vue";
 import Input from "@/components/ui/input/Input.vue";
-import { Download, ExternalLink, Loader2, Search, Zap } from "@lucide/vue";
+import { Download, ExternalLink, Loader2, Search } from "@lucide/vue";
 import ToolLayout from "@/components/ToolLayout.vue";
 import { accelerateData } from "virtual:accelerate-data";
+import ToolHint from "@/components/ToolHint.vue";
 import {
   buildGithubUrl,
   detectPlatform,
@@ -232,15 +233,10 @@ function formatSize(bytes: number): string {
       </div>
 
       <!-- 说明 -->
-      <div
-        class="flex items-start gap-2 rounded-xl border border-border bg-card p-3 text-xs leading-relaxed text-muted-foreground"
-      >
-        <Zap class="mt-0.5 size-4 shrink-0" />
-        <span>
-          Release 解析经当前渠道代理 GitHub API（无后端，全程浏览器直连）； 支持
-          github.com / raw / gist / api / codeload 链接拼接，已加速链接自动还原重拼。
-        </span>
-      </div>
+      <ToolHint hint-id="github-accelerate">
+        Release 解析经当前渠道代理 GitHub API（无后端，全程浏览器直连）； 支持 github.com
+        / raw / gist / api / codeload 链接拼接，已加速链接自动还原重拼。
+      </ToolHint>
     </div>
   </ToolLayout>
 </template>

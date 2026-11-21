@@ -3,9 +3,10 @@ import { computed, ref } from "vue";
 import { Button } from "@/components/ui/button";
 import CopyButton from "@/components/CopyButton.vue";
 import Input from "@/components/ui/input/Input.vue";
-import { ExternalLink, Zap } from "@lucide/vue";
+import { Download, ExternalLink } from "@lucide/vue";
 import ToolLayout from "@/components/ToolLayout.vue";
 import { accelerateData } from "virtual:accelerate-data";
+import ToolHint from "@/components/ToolHint.vue";
 import { buildSourceforgeUrl } from "@/lib/tools/accelerate";
 import { useSeo } from "@/composables/useSeo";
 
@@ -51,6 +52,12 @@ const valid = computed(() => input.value.trim() !== "" && accelerated.value !== 
         <div class="flex flex-wrap items-center gap-2">
           <CopyButton :text="accelerated" />
           <Button as-child variant="outline">
+            <a :href="accelerated" target="_blank" rel="noopener noreferrer" download>
+              <Download class="size-4" />
+              下载
+            </a>
+          </Button>
+          <Button as-child variant="outline">
             <a :href="accelerated" target="_blank" rel="noopener noreferrer">
               <ExternalLink class="size-4" />
               新窗口打开
@@ -59,14 +66,9 @@ const valid = computed(() => input.value.trim() !== "" && accelerated.value !== 
         </div>
       </div>
 
-      <div
-        class="flex items-start gap-2 rounded-xl border border-border bg-card p-3 text-xs leading-relaxed text-muted-foreground"
-      >
-        <Zap class="mt-0.5 size-4 shrink-0" />
-        <span>
-          仅支持 /projects/&lt;名&gt;/... 路径；完整 URL 与裸路径均可，粘贴后自动提取。
-        </span>
-      </div>
+      <ToolHint hint-id="sourceforge-accelerate">
+        仅支持 /projects/&lt;名&gt;/... 路径；完整 URL 与裸路径均可，粘贴后自动提取。
+      </ToolHint>
     </div>
   </ToolLayout>
 </template>

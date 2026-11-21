@@ -17,3 +17,9 @@
 - 1.以 <type>(<scope>): <subject> 为格式，使用中文，并且尽量简短并且表述准确，在简短描述后面再添加具体细节。
 - 2.完成一个目标之后自行提交，一次提交最好只有一到两处更改。
 - 3.如果你是 AI Agent，请你务必添加对应编程工具的 co-owner
+
+## 工具页说明提示规范
+
+- 1.工具页/新页面的说明类提示**必须**使用 `src/components/ToolHint.vue`（传唯一 `hint-id`），或带 `hint-id` 属性的 `Alert`——**禁止手写说明 div**（会丢失右上角关闭按钮与设置页「工具说明提示」开关的联动）。
+- 2.关闭行为由 `useHintSettings` 统一管理：关闭后永久记忆（localStorage `ui:hint-prefs`），设置页可一键恢复全部提示；hint-id 按页面-功能命名（如 `github-accelerate`）。
+- 3.纯静态确认类提示（无需关闭）才允许用不带 hint-id 的 `Alert`。
