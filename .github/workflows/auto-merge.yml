@@ -13,15 +13,42 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'renovate[bot]'
     steps:
-      - name: Wait for all checks to pass
-        uses: lewagon/wait-on-check-action@v1.3.4
+      - name: Wait for all other checks to pass
+        uses: actions/github-script@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
-          allowed-conclusions: success,skipped,neutral
-          # 终极修复：排除当前 workflow 自身，继续死等其他的 CI 检查
-          running-workflow-name: ${{ github.workflow }}
+          script: |
+            const { owner, repo } = context.repo;
+            const sha = context.payload.pull_request.head.sha;
+            const currentJob = 'automerge';
+            const allowed = ['success', 'skipped', 'neutral'];
+
+            while (true) {
+              const { data } = await github.rest.checks.listForRef({
+                owner, repo, ref: sha, per_page: 100
+              });
+
+              // 排除当前 job 自身，避免死锁
+              const others = data.check_runs.filter(c => c.name !== currentJob);
+
+              const failed = others.filter(c =>
+                c.status === 'completed' && !allowed.includes(c.conclusion)
+              );
+              if (failed.length > 0) {
+                core.setFailed(`Failed checks: ${failed.map(c => `${c.name}(${c.conclusion})`).join(', ')}`);
+                return;
+              }
+
+              const pending = others.filter(c =>
+                c.status === 'in_progress' || c.status === 'queued'
+              );
+              if (pending.length === 0) {
+                console.log('All other checks passed!');
+                break;
+              }
+
+              console.log(`Waiting for ${pending.length} check(s)...`);
+              await new Promise(r => setTimeout(r, 10000));
+            }
 
       - name: Merge PR
         run: gh pr merge --squash --delete-branch "$PR_URL"
