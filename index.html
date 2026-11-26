@@ -98,13 +98,33 @@
       })();
     </script>
     <script>
-      // 首屏前同步设置主题预设（rice / endfield），避免刷新闪烁。
+      // 首屏前同步设置主题预设（rice / liquid-glass / endfield / void），避免刷新闪烁。
+      // 无保存选择时，Apple 系统默认液态玻璃，其余系统默认 Rice。
       // 逻辑与 src/composables/useThemePreset.ts 保持一致。
       (function () {
         try {
-          if (localStorage.getItem("theme-preset") === "endfield") {
-            document.documentElement.classList.add("theme-endfield");
-          }
+          var saved = localStorage.getItem("theme-preset");
+          var apple =
+            /iPad|iPhone|iPod|Macintosh|Mac OS X/.test(navigator.userAgent || "") ||
+            (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+          var preset =
+            saved === "rice" ||
+            saved === "liquid-glass" ||
+            saved === "endfield" ||
+            saved === "void"
+              ? saved
+              : apple
+                ? "liquid-glass"
+                : "rice";
+          document.documentElement.classList.toggle(
+            "theme-liquid-glass",
+            preset === "liquid-glass",
+          );
+          document.documentElement.classList.toggle(
+            "theme-endfield",
+            preset === "endfield",
+          );
+          document.documentElement.classList.toggle("theme-void", preset === "void");
         } catch (e) {}
       })();
     </script>

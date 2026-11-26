@@ -45,7 +45,7 @@ watch(theme, (val) => {
   localStorage.setItem(THEME_KEY, val);
 });
 
-// 主题预设（rice / endfield）：与明暗模式正交，由「关于」页切换；启动即应用（模块副作用已 apply）
+// 主题预设（Rice / Liquid Glass / Endfield / Void）：与明暗模式正交，由「设置」页切换；启动即应用
 useThemePreset();
 
 // 国庆彩蛋：日期命中国庆（10.1-10.7）或 URL 携带 ?egg=cn_birthday 时显示横幅

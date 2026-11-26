@@ -6,12 +6,18 @@
  * nextHopProtocol，需要用 vi.spyOn 注入 mock。任一指标采不到时显示
  * 「无法获取」占位，全部采不到时整段显示「传输信息无法获取」。
  */
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import { nextTick } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 import { routes } from "vue-router/auto-routes";
 import AboutPage from "@/pages/about.vue";
+import {
+  ENDFIELD_CLASS,
+  LIQUID_GLASS_CLASS,
+  VOID_CLASS,
+  useThemePreset,
+} from "@/composables/useThemePreset";
 
 async function mountAt(initialRoute: string) {
   const router = createRouter({ history: createMemoryHistory(), routes });
@@ -29,6 +35,12 @@ function mockNavigationEntry(entry: Partial<PerformanceNavigationTiming>) {
     return [];
   });
 }
+
+beforeEach(() => {
+  const { setPreset } = useThemePreset();
+  setPreset("rice");
+  localStorage.clear();
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -171,52 +183,70 @@ describe("/about 页面：传输与加载信息", () => {
 });
 
 describe("/about 页面：主题预设切换", () => {
-  afterEach(() => {
-    // 复位为默认预设，避免影响其它用例
-    localStorage.removeItem("theme-preset");
-    document.documentElement.classList.remove("theme-endfield");
-  });
-
-  it("渲染 Rice / Endfield 两个主题选项", async () => {
+  it("渲染四套主题选项", async () => {
     const wrapper = await mountAt("/about");
     await nextTick();
 
     const radios = wrapper.findAll('[role="radio"]');
-    expect(radios.length).toBe(2);
+    expect(radios.length).toBe(4);
     const names = radios.map((r) => r.text());
+    expect(names.some((n) => n.includes("Liquid Glass"))).toBe(true);
     expect(names.some((n) => n.includes("Rice"))).toBe(true);
+    expect(names.some((n) => n.includes("Void"))).toBe(true);
     expect(names.some((n) => n.includes("Endfield"))).toBe(true);
   });
 
-  it("默认选中 Rice，点击 Endfield 后切换主题并持久化", async () => {
+  it("非 Apple 测试环境默认选中 Rice", async () => {
     const wrapper = await mountAt("/about");
     await nextTick();
 
-    const radios = wrapper.findAll('[role="radio"]');
-    // 默认 Rice 选中
-    expect(radios[0].attributes("aria-checked")).toBe("true");
-    expect(radios[1].attributes("aria-checked")).toBe("false");
-    expect(document.documentElement.classList.contains("theme-endfield")).toBe(false);
+    const rice = wrapper.find('[aria-label="切换到 Rice 主题"]');
+    expect(rice.attributes("aria-checked")).toBe("true");
+    for (const className of [LIQUID_GLASS_CLASS, VOID_CLASS, ENDFIELD_CLASS]) {
+      expect(document.documentElement.classList.contains(className)).toBe(false);
+    }
+  });
 
-    // 点击 Endfield
-    await radios[1].trigger("click");
+  it("点击 Liquid Glass 后切换主题并持久化", async () => {
+    const wrapper = await mountAt("/about");
     await nextTick();
 
-    expect(radios[0].attributes("aria-checked")).toBe("false");
-    expect(radios[1].attributes("aria-checked")).toBe("true");
-    expect(document.documentElement.classList.contains("theme-endfield")).toBe(true);
-    expect(localStorage.getItem("theme-preset")).toBe("endfield");
+    await wrapper.find('[aria-label="切换到 Liquid Glass 主题"]').trigger("click");
+    await nextTick();
+
+    expect(
+      wrapper.find('[aria-label="切换到 Liquid Glass 主题"]').attributes("aria-checked"),
+    ).toBe("true");
+    expect(document.documentElement.classList.contains(LIQUID_GLASS_CLASS)).toBe(true);
+    expect(document.documentElement.classList.contains(VOID_CLASS)).toBe(false);
+    expect(document.documentElement.classList.contains(ENDFIELD_CLASS)).toBe(false);
+    expect(localStorage.getItem("theme-preset")).toBe("liquid-glass");
+  });
+
+  it("点击 Void 后切换主题并持久化", async () => {
+    const wrapper = await mountAt("/about");
+    await nextTick();
+
+    await wrapper.find('[aria-label="切换到 Void 主题"]').trigger("click");
+    await nextTick();
+
+    expect(
+      wrapper.find('[aria-label="切换到 Void 主题"]').attributes("aria-checked"),
+    ).toBe("true");
+    expect(document.documentElement.classList.contains(VOID_CLASS)).toBe(true);
+    expect(document.documentElement.classList.contains(LIQUID_GLASS_CLASS)).toBe(false);
+    expect(localStorage.getItem("theme-preset")).toBe("void");
   });
 
   it("点击 Rice 切回默认主题", async () => {
     localStorage.setItem("theme-preset", "endfield");
-    document.documentElement.classList.add("theme-endfield");
+    const { setPreset } = useThemePreset();
+    setPreset("endfield");
 
     const wrapper = await mountAt("/about");
     await nextTick();
 
-    const radios = wrapper.findAll('[role="radio"]');
-    await radios[0].trigger("click");
+    await wrapper.find('[aria-label="切换到 Rice 主题"]').trigger("click");
     await nextTick();
 
     expect(document.documentElement.classList.contains("theme-endfield")).toBe(false);

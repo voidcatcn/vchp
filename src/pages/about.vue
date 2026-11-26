@@ -41,7 +41,7 @@ const GithubIcon: Component = {
 // Cookie 配置入口：主动打开全局 Cookie 选择弹窗（单例共享状态）
 const { openDialog } = useCookieConsent();
 
-// 主题预设切换：Rice（默认）/ Endfield（终末地风格），与明暗模式正交
+// 主题预设切换：四套预设各自支持明暗模式，Apple 系统首次访问默认液态玻璃
 const { preset: themePreset, setPreset: setThemePreset } = useThemePreset();
 
 // 提示与横幅：全站开关 + 按横幅单独启停（issue #253）
@@ -64,10 +64,22 @@ const themeOptions: {
   swatches: string[];
 }[] = [
   {
+    id: "liquid-glass",
+    name: "Liquid Glass",
+    desc: "液态玻璃 · Apple 设备默认",
+    swatches: ["#fbfbfa", "#ffffff", "#0071e3"],
+  },
+  {
     id: "rice",
     name: "Rice",
-    desc: "默认主题 · 米白纸张",
+    desc: "米白纸张 · 通用默认",
     swatches: ["#fbfbfa", "#e8e7e2", "#1f1f1f"],
+  },
+  {
+    id: "void",
+    name: "Void",
+    desc: "虚空紫 · 耀斑深空",
+    swatches: ["#090411", "#a855f7", "#f0abfc"],
   },
   {
     id: "endfield",
@@ -146,7 +158,7 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
   <main class="mt-6 flex w-full flex-col items-center gap-6">
     <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">设置</h1>
 
-    <!-- 外观：主题预设 Rice（默认）/ Endfield（终末地风格）切换 -->
+    <!-- 外观：四套主题预设切换（每套均支持明暗模式） -->
     <section aria-labelledby="appearance-heading" class="w-full max-w-2xl">
       <h2
         id="appearance-heading"
@@ -160,7 +172,7 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
         <div
           role="radiogroup"
           aria-label="选择主题"
-          class="flex flex-wrap justify-center gap-3"
+          class="grid w-full grid-cols-2 gap-3 sm:grid-cols-4"
         >
           <button
             v-for="opt in themeOptions"
@@ -169,7 +181,7 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
             role="radio"
             :aria-checked="themePreset === opt.id"
             :aria-label="`切换到 ${opt.name} 主题`"
-            class="group flex w-44 flex-col items-center gap-2 rounded-xl border p-4 text-center transition-colors"
+            class="group flex w-full flex-col items-center gap-2 rounded-xl border p-4 text-center transition-colors"
             :class="
               themePreset === opt.id
                 ? 'border-primary bg-primary text-primary-foreground'
@@ -201,7 +213,7 @@ const cfLogo = "https://esaimg.cdn1.vip/i/6ac7a1ece60b8_1791468012.webp";
               class="text-xs"
               :class="
                 themePreset === opt.id
-                  ? 'text-primary-foreground/80'
+                  ? 'text-primary-foreground'
                   : 'text-muted-foreground'
               "
             >
