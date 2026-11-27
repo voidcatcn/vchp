@@ -11,7 +11,7 @@ overrides:
   fast-uri@>=3.0.0 <3.1.5: 4.2.4
   postcss@<=8.5.22: 8.5.33
   sharp@<0.35.0: 0.35.5
-  hono@<4.12.34: 4.13.22
+  hono@<4.12.34: 4.13.23
   '@hono/node-server@<2.0.10': 2.1.11
   decode-uri-component@<=0.4.2: 0.5.1
   qs@>=6.14.2 <=6.15.3: 6.17.1
@@ -540,7 +540,7 @@ packages:
     resolution: {integrity: sha512-KzKz9vl4vvr1vgLHamj+g5uonbrj5NwAdO3yzOS6cd2HjALVeOgTgeZOyAzNxejbkfOOPIcvuf/Tg8l1pEFLog==}
     engines: {node: '>=20'}
     peerDependencies:
-      hono: 4.13.22
+      hono: 4.13.23
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -2521,8 +2521,8 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  hono@4.13.22:
-    resolution: {integrity: sha512-wncKd5/40Pj8grx0RZ2fgNIicFEmVFwIHT5UFLTnphR8I6AQWFf9c2JoM6ZJ9g8y4pMzg3sNlCVNe0m2Yclg0Q==}
+  hono@4.13.23:
+    resolution: {integrity: sha512-OS90dj7dcsftEEWCOef8jRbnHE5lbrOq0hNRqjSyPsOnaGZvvfof1KS05hQNb4kUOCfDq1mG3PmHoX37DMnHQg==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -4274,9 +4274,9 @@ snapshots:
       giscus: 1.6.0
       vue: 3.5.46(typescript@5.9.3)
 
-  '@hono/node-server@2.1.11(hono@4.13.22)':
+  '@hono/node-server@2.1.11(hono@4.13.23)':
     dependencies:
-      hono: 4.13.22
+      hono: 4.13.23
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -4471,7 +4471,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.32.2(zod@4.6.7)':
     dependencies:
-      '@hono/node-server': 2.1.11(hono@4.13.22)
+      '@hono/node-server': 2.1.11(hono@4.13.23)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -4481,7 +4481,7 @@ snapshots:
       eventsource-parser: 3.1.1
       express: 5.3.0
       express-rate-limit: 8.7.1(express@5.3.0)
-      hono: 4.13.22
+      hono: 4.13.23
       jose: 6.2.13
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -6163,7 +6163,7 @@ snapshots:
 
   he@1.2.0: {}
 
-  hono@4.13.22: {}
+  hono@4.13.23: {}
 
   hookable@5.5.3: {}
 
