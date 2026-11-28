@@ -31,7 +31,12 @@ useSeo({
     </div>
 
     <!-- 分组内工具卡片 -->
-    <div class="grid w-full max-w-2xl gap-3 sm:grid-cols-3">
+    <div
+      class="grid w-full gap-3"
+      :class="
+        group.items.length === 1 ? 'max-w-md sm:grid-cols-1' : 'max-w-2xl sm:grid-cols-3'
+      "
+    >
       <RouterLink
         v-for="tool in group.items"
         :key="tool.to"

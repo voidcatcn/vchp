@@ -7,7 +7,7 @@ import { useSeo } from "@/composables/useSeo";
 useSeo({
   title: "工具",
   description:
-    "浏览器本地运行的工具集：加密、转换、网络、加速与趣味小工具，全程本地计算。",
+    "浏览器本地运行的工具集：加密、转换、网络、开发、加速与趣味小工具，按需连接自托管服务。",
   path: "/tools",
 });
 </script>
@@ -16,10 +16,12 @@ useSeo({
   <main class="mt-6 flex w-full flex-col items-center gap-6">
     <div class="flex flex-col items-center gap-2 text-center">
       <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">工具</h1>
-      <p class="text-muted-foreground">全部在浏览器本地运行，数据不会上传喵～</p>
+      <p class="text-muted-foreground">
+        工具优先在浏览器本地运行，需要联网的服务会明确标注喵～
+      </p>
     </div>
 
-    <!-- 工具分组卡片：加密 / 转换 / 网络 / 其他 / 加速五个「文件夹」 -->
+    <!-- 工具分组卡片：加密 / 转换 / 网络 / 开发 / 其他 / 加速六个「文件夹」 -->
     <div class="grid w-full max-w-2xl gap-3 sm:grid-cols-2">
       <RouterLink
         v-for="group in toolGroups"

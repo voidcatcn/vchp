@@ -157,6 +157,20 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/tools/development/': RouteRecordInfo<
+      '/tools/development/',
+      '/tools/development',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/tools/development/ide': RouteRecordInfo<
+      '/tools/development/ide',
+      '/tools/development/ide',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/tools/encryption/': RouteRecordInfo<
       '/tools/encryption/',
       '/tools/encryption',
@@ -414,6 +428,22 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tools/conversion/video.vue': {
       routes:
         | '/tools/conversion/video'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/tools/development/index.vue': {
+      routes:
+        | '/tools/development/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/tools/development/ide.vue': {
+      routes:
+        | '/tools/development/ide'
       views:
         | never
       pathParamNames:

@@ -91,7 +91,8 @@ export default defineConfig({
       removeScriptTypeAttributes: true,
       removeStyleLinkTypeAttributes: true,
       useShortDoctype: true,
-      minifyCSS: true,
+      // Monaco 0.58 使用 CSS 嵌套；HTML 压缩器二次处理 CSS 会错误改写选择器。
+      minifyCSS: false,
       minifyJS: true,
       collapseBooleanAttributes: true,
       sortAttributes: true,
@@ -165,6 +166,8 @@ export default defineConfig({
             // 全站首屏都下载且 wasm 资产重复两份
             if (id.includes("@jsquash") || id.includes("wasm-feature-detect"))
               return undefined;
+            // Monaco 仅在线 IDE 路由动态加载，交给 Rollup 保持独立异步块。
+            if (id.includes("monaco-editor")) return undefined;
             if (id.includes("reka-ui")) return "reka";
             if (id.includes("@vueuse/core")) return "vueuse";
             if (id.includes("shiki") || id.includes("@shikijs")) {

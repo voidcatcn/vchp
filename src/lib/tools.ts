@@ -1,6 +1,7 @@
 import type { Component } from "vue";
 import {
   Activity,
+  CodeXml,
   Disc3,
   FileBadge,
   FileCode,
@@ -15,6 +16,7 @@ import {
   Network,
   Repeat,
   ShieldCheck,
+  SquareTerminal,
   Sparkles,
   Video,
   Zap,
@@ -35,7 +37,7 @@ export interface ToolInfo {
   icon: Component;
 }
 
-/** 工具分组（加密 / 转换 / 网络 / 其他）：对应一个「文件夹」路由 */
+/** 工具分组（加密 / 转换 / 网络 / 开发 / 其他 / 加速）：对应一个「文件夹」路由 */
 export interface ToolGroup {
   /** 分组路由，如 "/tools/encryption" */
   to: string;
@@ -124,6 +126,15 @@ const networkTools: ToolInfo[] = [
   },
 ];
 
+const developmentTools: ToolInfo[] = [
+  {
+    to: "/tools/development/ide",
+    label: "在线 IDE",
+    description: "Monaco 驱动的浏览器 IDE，虚拟文件管理器与本地自动保存",
+    icon: SquareTerminal,
+  },
+];
+
 const otherTools: ToolInfo[] = [
   {
     to: "/tools/other/wheel",
@@ -180,6 +191,13 @@ export const toolGroups: ToolGroup[] = [
     description: "CIDR 展开、IP 归属、Ping、测速与证书信息，支持批处理",
     icon: Globe,
     items: networkTools,
+  },
+  {
+    to: "/tools/development",
+    label: "开发",
+    description: "浏览器内 Monaco 编辑器与虚拟文件工作区",
+    icon: CodeXml,
+    items: developmentTools,
   },
   {
     to: "/tools/other",

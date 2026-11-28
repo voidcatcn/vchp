@@ -19,10 +19,13 @@ const props = withDefaults(
     backTo?: string;
     /** 返回链接文案，默认「返回全部工具」 */
     backLabel?: string;
+    /** 宽屏模式：用于在线 IDE 等需要更大编辑区的页面 */
+    wide?: boolean;
   }>(),
   {
     backTo: "/tools",
     backLabel: "返回全部工具",
+    wide: false,
   },
 );
 
@@ -32,7 +35,7 @@ const group = computed(() => toolGroups.find((g) => g.to === props.backTo));
 
 <template>
   <main class="mt-6 flex w-full flex-col items-center gap-6">
-    <div class="flex w-full max-w-4xl items-start gap-6">
+    <div class="flex w-full items-start gap-6" :class="wide ? 'max-w-6xl' : 'max-w-4xl'">
       <!-- 左侧工具栏：当前文件夹的全部工具（桌面端） -->
       <aside
         v-if="group"
