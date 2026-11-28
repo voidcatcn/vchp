@@ -9,10 +9,11 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import { createMemoryHistory, createRouter } from "vue-router";
+import { createMemoryHistory, createRouter, RouterLink } from "vue-router";
 import { nextTick } from "vue";
 import { routes } from "vue-router/auto-routes";
 import App from "@/App.vue";
+import MobileNav from "@/components/MobileNav.vue";
 
 beforeEach(() => {
   Object.defineProperty(navigator, "clipboard", {
@@ -123,15 +124,20 @@ describe("移动端悬浮导航（MobileNav）", () => {
     expect(link.getAttribute("href")).toBe("/contact");
 
     // 点击菜单项后菜单自动收起（回退为悬浮按钮）
-    // 注：happy-dom 下 RouterLink 点击不会完成路由跳转（既有环境限制，
-    // 桌面导航链接同样如此）；路由切换本身由上方「调 router.push」用例覆盖。
-    link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
-    await nextTick();
-    await flushPromises();
-    await nextTick();
+    // reka-ui 2.12+ 将 Popover 内容改为异步组件，Teleport 后的原生 DOM
+    // 不保证首帧已挂载 RouterLink 的 click 监听器。通过组件树触发点击，
+    // 同时验证路由跳转和菜单关闭，避免依赖首帧 DOM 的同步卸载行为。
+    const contactLink = wrapper
+      .findComponent(MobileNav)
+      .findAllComponents(RouterLink)
+      .find((item) => item.props("to") === "/contact")!;
 
-    expect(document.body.querySelector('[role="dialog"]')).toBeNull();
-    expect(router.currentRoute.value.path).toBe("/");
+    await vi.waitFor(async () => {
+      await contactLink.trigger("click");
+      await nextTick();
+      expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+    });
+    expect(router.currentRoute.value.path).toBe("/contact");
   });
 
   it("点击弹出层之外的地方：菜单收起，导航不跳转", async () => {
